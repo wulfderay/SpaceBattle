@@ -1,0 +1,6 @@
+c:\users\purchaser\documents\visual studio 2015\Projects\Spacebattle\Spacebattle\bin\Debug\Spacebattle.exe.config
+c:\users\purchaser\documents\visual studio 2015\Projects\Spacebattle\Spacebattle\bin\Debug\Spacebattle.exe
+c:\users\purchaser\documents\visual studio 2015\Projects\Spacebattle\Spacebattle\bin\Debug\Spacebattle.pdb
+c:\users\purchaser\documents\visual studio 2015\Projects\Spacebattle\Spacebattle\obj\Debug\Spacebattle.csprojResolveAssemblyReference.cache
+c:\users\purchaser\documents\visual studio 2015\Projects\Spacebattle\Spacebattle\obj\Debug\Spacebattle.exe
+c:\users\purchaser\documents\visual studio 2015\Projects\Spacebattle\Spacebattle\obj\Debug\Spacebattle.pdb
