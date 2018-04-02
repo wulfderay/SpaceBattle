@@ -20,7 +20,7 @@ namespace Spacebattle.physics
 
             foreach (var entity in entities)
             {
-                entity.Position += entity.Velocity; // no drag in space. 
+                entity.DoPhysicsStep();
             }
         }
 

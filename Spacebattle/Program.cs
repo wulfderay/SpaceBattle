@@ -3,7 +3,9 @@ using Spacebattle.entity;
 using Spacebattle.entity.parts;
 using System.Collections.Generic;
 using System;
+using System.Drawing;
 using Spacebattle.orders;
+using Konsole;
 
 namespace Spacebattle
 {
@@ -62,6 +64,31 @@ namespace Spacebattle
              * 
              */
 
+
+            var con = new Window(200, 50);
+            con.WriteLine("starting client server demo");
+            var visualizer = new Window(1, 4, 20, 20, ConsoleColor.Gray, ConsoleColor.DarkBlue, con);
+            var output = new Window(25, 4, 20, 20, con);
+            visualizer.WriteLine("Visualizer");
+            visualizer.WriteLine("------");
+            output.WriteLine("Output");
+            output.WriteLine("------");
+            visualizer.WriteLine("<-- PUT some long text to show wrapping");
+            output.WriteLine(ConsoleColor.DarkYellow, "--> PUT some long text to show wrapping");
+            output.WriteLine(ConsoleColor.Red, "<-- 404|Not Found|some long text to show wrapping|");
+            visualizer.WriteLine(ConsoleColor.Red, "--> 404|Not Found|some long text to show wrapping|");
+
+
+
+
+            var shaunShip = new Ship(
+                "ShaunShip",
+                new List<Reactor>() {Reactor.SmallReactor()},
+                new List<Sheild>() {Sheild.FastRegenSheild()},
+                new List<Weapon>() { new Weapon("Lance", 50, 1, 10, 100, 500)},
+                new List<Engine>() {new Engine("MegaThruster", 50, 20, 100, 1000)},
+                new List<CrewDeck>() { CrewDeck.Bridge() });
+
             var shipOne = new Ship(
                 "Enterprise",
                 new List<Reactor>() { Reactor.BigReactor(), Reactor.SmallReactor() },
@@ -79,7 +106,7 @@ namespace Spacebattle
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck() , CrewDeck.Bridge()});
 
-            var shipThree = new Ship(
+            var pooey = new Ship(
                 "pooey",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
                 new List<Sheild>() {  Sheild.FastRegenSheild() },
@@ -89,7 +116,10 @@ namespace Spacebattle
 
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
-            game.StartNewGame(new List<Ship> { shipOne }, new List<Ship> { shipTwo, shipThree }, 1000);
+            game.StartNewGame(new List<Ship> { shaunShip }, new List<Ship> {  pooey }, 1000);
+
+            
+
 
 
             while (!game.IsGameFinished())

@@ -8,9 +8,10 @@ namespace Spacebattle.physics
         public float X { get; set; }
         public float Y { get; set; }
 
+        public static Vector2d Zero => new Vector2d {X = 0, Y = 0};
+
         public float DistanceTo(Vector2d other)
         {
-
             var x = (X - other.X);
             var y = (Y - other.Y);
             return (float)Math.Sqrt((x * x) + (y * y));

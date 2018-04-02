@@ -150,10 +150,7 @@ namespace Spacebattle.entity
             
             Power = _reactors.Select(x => x.Produce()).Sum();
 
-            payUpkeep();
-
-            foreach (var sheild in _sheilds)
-                Power = sheild.Regen(Power);
+            spendPower();
 
             moveShip();
             
@@ -170,8 +167,9 @@ namespace Spacebattle.entity
             return _name;
         }
 
-        private void payUpkeep()
+        private void spendPower()
         {
+            // change to for loop so we have more control owver what gets power when and what happens if there isn't enough power.
             Power -=( _reactors.Select(x => x.GetUpkeepCost()).Sum() +
                _sheilds.Select(x => x.GetUpkeepCost()).Sum() +
                _guns.Select(x => x.GetUpkeepCost()).Sum() +
@@ -179,6 +177,8 @@ namespace Spacebattle.entity
                _crewDecks.Select(x => x.GetUpkeepCost()).Sum());
             if (Power < 0)
                 Power = 0;
+            foreach (var sheild in _sheilds)
+                Power = sheild.Regen(Power);
         }
 
         public void ShootAt(Ship otherShip) // this isn't great because we should ideally be able to pick the gun we are shooting with.

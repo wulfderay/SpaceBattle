@@ -96,7 +96,7 @@ namespace Spacebattle
 
             //Todo: actual commnds and ai.
             DoOrder(order, _redTeam[0]);
-            for ( int i = 1; i < _redTeam.Count; i++)
+            for ( var i = 1; i < _redTeam.Count; i++)
             {
                 if (_redTeam[i].IsDestroyed())
                     continue;
@@ -146,9 +146,9 @@ namespace Spacebattle
                     break;
                 case OrderType.LOCK:
                     var lockOrder = (LockOrder)order;
-                    var shipToLockOn = _blueTeam.Where(x => x.GetName() == lockOrder.ShipToLockOn).FirstOrDefault();
+                    var shipToLockOn = _blueTeam.FirstOrDefault(x => x.GetName() == lockOrder.ShipToLockOn);
                     if (shipToLockOn == null)
-                        shipToLockOn = _redTeam.Where(x => x.GetName() == lockOrder.ShipToLockOn).FirstOrDefault();
+                        shipToLockOn = _redTeam.FirstOrDefault(x => x.GetName() == lockOrder.ShipToLockOn);
                     if (shipToLockOn == null)
                     {
                         OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "No ship found with that name, Sir!"});

@@ -19,6 +19,7 @@ namespace Spacebattle.orders
 
             switch (tokens[0].ToLower())
             {
+                case "he":
                 case "setcourse":
                     if ( tokens.Length > 1)
                         return parseAsSetCourse(tokens);
@@ -33,7 +34,6 @@ namespace Spacebattle.orders
                     break;
                 case "fire":
                     return Order.Fire();
-                    break;
 
             }
             return Order.NullOrder();
@@ -41,26 +41,18 @@ namespace Spacebattle.orders
 
         private static Order parseAsSetThrottle(string[] tokens)
         {
-            float throttlePercent;
-
-            if (!float.TryParse(tokens[1], out throttlePercent))
-            {
-                Console.WriteLine("Could not parse " + tokens[1] + " into a percent (0 - 100). :(");
-                return Order.NullOrder();
-            }
-            return Order.SetThrottle(throttlePercent);
+            if (float.TryParse(tokens[1], out var throttlePercent))
+                return Order.SetThrottle(throttlePercent);
+            Console.WriteLine("Could not parse " + tokens[1] + " into a percent (0 - 100). :(");
+            return Order.NullOrder();
         }
 
         private static Order parseAsSetCourse(string[] tokens)
         {
-            float angleInDegrees;
-
-            if (!float.TryParse(tokens[1], out angleInDegrees))
-            {
-                Console.WriteLine("Could not parse " + tokens[1] + " into an angle. :(");
-                return Order.NullOrder();
-            }
-            return Order.SetCourse(angleInDegrees);
+            if (float.TryParse(tokens[1], out var angleInDegrees))
+                return Order.SetCourse(angleInDegrees);// TODO: clamp angle to 0 - 360
+            Console.WriteLine("Could not parse " + tokens[1] + " into an angle. :(");
+            return Order.NullOrder();
         }
     }
 }

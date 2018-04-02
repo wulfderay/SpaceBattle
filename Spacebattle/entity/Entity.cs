@@ -1,4 +1,5 @@
-﻿using Spacebattle.physics;
+﻿using System;
+using Spacebattle.physics;
 namespace Spacebattle.entity
 {
     public class Entity
@@ -29,6 +30,14 @@ namespace Spacebattle.entity
             // a = f/m
             var accel = force / Mass;
             Velocity += accel;
+            //Rounding to account for floating point errors
+            if (Math.Abs(Velocity.Magnitude()) < 1)
+                Velocity = Vector2d.Zero;
+        }
+
+        public void DoPhysicsStep()
+        {
+            Position += Velocity; // no drag in space. 
         }
     }
 }
