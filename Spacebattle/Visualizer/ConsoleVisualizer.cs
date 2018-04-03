@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Konsole;
+using Spacebattle.entity;
 
 namespace Spacebattle.Visualizer
 {
@@ -83,6 +86,27 @@ namespace Spacebattle.Visualizer
             Console.SetCursorPosition(x, y);
             Console.Write(message);
             Console.SetCursorPosition(oldX, oldY);
+        }
+
+        public static void  DrawRadar(IConsole window, List<Entity> entities, Entity centreEntity, float range)
+        {
+            window.Clear();
+            var scaleX = window.WindowWidth / range;
+            var scaleY = window.WindowHeight / range;
+            foreach (var entity in entities)
+            {
+                if (entity == centreEntity)
+                    continue; // don't draw yourself (yet)
+                if (entity.DistanceTo(centreEntity) > range)
+                    continue;
+                var distanceFromCenter = entity.Position - centreEntity.Position;
+                var x = (int)(distanceFromCenter.X * scaleX);
+                var y = (int)(distanceFromCenter.Y * scaleY);
+                if (x < 0 || y < 0)
+                    continue;
+                window.PrintAt(x,y, '*');
+
+            }
         }
 
     }

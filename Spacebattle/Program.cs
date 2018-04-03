@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System;
 using Spacebattle.orders;
 using Konsole;
-using System.Text.RegularExpressions;
 using System.Linq;
+using Konsole.Drawing;
+using Spacebattle.physics;
+using Spacebattle.Visualizer;
 
 namespace Spacebattle
 {
@@ -67,13 +69,13 @@ namespace Spacebattle
              * 
              */
             setConsoleSize();
-            var visualizer = new Window(0, 0,122 ,20, ConsoleColor.Yellow, ConsoleColor.DarkGray);
-            output = new Window(0, 20, 122, 20);
-            var input = new Window(0, 40, 100, 1);
-            visualizer.WriteLine("Visualizer");
-            visualizer.WriteLine("------");
-            output.WriteLine("Output");
-            output.WriteLine("------");
+            var radarPanel = Window.Open(1, 1, 25, 14, "Radar", LineThickNess.Single, ConsoleColor.Green,
+                ConsoleColor.Black);
+            radarPanel.WriteLine("Radar");
+            var ScanPanel = new Window(27, 1,100 ,14, ConsoleColor.Yellow, ConsoleColor.DarkGray);
+            output = new Window(1, 16, 100, 24,  ConsoleColor.DarkGray, ConsoleColor.DarkCyan);
+            var input = new Window(1, 40, 100, 1, ConsoleColor.DarkGray, ConsoleColor.DarkMagenta);
+
 
 
 
@@ -111,15 +113,18 @@ namespace Spacebattle
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
 
+            pooey.Position = new Vector2d(100,100);
+
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
             game.StartNewGame(new List<Ship> { shaunShip }, new List<Ship> {  pooey }, 1000);
 
 
 
-            PrintShip(pooey, visualizer, ConsoleColor.DarkRed);
-            visualizer.WriteLine("");
-            PrintShip(shaunShip, visualizer, ConsoleColor.White);
+            PrintShip(pooey, ScanPanel, ConsoleColor.DarkRed);
+            ScanPanel.WriteLine("");
+            PrintShip(shaunShip, ScanPanel, ConsoleColor.White);
+            ConsoleVisualizer.DrawRadar(radarPanel, new List<Entity>(){pooey},shaunShip, 500 );
             while (!game.IsGameFinished())
             {
                 // TODO: Get order from console 
@@ -128,11 +133,11 @@ namespace Spacebattle
                 var order = OrderParser.ParseOrder(Console.ReadLine());
 
                 game.RunOneRound(order);
-                visualizer.Clear();
-                PrintShip(pooey, visualizer, ConsoleColor.DarkRed);
-                visualizer.WriteLine("");
-                PrintShip(shaunShip, visualizer, ConsoleColor.White);
-
+                ScanPanel.Clear();
+                PrintShip(pooey, ScanPanel, ConsoleColor.DarkRed);
+                ScanPanel.WriteLine("");
+                PrintShip(shaunShip, ScanPanel, ConsoleColor.White);
+                ConsoleVisualizer.DrawRadar(radarPanel, new List<Entity>() { pooey }, shaunShip, 500);
 
             }
             if (game.GetWhichTeamWon() == -1)

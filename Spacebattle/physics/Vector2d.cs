@@ -1,5 +1,6 @@
 ﻿using Spacebattle.Extensions;
 using System;
+using System.Data.SqlTypes;
 
 namespace Spacebattle.physics
 {
@@ -9,6 +10,14 @@ namespace Spacebattle.physics
         public float Y { get; set; }
 
         public static Vector2d Zero => new Vector2d {X = 0, Y = 0};
+
+        public Vector2d(){}
+
+        public Vector2d(float x, float y)
+        {
+            X = x;
+            Y = y;
+        }
 
         public float DistanceTo(Vector2d other)
         {
