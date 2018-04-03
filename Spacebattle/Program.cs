@@ -3,14 +3,17 @@ using Spacebattle.entity;
 using Spacebattle.entity.parts;
 using System.Collections.Generic;
 using System;
-using System.Drawing;
 using Spacebattle.orders;
 using Konsole;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Spacebattle
 {
     class Program
     {
+        private static Window output;
+
         static void Main(string[] args)
         {
             /*
@@ -30,7 +33,7 @@ namespace Spacebattle
              *  
              *  
              *  
-             *  TODO: guns should shoot at an angle.... and the sheilds should provide protection so long as they are in the way.
+             *  TODO: guns should shoot at an angle.... and the shields should provide protection so long as they are in the way.
              *  Commands to implement:
              *  Report
              *  fire
@@ -49,7 +52,7 @@ namespace Spacebattle
              * reactors provide power, of course.... if we anted to model them after fusion reactors, we could make them require some power as well, but that's going to far. :>)
              * 
              * Right now we have an upkeep power requirement... if you consume too much power, you don't have enough energy to do per-use things
-             * for example, sheilds won't charge if there isn't enough power. For now, that's the only problem. Needs more fleshing out though.
+             * for example, shields won't charge if there isn't enough power. For now, that's the only problem. Needs more fleshing out though.
              * 
              * Weapons need more work. Accuracy on some weapons should fall off with distance, damage with distance for others.
              * Projectile weapons also need to be implemented. Also, the concept of loading.
@@ -63,20 +66,14 @@ namespace Spacebattle
              * 
              * 
              */
-
-
-            var con = new Window(200, 50);
-            con.WriteLine("starting client server demo");
-            var visualizer = new Window(1, 4, 20, 20, ConsoleColor.Gray, ConsoleColor.DarkBlue, con);
-            var output = new Window(25, 4, 20, 20, con);
+            setConsoleSize();
+            var visualizer = new Window(0, 0,122 ,20, ConsoleColor.Yellow, ConsoleColor.DarkGray);
+            output = new Window(0, 20, 122, 20);
+            var input = new Window(0, 40, 100, 1);
             visualizer.WriteLine("Visualizer");
             visualizer.WriteLine("------");
             output.WriteLine("Output");
             output.WriteLine("------");
-            visualizer.WriteLine("<-- PUT some long text to show wrapping");
-            output.WriteLine(ConsoleColor.DarkYellow, "--> PUT some long text to show wrapping");
-            output.WriteLine(ConsoleColor.Red, "<-- 404|Not Found|some long text to show wrapping|");
-            visualizer.WriteLine(ConsoleColor.Red, "--> 404|Not Found|some long text to show wrapping|");
 
 
 
@@ -84,7 +81,7 @@ namespace Spacebattle
             var shaunShip = new Ship(
                 "ShaunShip",
                 new List<Reactor>() {Reactor.SmallReactor()},
-                new List<Sheild>() {Sheild.FastRegenSheild()},
+                new List<Shield>() {Shield.FastRegenshield()},
                 new List<Weapon>() { new Weapon("Lance", 50, 1, 10, 100, 500)},
                 new List<Engine>() {new Engine("MegaThruster", 50, 20, 100, 1000)},
                 new List<CrewDeck>() { CrewDeck.Bridge() });
@@ -92,7 +89,7 @@ namespace Spacebattle
             var shipOne = new Ship(
                 "Enterprise",
                 new List<Reactor>() { Reactor.BigReactor(), Reactor.SmallReactor() },
-                new List<Sheild>() { Sheild.BigSheild(), Sheild.FastRegenSheild()},
+                new List<Shield>() { Shield.Bigshield(), Shield.FastRegenshield()},
                 new List<Weapon>() { new Weapon("Gun",100,10,0, 30, 200) , new Weapon("Gun",100, 10, 0, 30, 200) },
                 new List<Engine>() { new Engine("Engine",100,20, 50,100) },
                 new List<CrewDeck>() { CrewDeck.MilitaryDeck(), CrewDeck.PleasureDeck()});
@@ -101,7 +98,7 @@ namespace Spacebattle
             var shipTwo = new Ship(
                 "destroyer",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
-                new List<Sheild>() {  Sheild.FastRegenSheild() },
+                new List<Shield>() {  Shield.FastRegenshield() },
                 new List<Weapon>() { new Weapon("Gun", 100, 10, 0, 30, 200) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck() , CrewDeck.Bridge()});
@@ -109,7 +106,7 @@ namespace Spacebattle
             var pooey = new Ship(
                 "pooey",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
-                new List<Sheild>() {  Sheild.FastRegenSheild() },
+                new List<Shield>() {  Shield.FastRegenshield() },
                 new List<Weapon>() { new Weapon("Gun", 100, 10, 0, 30, 200) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
@@ -118,35 +115,67 @@ namespace Spacebattle
             game.FlavourTextEventHandler += OnFlavourText;
             game.StartNewGame(new List<Ship> { shaunShip }, new List<Ship> {  pooey }, 1000);
 
-            
 
 
-
+            PrintShip(pooey, visualizer, ConsoleColor.DarkRed);
+            visualizer.WriteLine("");
+            PrintShip(shaunShip, visualizer, ConsoleColor.White);
             while (!game.IsGameFinished())
             {
                 // TODO: Get order from console 
-                Console.WriteLine("Your orders, Sir?");
+                input.WriteLine(ConsoleColor.Green,"Your orders, Sir?");
+                Console.SetCursorPosition(20, 40);
                 var order = OrderParser.ParseOrder(Console.ReadLine());
 
                 game.RunOneRound(order);
+                visualizer.Clear();
+                PrintShip(pooey, visualizer, ConsoleColor.DarkRed);
+                visualizer.WriteLine("");
+                PrintShip(shaunShip, visualizer, ConsoleColor.White);
+
 
             }
             if (game.GetWhichTeamWon() == -1)
             {
-                Console.WriteLine("It was a tie!");
+                output.WriteLine("It was a tie!");
             }
             else 
             {
-               
-                Console.WriteLine("Team "+ game.GetWhichTeamWon() + " Won!!");
-
-
+                output.WriteLine("Team "+ game.GetWhichTeamWon() + " Won!!");
             }
+            Console.ReadKey();
         }
 
         private static void OnFlavourText(object sender, FlavourTextEventArgs e)
         {
-            Console.WriteLine("["+e.name+"]: "+e.message);
+            if ( e.team == -1)
+                output.WriteLine("["+e.name+"]: "+e.message);
+            if (e.team == 0)
+                output.WriteLine(ConsoleColor.Blue, "[" + e.name + "]: " + e.message);
+            if (e.team == 1)
+                output.WriteLine(ConsoleColor.Red, "[" + e.name + "]: " + e.message);
+        }
+
+        static void setConsoleSize()
+        {
+            Console.SetWindowPosition(0, 0);   // sets window position to upper left
+            Console.SetBufferSize(122, 54);   // make sure buffer is bigger than window
+            Console.SetWindowSize(122, 54);   //set window size to almost full screen 
+        }  // End  setConsoleSize()
+
+        public static void PrintShip(Ship ship, Window window , ConsoleColor color)
+        {
+            window.WriteLine(color, "Name:" + ship.GetName() +
+                " Crew:" + ship.CrewDecks.Select(x => (int)x.GetCrew()).Sum() +
+                " Mass: " + ship.Mass +
+                " Power:" + ship.Power);
+            window.WriteLine(color, string.Join(" ", ship.Reactors.Select(x => x.ToString())));
+            window.WriteLine(color, string.Join(" ", ship.Shields.Select(x => x.ToString())));
+            window.WriteLine(color, string.Join(" ", ship.Guns.Select(x => x.ToString())));
+            window.WriteLine(color, string.Join(" ", ship.Engines.Select(x => x.ToString())));
+            window.WriteLine(color, string.Join(" ", ship.CrewDecks.Select(x => x.ToString())));
+            if (ship.IsDestroyed())
+                window.WriteLine("(Destroyed)");
         }
     }
 }

@@ -58,13 +58,16 @@ namespace Spacebattle
             _physicsEngine = new PhysicsEngine();
             _redTeam.ForEach(x => {
                 _physicsEngine.Register(x);
-                x.FlavourTextEventHandler += OnFlavourText;
+                x.FlavourTextEventHandler += OnRedFlavourText;
             });
             _blueTeam.ForEach(x => {
                 _physicsEngine.Register(x);
-                x.FlavourTextEventHandler += OnFlavourText;
+                x.FlavourTextEventHandler += OnBlueFlavourText;
             });
         }
+
+       
+
         public int GetWhichTeamWon()
         {
             if (!IsGameFinished())
@@ -88,7 +91,6 @@ namespace Spacebattle
                 throw new Exception("The Round limit has been reached. The game is over! Stop trying to run it! Check the current round next time!");
             }
             CurrentRound += 1;
-            Console.WriteLine("Turn: " + CurrentRound);
             _physicsEngine.Update(CurrentRound);
             _redTeam.ForEach(x => x.Update(CurrentRound));
             _blueTeam.ForEach(x => x.Update(CurrentRound));
@@ -103,7 +105,6 @@ namespace Spacebattle
                 var target = _blueTeam[rng.Next(_blueTeam.Count)];
                 _redTeam[i].ShootAt(target);
             }
-            Console.WriteLine();
             _blueTeam.ForEach(x => {
                 var target = _redTeam[rng.Next(_redTeam.Count)];
                 x.ShootAt(target);
@@ -117,14 +118,6 @@ namespace Spacebattle
                   //  x.Throttle = rng.Next(100);
                 }
             });
-
-            Console.WriteLine();
-
-
-            // this will probably get moved outside the engine. One should probably use the scan command etc to view status.
-            _redTeam.ForEach(x => Console.WriteLine(x));
-            Console.WriteLine();
-            _blueTeam.ForEach(x => Console.WriteLine(x));
 
         }
 
@@ -172,8 +165,21 @@ namespace Spacebattle
             }
         }
 
+        private void OnBlueFlavourText(object sender, FlavourTextEventArgs e)
+        {
+            e.team = 0;
+            FlavourTextEventHandler?.Invoke(sender, e);
+
+        }
+
+        private void OnRedFlavourText(object sender, FlavourTextEventArgs e)
+        {
+            e.team = 1;
+            FlavourTextEventHandler?.Invoke(sender, e);
+        }
         private void OnFlavourText(object sender, FlavourTextEventArgs e)
         {
+            e.team = -1; //gaia
             FlavourTextEventHandler?.Invoke(sender, e);
         }
     }

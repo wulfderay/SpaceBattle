@@ -29,7 +29,7 @@ namespace Spacebattle.entity.parts
             if (distance <= _range)
                 target.Damage(_power);
             else
-                Console.WriteLine("Target was too far away to hit!");
+                OnFlavourText(_name, "Target was too far away to hit!");
         }
 
         public override string ToString()

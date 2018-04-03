@@ -41,7 +41,8 @@ namespace Spacebattle.orders
 
         private static Order parseAsSetThrottle(string[] tokens)
         {
-            if (float.TryParse(tokens[1], out var throttlePercent))
+            float throttlePercent;
+            if (float.TryParse(tokens[1], out throttlePercent))
                 return Order.SetThrottle(throttlePercent);
             Console.WriteLine("Could not parse " + tokens[1] + " into a percent (0 - 100). :(");
             return Order.NullOrder();
@@ -49,7 +50,8 @@ namespace Spacebattle.orders
 
         private static Order parseAsSetCourse(string[] tokens)
         {
-            if (float.TryParse(tokens[1], out var angleInDegrees))
+            float angleInDegrees;
+            if (float.TryParse(tokens[1], out angleInDegrees))
                 return Order.SetCourse(angleInDegrees);// TODO: clamp angle to 0 - 360
             Console.WriteLine("Could not parse " + tokens[1] + " into an angle. :(");
             return Order.NullOrder();

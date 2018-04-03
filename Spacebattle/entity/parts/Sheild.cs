@@ -3,14 +3,14 @@ using System;
 
 namespace Spacebattle.entity.parts
 {
-    public class Sheild : ShipPart
+    public class Shield : ShipPart
     {
         float _currentAbsorbtion;
         float _maxAbsorbtion;
         float _regenRate;
         float _powerPerRegenUnit;
 
-        public Sheild(string name, float maxHealth, float mass,float upkeepCost,float maxAbsorbtion, float regenRate, float powerPerRegenUnit): base(name, maxHealth, mass, upkeepCost)
+        public Shield(string name, float maxHealth, float mass,float upkeepCost,float maxAbsorbtion, float regenRate, float powerPerRegenUnit): base(name, maxHealth, mass, upkeepCost)
         {
             _maxAbsorbtion= _currentAbsorbtion = maxAbsorbtion;
             _regenRate = regenRate;
@@ -54,15 +54,15 @@ namespace Spacebattle.entity.parts
         }
 
         // fast but expensive and fragile
-        public static Sheild FastRegenSheild()
+        public static Shield FastRegenshield()
         {
-            return new Sheild("Fast Sheild",50, 50, 20, 100, 20f, 5);
+            return new Shield("Fast shield",50, 50, 20, 100, 20f, 5);
         }
 
         // slow but efficient
-        public static Sheild BigSheild()
+        public static Shield Bigshield()
         {
-            return new Sheild("Big Sheild",100, 100, 10, 200, 15f, 2);
+            return new Shield("Big shield",100, 100, 10, 200, 15f, 2);
         }
     }
 }
