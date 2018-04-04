@@ -34,6 +34,8 @@ namespace Spacebattle.orders
                     break;
                 case "fire":
                     return Order.Fire();
+                case "allstop":
+                    return Order.AllStop();
 
             }
             return Order.NullOrder();

@@ -4,7 +4,7 @@ namespace Spacebattle.orders
 {
     public class Order
     {
-        public enum OrderType { NULL_ORDER = 0,SET_COURSE, SET_THROTTLE, FIRE, LOCK};
+        public enum OrderType { NULL_ORDER = 0,SET_COURSE, SET_THROTTLE, FIRE, LOCK, ALL_STOP};
 
         public OrderType Type;
 
@@ -33,6 +33,11 @@ namespace Spacebattle.orders
         public static Order Fire() //TODO: fire a specific weapon
         {
             return new Order { Type = OrderType.FIRE };
+        }
+
+        public static Order AllStop() //TODO: fire a specific weapon
+        {
+            return new Order { Type = OrderType.ALL_STOP};
         }
 
         public static LockOrder Lock(string shipName)

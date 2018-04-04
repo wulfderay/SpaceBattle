@@ -69,13 +69,16 @@ namespace Spacebattle
              * 
              */
             setConsoleSize();
+            var DebugPanel = Window.Open(1, 41, 100, 10, "Debug", LineThickNess.Single, ConsoleColor.Red, ConsoleColor.Black);
             var radarPanel = Window.Open(1, 1, 25, 14, "Radar", LineThickNess.Single, ConsoleColor.Green,
                 ConsoleColor.Black);
             radarPanel.WriteLine("Radar");
             var ScanPanel = new Window(27, 1,100 ,14, ConsoleColor.Yellow, ConsoleColor.DarkGray);
-            output = new Window(1, 16, 100, 24,  ConsoleColor.DarkGray, ConsoleColor.DarkCyan);
-            var input = new Window(1, 40, 100, 1, ConsoleColor.DarkGray, ConsoleColor.DarkMagenta);
-
+            output = new Window(1, 16, 60, 24,  ConsoleColor.White, ConsoleColor.DarkCyan);
+            var input = new Window(1, 40, 60, 1, ConsoleColor.DarkGray, ConsoleColor.DarkMagenta);
+            var shipList = Window.Open(62, 16, 60, 24, "Ships In Range", LineThickNess.Single, ConsoleColor.Cyan,
+                ConsoleColor.Black);
+            
 
 
 
@@ -113,18 +116,22 @@ namespace Spacebattle
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
 
-            pooey.Position = new Vector2d(100,100);
-
+            pooey.Position = new Vector2d(100,-100);
+            shaunShip.Position = new Vector2d(0, 0);
+            shipTwo.Position = new Vector2d(100, 100);
+            shipOne.Position = new Vector2d(-100, -100);
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
-            game.StartNewGame(new List<Ship> { shaunShip }, new List<Ship> {  pooey }, 1000);
+            var redteam = new List<Ship> { shaunShip, shipOne };
+            var blueteam = new List<Ship> { pooey, shipTwo };
+            var bothTeams = new List<Ship>();
+            bothTeams.AddRange(redteam);
+            bothTeams.AddRange(blueteam);
+            game.StartNewGame(redteam, blueteam, 1000);
 
+            UpdateDisplay(pooey, shaunShip, bothTeams, ScanPanel, radarPanel, shipList);
 
-
-            PrintShip(pooey, ScanPanel, ConsoleColor.DarkRed);
-            ScanPanel.WriteLine("");
-            PrintShip(shaunShip, ScanPanel, ConsoleColor.White);
-            ConsoleVisualizer.DrawRadar(radarPanel, new List<Entity>(){pooey},shaunShip, 500 );
+            
             while (!game.IsGameFinished())
             {
                 // TODO: Get order from console 
@@ -133,11 +140,8 @@ namespace Spacebattle
                 var order = OrderParser.ParseOrder(Console.ReadLine());
 
                 game.RunOneRound(order);
-                ScanPanel.Clear();
-                PrintShip(pooey, ScanPanel, ConsoleColor.DarkRed);
-                ScanPanel.WriteLine("");
-                PrintShip(shaunShip, ScanPanel, ConsoleColor.White);
-                ConsoleVisualizer.DrawRadar(radarPanel, new List<Entity>() { pooey }, shaunShip, 500);
+                UpdateDisplay(pooey, shaunShip, bothTeams, ScanPanel, radarPanel, shipList);
+
 
             }
             if (game.GetWhichTeamWon() == -1)
@@ -168,7 +172,7 @@ namespace Spacebattle
             Console.SetWindowSize(122, 54);   //set window size to almost full screen 
         }  // End  setConsoleSize()
 
-        public static void PrintShip(Ship ship, Window window , ConsoleColor color)
+        public static void PrintShip(Ship ship, IConsole window , ConsoleColor color)
         {
             window.WriteLine(color, "Name:" + ship.GetName() +
                 " Crew:" + ship.CrewDecks.Select(x => (int)x.GetCrew()).Sum() +
@@ -181,6 +185,15 @@ namespace Spacebattle
             window.WriteLine(color, string.Join(" ", ship.CrewDecks.Select(x => x.ToString())));
             if (ship.IsDestroyed())
                 window.WriteLine("(Destroyed)");
+        }
+
+        public static void UpdateDisplay(Ship target, Ship flagship, List<Ship> ships, IConsole scanPanel, IConsole radarPanel, IConsole shipListPanel)
+        {
+            PrintShip(target, scanPanel, ConsoleColor.DarkRed);
+            scanPanel.WriteLine("");
+            PrintShip(flagship, scanPanel, ConsoleColor.White);
+            ConsoleVisualizer.DrawRadar(radarPanel, ships, flagship, 1000);
+            ConsoleVisualizer.DrawShipList(shipListPanel, ships, flagship);
         }
     }
 }

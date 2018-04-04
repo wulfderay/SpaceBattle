@@ -6,13 +6,13 @@ namespace Spacebattle.entity
     {
 
 
-        public Vector2d Position; 
+        public Vector2d Position { get; set; }
 
         public float Orientation { get; set; } // ideally in radians. but we also need to know the current velocity in xy or xtheta
 
-        public Vector2d Velocity; // where x is magnitude and y is direction // or is that what we want?
+        public Vector2d Velocity { get; set; } // where x is magnitude and y is direction // or is that what we want?
 
-        public float Mass { get; protected set; }
+        public float Mass { get; set; }
 
         public float DistanceTo(Entity other)
         {

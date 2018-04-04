@@ -73,7 +73,7 @@ namespace Spacebattle.Visualizer
                     ConsoleWritePixel(bmpMax.GetPixel(j * 2, i));
                     ConsoleWritePixel(bmpMax.GetPixel(j * 2 + 1, i));
                 }
-                System.Console.WriteLine();
+                Console.WriteLine();
             }
             Console.ResetColor();
         }
@@ -88,25 +88,47 @@ namespace Spacebattle.Visualizer
             Console.SetCursorPosition(oldX, oldY);
         }
 
-        public static void  DrawRadar(IConsole window, List<Entity> entities, Entity centreEntity, float range)
+        public static void  DrawRadar(IConsole window, List<Ship> ships, Entity centreEntity, float range)
         {
             window.Clear();
             var scaleX = window.WindowWidth / range;
             var scaleY = window.WindowHeight / range;
-            foreach (var entity in entities)
+            foreach (var ship in ships)
             {
-                if (entity == centreEntity)
+                if (ship == centreEntity)
                     continue; // don't draw yourself (yet)
-                if (entity.DistanceTo(centreEntity) > range)
+                if (ship.DistanceTo(centreEntity) > range)
                     continue;
-                var distanceFromCenter = entity.Position - centreEntity.Position;
+                var distanceFromCenter = ship.Position - centreEntity.Position;
                 var x = (int)(distanceFromCenter.X * scaleX);
                 var y = (int)(distanceFromCenter.Y * scaleY);
                 if (x < 0 || y < 0)
                     continue;
-                window.PrintAt(x,y, '*');
+                window.PrintAt(x,y, GetShipSymbol(ship));
 
             }
+        }
+
+        public static void DrawShipList(IConsole window, List<Ship> ships, Entity centreEntity)
+        {
+            window.Clear();
+            window.WriteLine(ConsoleColor.Yellow,"Name".PadLeft(12) + "\t" + "Range" + "\t" + "Bearing");
+            foreach (var ship in ships.OrderBy(x => x.DistanceTo(centreEntity)))
+            {
+                window.WriteLine(ConsoleColor.White, GetShipSymbol(ship) + " "+
+                    ship.GetName().PadLeft(10) + "\t" + 
+                    (int)ship.DistanceTo(centreEntity) + "\t" + 
+                    (int)centreEntity.DirectionInDegreesTo(ship) + '\t'+
+                    (int)ship.Position.X+ "\t"+
+                    (int)ship.Position.Y);
+            }
+        }
+
+        public static char GetShipSymbol(Ship ship)
+        {
+            List<char> symbols = new List<char> { '@', '#', '$', '%', '&', '*', '§' ,'¥'};
+            var index = (Math.Abs(ship.GetName().GetHashCode()) % symbols.Count);
+            return symbols[index];
         }
 
     }

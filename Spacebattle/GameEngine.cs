@@ -159,6 +159,10 @@ namespace Spacebattle
                     OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Firing weapons!" });
                     ship.ShootAt(_lockedShip);
                     break;
+                case OrderType.ALL_STOP:
+                    OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Stopping all motion, Capitain." });
+                    ship.AllStop();
+                    break;
                 default:
                     OnFlavourText(this, new FlavourTextEventArgs { name=ship.GetName(), message="Sorry, what was that, Captain?" });
                     break;
