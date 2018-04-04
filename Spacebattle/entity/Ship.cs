@@ -147,7 +147,7 @@ namespace Spacebattle.entity
             var accelerationNeeded = Mass * Velocity.Magnitude();
             var maxAcceleration = GetMaxAcceleration();
 
-            SetCourse(Velocity.DirectionInDegreesTo(new Vector2d { X = 0, Y = 0 }));
+            SetCourse(Velocity.DirectionInDegreesTo(new Vector2d { X = 1, Y = 0 }));
             if (maxAcceleration > accelerationNeeded)
                 Throttle = 100 * (accelerationNeeded / maxAcceleration);
             else

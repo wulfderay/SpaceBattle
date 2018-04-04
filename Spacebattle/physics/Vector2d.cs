@@ -69,23 +69,26 @@ namespace Spacebattle.physics
 
         public static Vector2d operator *(Vector2d vector2d, float scalar)
         {
-            vector2d.X *= scalar;
-            vector2d.Y *= scalar;
-            return vector2d;
+            var x = vector2d.X * scalar;
+            var y = vector2d.Y * scalar;
+
+            return new Vector2d(x,y);
         }
 
         public static Vector2d operator +(Vector2d vector2d, Vector2d other)
         {
-            vector2d.X += other.X;
-            vector2d.Y += other.Y;
-            return vector2d;
+            var x = vector2d.X + other.X;
+            var y = vector2d.Y + other.Y;
+
+            return new Vector2d(x, y);
         }
 
         public static Vector2d operator -(Vector2d vector2d, Vector2d other)
         {
-            vector2d.X -= other.X;
-            vector2d.Y -= other.Y;
-            return vector2d;
+            var x = vector2d.X - other.X;
+            var y = vector2d.Y - other.Y;
+
+            return new Vector2d(x, y);
         }
     }
 }

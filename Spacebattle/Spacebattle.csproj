@@ -47,11 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debug\IDebugProvider.cs" />
     <Compile Include="Visualizer\ConsoleVisualizer.cs" />
     <Compile Include="entity\Entity.cs" />
-    <Compile Include="entity\FlavourTextEventArgs.cs" />
+    <Compile Include="FlavourText\FlavourTextEventArgs.cs" />
     <Compile Include="entity\IDamageable.cs" />
-    <Compile Include="entity\IFlavourTextProvider.cs" />
+    <Compile Include="FlavourText\IFlavourTextProvider.cs" />
     <Compile Include="entity\parts\IShipPart.cs" />
     <Compile Include="entity\parts\ShipPart.cs" />
     <Compile Include="entity\IUpdateable.cs" />

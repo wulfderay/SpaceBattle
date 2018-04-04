@@ -8,31 +8,31 @@ namespace Spacebattle.entity.parts
     public class Engine : ShipPart
     {
         
-        float _power;
+        float _thrustPower;
 
-        public Engine(string name, float maxHealth, float mass, float upkeepCost, float power) : base(name, maxHealth, mass, upkeepCost)
+        public Engine(string name, float maxHealth, float mass, float upkeepCost, float thrustPower) : base(name, maxHealth, mass, upkeepCost)
         {
-            _power = power;
+            _thrustPower = thrustPower;
         }
 
         /// <summary>
-        /// returns the power of the engine given some throttle percentage
+        /// returns the thrustPower of the engine given some throttle percentage
         /// </summary>
         /// <returns></returns>
         public float Throttle(float percent)
         {
             //TODO: Model heat.... probably add heat for high percent throttle and when engine is damaged... 
-            return (_power * _currentHealth/_maxHealth) * percent;
+            return (_thrustPower * _currentHealth/_maxHealth) * percent;
         }
 
         public override string ToString()
         {
-            return "["+_name+" H:" + _currentHealth + "/" + _maxHealth + " P:" + _power + "]";
+            return "["+_name+" H:" + _currentHealth + "/" + _maxHealth + " P:" + _thrustPower +" Mf:"+getMaxForce() +"]";
         }
 
         public float getMaxForce()
         {
-            return (_power * _currentHealth / _maxHealth);
+            return (_thrustPower * _currentHealth / _maxHealth);
         }
     }
 }

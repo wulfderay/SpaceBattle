@@ -70,6 +70,8 @@ namespace Spacebattle
              */
             setConsoleSize();
             var DebugPanel = Window.Open(1, 41, 100, 10, "Debug", LineThickNess.Single, ConsoleColor.Red, ConsoleColor.Black);
+            ConsoleVisualizer.DebugEventHandler += (sender, eventArgs) =>
+                DebugPanel.WriteLine("[" + eventArgs.From + "] " + eventArgs.Message);
             var radarPanel = Window.Open(1, 1, 25, 14, "Radar", LineThickNess.Single, ConsoleColor.Green,
                 ConsoleColor.Black);
             radarPanel.WriteLine("Radar");
@@ -85,11 +87,11 @@ namespace Spacebattle
 
             var shaunShip = new Ship(
                 "ShaunShip",
-                new List<Reactor>() {Reactor.SmallReactor()},
+                new List<Reactor>() {Reactor.BigReactor()},
                 new List<Shield>() {Shield.FastRegenshield()},
                 new List<Weapon>() { new Weapon("Lance", 50, 1, 10, 100, 500)},
                 new List<Engine>() {new Engine("MegaThruster", 50, 20, 100, 1000)},
-                new List<CrewDeck>() { CrewDeck.Bridge() });
+                new List<CrewDeck>() { CrewDeck.Bridge()});
 
             var shipOne = new Ship(
                 "Enterprise",

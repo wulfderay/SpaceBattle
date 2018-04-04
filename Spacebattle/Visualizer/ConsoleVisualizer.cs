@@ -14,6 +14,7 @@ namespace Spacebattle.Visualizer
 
         static int[] cColors = { 0x000000, 0x000080, 0x008000, 0x008080, 0x800000, 0x800080, 0x808000, 0xC0C0C0, 0x808080, 0x0000FF, 0x00FF00, 0x00FFFF, 0xFF0000, 0xFF00FF, 0xFFFF00, 0xFFFFFF };
 
+        public static event EventHandler<DebugEventArgs> DebugEventHandler;
         /// <summary>
         /// Taken from the excellent answer on stack overflow: https://stackoverflow.com/questions/33538527/display-a-image-in-a-console-application
         /// </summary>
@@ -93,18 +94,31 @@ namespace Spacebattle.Visualizer
             window.Clear();
             var scaleX = window.WindowWidth / range;
             var scaleY = window.WindowHeight / range;
+            var centreX = window.WindowWidth / 2;
+            var centreY = window.WindowHeight / 2;
             foreach (var ship in ships)
             {
-                if (ship == centreEntity)
-                    continue; // don't draw yourself (yet)
                 if (ship.DistanceTo(centreEntity) > range)
                     continue;
                 var distanceFromCenter = ship.Position - centreEntity.Position;
-                var x = (int)(distanceFromCenter.X * scaleX);
-                var y = (int)(distanceFromCenter.Y * scaleY);
+                var x = (int)(distanceFromCenter.X * scaleX) + centreX;
+                var y = (int)(distanceFromCenter.Y * scaleY) + centreY;
                 if (x < 0 || y < 0)
+                {
+                    OnDebug("Radar", "Didn't draw " + ship.GetName() + " at " + x + " " + y);
                     continue;
+                }
+
+                if (ship.IsDestroyed())
+                {
+                    window.ForegroundColor = ConsoleColor.Red;
+                }
+                else
+                {
+                    window.ForegroundColor = ConsoleColor.Green;
+                }
                 window.PrintAt(x,y, GetShipSymbol(ship));
+                OnDebug("Radar", "Drew "+ship.GetName()+" at "+x+" "+y);
 
             }
         }
@@ -129,6 +143,11 @@ namespace Spacebattle.Visualizer
             List<char> symbols = new List<char> { '@', '#', '$', '%', '&', '*', '§' ,'¥'};
             var index = (Math.Abs(ship.GetName().GetHashCode()) % symbols.Count);
             return symbols[index];
+        }
+
+        protected static void OnDebug(string from, string message)
+        {
+            DebugEventHandler?.Invoke(null, new DebugEventArgs() { From = from, Message = message });
         }
 
     }
