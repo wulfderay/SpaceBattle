@@ -16,7 +16,7 @@ namespace Spacebattle
         private PhysicsEngine _physicsEngine;
         
         private static  Random rng = new Random();
-        private Ship _lockedShip;
+        
 
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
 
@@ -59,10 +59,12 @@ namespace Spacebattle
             _redTeam.ForEach(x => {
                 _physicsEngine.Register(x);
                 x.FlavourTextEventHandler += OnRedFlavourText;
+                x.Position = new Vector2d(rng.Next(0, 200), rng.Next(0, 200));
             });
             _blueTeam.ForEach(x => {
                 _physicsEngine.Register(x);
                 x.FlavourTextEventHandler += OnBlueFlavourText;
+                x.Position = new Vector2d(rng.Next(500, 700), rng.Next(500, 700));
             });
         }
 
@@ -90,35 +92,55 @@ namespace Spacebattle
             {
                 throw new Exception("The Round limit has been reached. The game is over! Stop trying to run it! Check the current round next time!");
             }
-            CurrentRound += 1;
-            _physicsEngine.Update(CurrentRound);
-            _redTeam.ForEach(x => x.Update(CurrentRound));
-            _blueTeam.ForEach(x => x.Update(CurrentRound));
-
 
             //Todo: actual commnds and ai.
             DoOrder(order, _redTeam[0]);
             for ( var i = 1; i < _redTeam.Count; i++)
             {
-                if (_redTeam[i].IsDestroyed())
-                    continue;
-                var target = _blueTeam[rng.Next(_blueTeam.Count)];
-                _redTeam[i].ShootAt(target);
+                DoAIOrder(_redTeam[i], _blueTeam);
             }
-            _blueTeam.ForEach(x => {
-                var target = _redTeam[rng.Next(_redTeam.Count)];
-                x.ShootAt(target);
-                if (x.DistanceTo(target) > 100)
+            _blueTeam.ForEach(x =>
+            {
+                DoAIOrder(x, _redTeam);
+            });
+            CurrentRound += 1;
+            _physicsEngine.Update(CurrentRound);
+            _redTeam.ForEach(x => x.Update(CurrentRound));
+            _blueTeam.ForEach(x => x.Update(CurrentRound));
+
+        }
+
+        private void DoAIOrder(Ship ship, List<Ship> enemies)
+        {
+            if (ship.IsDestroyed())
+                return;
+            if (ship.LockedShip == null || ship.LockedShip.IsDestroyed())
+            {
+                ship.LockOn(enemies[rng.Next(enemies.Count)]);
+                return; // don't give unfair turn advantage
+            }
+            else
+            {
+                ship.ShootAt(ship.LockedShip);
+            }
+            
+            if (ship.DistanceTo(ship.LockedShip) > 190)
+            {
+                if (ship.DistanceTo(ship.LockedShip) > 200)
                 {
-                  //  x.AllStop();
+                    ship.SetCourse(ship.DirectionInDegreesTo(ship.LockedShip));
+                    ship.Throttle = rng.Next(10);
                 }
                 else
                 {
-                   // x.SetCourse(rng.Next(360));
-                  //  x.Throttle = rng.Next(100);
+                    ship.AllStop();
                 }
-            });
-
+            }
+            else
+            {
+                ship.SetCourse(rng.Next(360));
+                ship.Throttle = rng.Next(10);
+            }
         }
 
         private void DoOrder(Order order, Ship ship)
@@ -147,17 +169,17 @@ namespace Spacebattle
                         OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "No ship found with that name, Sir!"});
                         break;
                     }
-                    _lockedShip = shipToLockOn;
+                    ship.LockOn(shipToLockOn);
                     OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Locking weapons on to the " + shipToLockOn.GetName() });
                     break;
                 case OrderType.FIRE:
-                    if ( _lockedShip == null)
+                    if ( ship.LockedShip == null)
                     {
                         OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "At which ship, Sir?"});
                         break;
                     }
                     OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Firing weapons!" });
-                    ship.ShootAt(_lockedShip);
+                    ship.ShootAt(ship.LockedShip);
                     break;
                 case OrderType.ALL_STOP:
                     OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Stopping all motion, Capitain." });

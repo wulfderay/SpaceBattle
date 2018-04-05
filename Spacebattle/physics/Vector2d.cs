@@ -29,13 +29,13 @@ namespace Spacebattle.physics
         public float DirectionInRadiansTo(Vector2d other)
         {
             var difference = other - this;
-            return (float)Math.Atan2(difference.Y, difference.X);
+            return (float)((2 * Math.PI)+ Math.Atan2(difference.Y, difference.X) % (2 * Math.PI));
         }
 
         public float DirectionInDegreesTo(Vector2d other)
         {
             var difference = other - this;
-            return (float)(Math.Atan2(difference.Y, difference.X)).ToDegrees(); ;
+            return (360 + (float)(Math.Atan2(difference.Y, difference.X)).ToDegrees()) % 360;
         }
 
         public float Magnitude()

@@ -7,7 +7,6 @@ using Spacebattle.orders;
 using Konsole;
 using System.Linq;
 using Konsole.Drawing;
-using Spacebattle.physics;
 using Spacebattle.Visualizer;
 
 namespace Spacebattle
@@ -80,13 +79,9 @@ namespace Spacebattle
             var input = new Window(1, 40, 60, 1, ConsoleColor.DarkGray, ConsoleColor.DarkMagenta);
             var shipList = Window.Open(62, 16, 60, 24, "Ships In Range", LineThickNess.Single, ConsoleColor.Cyan,
                 ConsoleColor.Black);
-            
-
-
-
 
             var shaunShip = new Ship(
-                "ShaunShip",
+                "Lance",
                 new List<Reactor>() {Reactor.BigReactor()},
                 new List<Shield>() {Shield.FastRegenshield()},
                 new List<Weapon>() { new Weapon("Lance", 50, 1, 10, 100, 500)},
@@ -97,7 +92,7 @@ namespace Spacebattle
                 "Enterprise",
                 new List<Reactor>() { Reactor.BigReactor(), Reactor.SmallReactor() },
                 new List<Shield>() { Shield.Bigshield(), Shield.FastRegenshield()},
-                new List<Weapon>() { new Weapon("Gun",100,10,0, 30, 200) , new Weapon("Gun",100, 10, 0, 30, 200) },
+                new List<Weapon>() { new Weapon("Phaser",100,10,0, 30, 1200) , new Weapon("ScatterGun",100, 10, 0, 100, 200) },
                 new List<Engine>() { new Engine("Engine",100,20, 50,100) },
                 new List<CrewDeck>() { CrewDeck.MilitaryDeck(), CrewDeck.PleasureDeck()});
 
@@ -106,32 +101,55 @@ namespace Spacebattle
                 "destroyer",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
                 new List<Shield>() {  Shield.FastRegenshield() },
-                new List<Weapon>() { new Weapon("Gun", 100, 10, 0, 30, 200) },
+                new List<Weapon>() { new Weapon("Gun", 100, 10, 0, 30, 200), new Weapon("Gun", 100, 10, 0, 30, 200) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck() , CrewDeck.Bridge()});
 
             var pooey = new Ship(
-                "pooey",
+                "Pooey",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
                 new List<Shield>() {  Shield.FastRegenshield() },
                 new List<Weapon>() { new Weapon("Gun", 100, 10, 0, 30, 200) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
 
-            pooey.Position = new Vector2d(100,-100);
-            shaunShip.Position = new Vector2d(0, 0);
-            shipTwo.Position = new Vector2d(100, 100);
-            shipOne.Position = new Vector2d(-100, -100);
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
-            var redteam = new List<Ship> { shaunShip, shipOne };
-            var blueteam = new List<Ship> { pooey, shipTwo };
+            var redteam = new List<Ship> {
+                shipOne,
+                shaunShip,
+                new Ship(
+                "Cube",
+                new List<Reactor>() { Reactor.BigReactor(), Reactor.BigReactor(), Reactor.BigReactor() },
+                new List<Shield>() {  },
+                new List<Weapon>() { new Weapon("PlasmaBolt+", 100, 10, 0, 300, 400) },
+                new List<Engine>() { new Engine("Transwarp", 100, 20, 50, 1000) },
+                new List<CrewDeck>() { CrewDeck.EngineeringDeck(),CrewDeck.EngineeringDeck(),CrewDeck.EngineeringDeck() })
+        };
+            var blueteam = new List<Ship> {
+                pooey,
+                shipTwo,
+                new Ship(
+                "Vega",
+                new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
+                new List<Shield>() {  Shield.FastRegenshield(), Shield.FastRegenshield()},
+                new List<Weapon>() { new Weapon("PlasmaBolt", 100, 10, 20, 60, 500) },
+                new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
+                new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) }),
+                new Ship(
+                "Vega2",
+                new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
+                new List<Shield>() {  Shield.FastRegenshield(), Shield.FastRegenshield()},
+                new List<Weapon>() { new Weapon("PlasmaBolt", 100, 10, 20, 60, 500) },
+                new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
+                new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) })
+        };
             var bothTeams = new List<Ship>();
             bothTeams.AddRange(redteam);
             bothTeams.AddRange(blueteam);
             game.StartNewGame(redteam, blueteam, 1000);
 
-            UpdateDisplay(pooey, shaunShip, bothTeams, ScanPanel, radarPanel, shipList);
+            UpdateDisplay(redteam[0].LockedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
 
             
             while (!game.IsGameFinished())
@@ -142,7 +160,7 @@ namespace Spacebattle
                 var order = OrderParser.ParseOrder(Console.ReadLine());
 
                 game.RunOneRound(order);
-                UpdateDisplay(pooey, shaunShip, bothTeams, ScanPanel, radarPanel, shipList);
+                UpdateDisplay(redteam[0].LockedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
 
 
             }
@@ -154,7 +172,11 @@ namespace Spacebattle
             {
                 output.WriteLine("Team "+ game.GetWhichTeamWon() + " Won!!");
             }
-            Console.ReadKey();
+            
+           while (Console.ReadKey().Key != ConsoleKey.Escape)
+            {
+
+            }
         }
 
         private static void OnFlavourText(object sender, FlavourTextEventArgs e)
@@ -191,8 +213,11 @@ namespace Spacebattle
 
         public static void UpdateDisplay(Ship target, Ship flagship, List<Ship> ships, IConsole scanPanel, IConsole radarPanel, IConsole shipListPanel)
         {
-            PrintShip(target, scanPanel, ConsoleColor.DarkRed);
-            scanPanel.WriteLine("");
+            if (target != null)
+            {
+                PrintShip(target, scanPanel, ConsoleColor.Black);
+                scanPanel.WriteLine("");
+            }
             PrintShip(flagship, scanPanel, ConsoleColor.White);
             ConsoleVisualizer.DrawRadar(radarPanel, ships, flagship, 1000);
             ConsoleVisualizer.DrawShipList(shipListPanel, ships, flagship);

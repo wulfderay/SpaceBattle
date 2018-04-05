@@ -15,7 +15,7 @@ namespace Spacebattle.entity
         private List<Weapon> _guns;
         private List<Engine> _engines;
         private List<CrewDeck> _crewDecks;
-
+        private Ship _lockedShip;
         private string _name;
 
         private float _throttle;
@@ -80,6 +80,19 @@ namespace Spacebattle.entity
             }
         }
 
+        public Ship LockedShip
+        {
+            get
+            {
+                return _lockedShip;
+            }
+
+            private set
+            {
+                _lockedShip = value;
+            }
+        }
+
         public Ship ( string name, List<Reactor> reactors, List<Shield> shields, List<Weapon> guns, List<Engine> engines, List<CrewDeck> crewDecks)
         {
             _name = name;
@@ -124,6 +137,8 @@ namespace Spacebattle.entity
                     _reactors[GameEngine.Random(_reactors.Count)].Damage(residualDamage);
                     break;
                 case 1:
+                    if (_shields.Count == 0)
+                        Damage(residualDamage);
                     OnFlavourText(_name, residualDamage + " damage to shields.");
                     _shields[GameEngine.Random(_shields.Count)].Damage(residualDamage);
                     break;
@@ -144,6 +159,10 @@ namespace Spacebattle.entity
 
         public void AllStop()
         {
+            Velocity = Vector2d.Zero;
+            Throttle = 0;
+            //TODO: get this done the correct way.
+            /*
             var accelerationNeeded = Mass * Velocity.Magnitude();
             var maxAcceleration = GetMaxAcceleration();
 
@@ -152,6 +171,7 @@ namespace Spacebattle.entity
                 Throttle = 100 * (accelerationNeeded / maxAcceleration);
             else
                 Throttle = 100;
+                */
         }
 
         public bool IsDestroyed()
@@ -219,6 +239,12 @@ namespace Spacebattle.entity
                 Power = 0;
             foreach (var shield in _shields)
                 Power = shield.Regen(Power);
+        }
+
+        public void LockOn(Ship ship)
+        {
+            if ( ship != this) // stop hitting yourself! Stop hitting yourself!
+                LockedShip = ship;
         }
 
         public void ShootAt(Ship otherShip) // this isn't great because we should ideally be able to pick the gun we are shooting with.

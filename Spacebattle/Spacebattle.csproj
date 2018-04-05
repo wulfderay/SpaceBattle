@@ -60,7 +60,7 @@
     <Compile Include="entity\parts\Engine.cs" />
     <Compile Include="entity\parts\Weapon.cs" />
     <Compile Include="entity\parts\Reactor.cs" />
-    <Compile Include="entity\parts\Sheild.cs" />
+    <Compile Include="entity\parts\Shield.cs" />
     <Compile Include="entity\Ship.cs" />
     <Compile Include="Extensions\ConversionExtensions.cs" />
     <Compile Include="GameEngine.cs" />
