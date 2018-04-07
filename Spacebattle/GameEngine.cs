@@ -161,9 +161,9 @@ namespace Spacebattle
                     break;
                 case OrderType.LOCK:
                     var lockOrder = (LockOrder)order;
-                    var shipToLockOn = _blueTeam.FirstOrDefault(x => x.GetName() == lockOrder.ShipToLockOn);
+                    var shipToLockOn = _blueTeam.FirstOrDefault(x => x.GetName().ToLower()== lockOrder.ShipToLockOn.ToLower());
                     if (shipToLockOn == null)
-                        shipToLockOn = _redTeam.FirstOrDefault(x => x.GetName() == lockOrder.ShipToLockOn);
+                        shipToLockOn = _redTeam.FirstOrDefault(x => x.GetName().ToLower() == lockOrder.ShipToLockOn.ToLower());
                     if (shipToLockOn == null)
                     {
                         OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "No ship found with that name, Sir!"});

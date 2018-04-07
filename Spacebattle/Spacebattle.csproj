@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Damage\DamageSource.cs" />
     <Compile Include="Debug\IDebugProvider.cs" />
     <Compile Include="Visualizer\ConsoleVisualizer.cs" />
     <Compile Include="entity\Entity.cs" />

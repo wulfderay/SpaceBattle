@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spacebattle.Damage;
+using System;
 
 namespace Spacebattle.entity.parts
 {
@@ -13,7 +14,7 @@ namespace Spacebattle.entity.parts
             _repairRate = repairRate;
         }
 
-        public override void Damage(float damage)
+        public override void Damage(DamageSource damage)
         {
             base.Damage(damage);
             if ( _currentHealth <= 0)
@@ -24,7 +25,7 @@ namespace Spacebattle.entity.parts
                 _crew = 0;
                 return;
             }
-            var crewKilled = (uint) Math.Min((GameEngine.Random((int)damage / 3)), _crew);//kill up  to 1/3* damage crew
+            var crewKilled = (uint) Math.Min((GameEngine.Random((int)damage.Magnitude / 3)), _crew);//kill up  to 1/3* damage crew
             _crew -= crewKilled;
             if (_crew < 0)
                 _crew = 0;

@@ -68,7 +68,7 @@ namespace Spacebattle
              * 
              */
             setConsoleSize();
-            var DebugPanel = Window.Open(1, 41, 100, 10, "Debug", LineThickNess.Single, ConsoleColor.Red, ConsoleColor.Black);
+            var DebugPanel = Window.Open(1, 41, 100, 5, "Debug", LineThickNess.Single, ConsoleColor.Red, ConsoleColor.Black);
             ConsoleVisualizer.DebugEventHandler += (sender, eventArgs) =>
                 DebugPanel.WriteLine("[" + eventArgs.From + "] " + eventArgs.Message);
             var radarPanel = Window.Open(1, 1, 25, 14, "Radar", LineThickNess.Single, ConsoleColor.Green,
@@ -192,8 +192,8 @@ namespace Spacebattle
         static void setConsoleSize()
         {
             Console.SetWindowPosition(0, 0);   // sets window position to upper left
-            Console.SetBufferSize(122, 54);   // make sure buffer is bigger than window
-            Console.SetWindowSize(122, 54);   //set window size to almost full screen 
+            Console.SetBufferSize(122, 46);   // make sure buffer is bigger than window
+            Console.SetWindowSize(122, 46);   //set window size to almost full screen 
         }  // End  setConsoleSize()
 
         public static void PrintShip(Ship ship, IConsole window , ConsoleColor color)

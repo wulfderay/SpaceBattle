@@ -1,4 +1,5 @@
 ﻿
+using Spacebattle.Damage;
 using System;
 
 namespace Spacebattle.entity
@@ -21,11 +22,11 @@ namespace Spacebattle.entity
             _name = name;
         }
 
-        public virtual void Damage(float damage)
+        public virtual void Damage(DamageSource damage)
         {
             if (IsDestroyed())
                 return;
-            _currentHealth -= damage;
+            _currentHealth -= damage.Magnitude;
             if (_currentHealth < 0)
                 _currentHealth = 0;
             if (IsDestroyed())

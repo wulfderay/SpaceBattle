@@ -1,4 +1,6 @@
 ﻿
+using Spacebattle.Damage;
+
 namespace Spacebattle.entity
 {
     public interface IDamageable
@@ -8,7 +10,7 @@ namespace Spacebattle.entity
         /// TODO: make this care about angle
         /// </summary>
         /// <param name="damage">the amount of damage to deal</param>
-        void Damage(float damage);
+        void Damage(DamageSource damage);
         /// <summary>
         /// returns whether the entity is destroyed.
         /// </summary>

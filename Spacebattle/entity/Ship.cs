@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using Spacebattle.physics;
+using Spacebattle.Damage;
 
 namespace Spacebattle.entity
 {
@@ -116,17 +117,18 @@ namespace Spacebattle.entity
         }
 
 
-        public void Damage(float damage)
+        public void Damage(DamageSource damage)
         {
             OnFlavourText( _name, _name+ " was Hit!");
-            var residualDamage = damage;
+            var residualDamage = damage.Magnitude;
             foreach (var shield in _shields)
             {
                 if (residualDamage == 0)
                     break;
-                residualDamage= shield.Absorb(damage);
+                residualDamage= shield.Absorb(residualDamage);
             }
-            OnFlavourText(_name, damage - residualDamage +" damage was absorbed by shields.");
+            OnFlavourText(_name, damage.Magnitude - residualDamage +" damage was absorbed by shields.");
+            damage.Magnitude = residualDamage;
             if (residualDamage == 0)
                 return;
             OnFlavourText(_name, _name + " suffered a hit to the hull!!");
@@ -134,25 +136,28 @@ namespace Spacebattle.entity
             {
                 case 0:
                     OnFlavourText(_name, residualDamage + " damage to reactors.");
-                    _reactors[GameEngine.Random(_reactors.Count)].Damage(residualDamage);
+                    _reactors[GameEngine.Random(_reactors.Count)].Damage(damage);
                     break;
                 case 1:
                     if (_shields.Count == 0)
-                        Damage(residualDamage);
+                    {
+                        Damage(damage);
+                        break;
+                    }
                     OnFlavourText(_name, residualDamage + " damage to shields.");
-                    _shields[GameEngine.Random(_shields.Count)].Damage(residualDamage);
+                    _shields[GameEngine.Random(_shields.Count)].Damage(damage);
                     break;
                 case 2:
                     OnFlavourText(_name, residualDamage + " damage to weapons.");
-                    _guns[GameEngine.Random(_guns.Count)].Damage(residualDamage);
+                    _guns[GameEngine.Random(_guns.Count)].Damage(damage);
                     break;
                 case 3:
                     OnFlavourText(_name, residualDamage + " damage to engines.");
-                    _engines[GameEngine.Random(_engines.Count)].Damage(residualDamage);
+                    _engines[GameEngine.Random(_engines.Count)].Damage(damage);
                     break;
                 case 4:
                     OnFlavourText(_name, residualDamage + " damage to crew deck.");
-                    _crewDecks[GameEngine.Random(_crewDecks.Count)].Damage(residualDamage);
+                    _crewDecks[GameEngine.Random(_crewDecks.Count)].Damage(damage);
                     break;
             }
         }

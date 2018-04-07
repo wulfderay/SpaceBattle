@@ -1,7 +1,7 @@
 ﻿
 
 using System;
-
+using Spacebattle.Damage;
 namespace Spacebattle.entity.parts
 {
     //Todo: model reloading
@@ -26,8 +26,8 @@ namespace Spacebattle.entity.parts
         {
             if (IsDestroyed())
                 return;
-            if (distance <= _range)
-                target.Damage(_power);
+            if (distance <= _range) 
+                target.Damage(new DamageSource() { Magnitude = _power, Type=DamageType.CONCUSSIVE });
             else
                 OnFlavourText(_name, "Target was too far away to hit!");
         }
