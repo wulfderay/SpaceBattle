@@ -94,6 +94,7 @@ namespace Spacebattle
             }
 
             //Todo: actual commnds and ai.
+            // also, it might be a good idea to queue up actions and results and apply them all at one in order to be failr ...
             DoOrder(order, _redTeam[0]);
             for ( var i = 1; i < _redTeam.Count; i++)
             {

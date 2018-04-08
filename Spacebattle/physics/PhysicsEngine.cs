@@ -9,7 +9,7 @@ namespace Spacebattle.physics
     class PhysicsEngine : IUpdateable
     {
 
-        List<Entity> entities = new List<Entity>();
+        List<IEntity> entities = new List<IEntity>();
 
         public void Update(uint roundNumber)
         {
@@ -28,13 +28,13 @@ namespace Spacebattle.physics
         /// The physics engine will update the position, velocity etc of the given object each tick.
         /// </summary>
         /// <param name="entity"></param>
-        public void Register(Entity entity)
+        public void Register(IEntity entity)
         {
             if (entity != null)
                 entities.Add(entity);
         }
 
-        public void DeRegister(Entity entity)
+        public void DeRegister(IEntity entity)
         {
             if (entities.Contains(entity))
                 entities.Remove(entity);

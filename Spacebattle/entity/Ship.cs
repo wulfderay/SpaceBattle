@@ -5,15 +5,16 @@ using System.Linq;
 using System;
 using Spacebattle.physics;
 using Spacebattle.Damage;
+using Spacebattle.entity.parts.Weapon;
 
 namespace Spacebattle.entity
 {
-    public class Ship : Entity, IDamageable, IUpdateable, IFlavourTextProvider
+    public class Ship : Entity,IDamageableEntity, IUpdateable, IFlavourTextProvider
     {
         //TODO: make reactor power be used by other parts... have a power requirement for each other type that is refreshed each tick.
         private List<Reactor> _reactors;
         private List<Shield> _shields;
-        private List<Weapon> _guns;
+        private List<IWeapon> _weapons;
         private List<Engine> _engines;
         private List<CrewDeck> _crewDecks;
         private Ship _lockedShip;
@@ -57,11 +58,11 @@ namespace Spacebattle.entity
             }
         }
 
-        public List<Weapon> Guns
+        public List<IWeapon> Weapons
         {
             get
             {
-                return _guns;
+                return _weapons;
             }
         }
 
@@ -94,20 +95,20 @@ namespace Spacebattle.entity
             }
         }
 
-        public Ship ( string name, List<Reactor> reactors, List<Shield> shields, List<Weapon> guns, List<Engine> engines, List<CrewDeck> crewDecks)
+        public Ship ( string name, List<Reactor> reactors, List<Shield> shields, List<IWeapon> weapons, List<Engine> engines, List<CrewDeck> crewDecks)
         {
             _name = name;
             _reactors = reactors;
             _shields = shields;
-            _guns = guns;
+            _weapons = weapons;
             _engines = engines;
             _crewDecks = crewDecks;
 
-            _reactors.ForEach(x => x.FlavourTextEventHandler += OnFlavourText);
-            _shields.ForEach(x => x.FlavourTextEventHandler += OnFlavourText);
-            _guns.ForEach(x => x.FlavourTextEventHandler += OnFlavourText);
-            _engines.ForEach(x => x.FlavourTextEventHandler += OnFlavourText);
-            _crewDecks.ForEach(x => x.FlavourTextEventHandler += OnFlavourText);
+            _reactors.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; });
+            _shields.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; });
+            _weapons.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; });
+            _engines.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; });
+            _crewDecks.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; });
 
             Mass = getTotalMass();
 
@@ -120,22 +121,20 @@ namespace Spacebattle.entity
         public void Damage(DamageSource damage)
         {
             OnFlavourText( _name, _name+ " was Hit!");
-            var residualDamage = damage.Magnitude;
-            foreach (var shield in _shields)
-            {
-                if (residualDamage == 0)
-                    break;
-                residualDamage= shield.Absorb(residualDamage);
-            }
-            OnFlavourText(_name, damage.Magnitude - residualDamage +" damage was absorbed by shields.");
-            damage.Magnitude = residualDamage;
-            if (residualDamage == 0)
+            var residualDamage = DoShieldAbsorbtion(damage);
+            
+            
+            if (residualDamage.Magnitude == 0)
                 return;
             OnFlavourText(_name, _name + " suffered a hit to the hull!!");
+            if ( residualDamage.Type == DamageType.FIRE)
+            {
+                OnFlavourText(_name, _name + " is on fire!");
+            }
             switch (GameEngine.Random(5))
             {
                 case 0:
-                    OnFlavourText(_name, residualDamage + " damage to reactors.");
+                    OnFlavourText(_name, residualDamage.Magnitude + " damage to reactors.");
                     _reactors[GameEngine.Random(_reactors.Count)].Damage(damage);
                     break;
                 case 1:
@@ -144,22 +143,48 @@ namespace Spacebattle.entity
                         Damage(damage);
                         break;
                     }
-                    OnFlavourText(_name, residualDamage + " damage to shields.");
+                    OnFlavourText(_name, residualDamage.Magnitude + " damage to shields.");
                     _shields[GameEngine.Random(_shields.Count)].Damage(damage);
                     break;
                 case 2:
-                    OnFlavourText(_name, residualDamage + " damage to weapons.");
-                    _guns[GameEngine.Random(_guns.Count)].Damage(damage);
+                    OnFlavourText(_name, residualDamage.Magnitude + " damage to weapons.");
+                    _weapons[GameEngine.Random(_weapons.Count)].Damage(damage);
                     break;
                 case 3:
-                    OnFlavourText(_name, residualDamage + " damage to engines.");
+                    OnFlavourText(_name, residualDamage.Magnitude + " damage to engines.");
                     _engines[GameEngine.Random(_engines.Count)].Damage(damage);
                     break;
                 case 4:
-                    OnFlavourText(_name, residualDamage + " damage to crew deck.");
+                    OnFlavourText(_name, residualDamage.Magnitude + " damage to crew deck.");
                     _crewDecks[GameEngine.Random(_crewDecks.Count)].Damage(damage);
                     break;
             }
+        }
+
+        private DamageSource DoShieldAbsorbtion(DamageSource damage)
+        {
+            if (_shields.Count == 0)
+                return damage;
+            if (damage.Type == (DamageType.RADIATION | DamageType.PIERCING))
+            {
+                OnFlavourText(_name, "It passed right through the shields!");
+                return damage;
+            }
+            var residualDamage = damage.Magnitude;
+            var modifier = 1f;
+            if (damage.Type == DamageType.DRAINING)
+                modifier = 2f;
+            if (damage.Type == DamageType.CONCUSSIVE)
+                modifier = 0.5f;
+            
+            foreach (var shield in _shields) //TODO: angled shields
+            {
+                if (residualDamage == 0)
+                    break;
+                residualDamage = shield.Absorb(residualDamage * modifier)/modifier; // apply a modifier to the damage to the sheild, but remove that modifire before it gets to the hull.
+            }
+            OnFlavourText(_name, damage.Magnitude - residualDamage + " damage was absorbed by shields.");
+            return new DamageSource { Magnitude = residualDamage, Origin = damage.Origin, Type = damage.Type };
         }
 
         public void AllStop()
@@ -193,7 +218,7 @@ namespace Spacebattle.entity
                 if (!part.IsDestroyed())
                     return false;
             }
-            foreach (var part in _guns)
+            foreach (var part in _weapons)
             {
                 if (!part.IsDestroyed())
                     return false;
@@ -237,7 +262,7 @@ namespace Spacebattle.entity
             // change to for loop so we have more control owver what gets power when and what happens if there isn't enough power.
             Power -=( _reactors.Select(x => x.GetUpkeepCost()).Sum() +
                _shields.Select(x => x.GetUpkeepCost()).Sum() +
-               _guns.Select(x => x.GetUpkeepCost()).Sum() +
+               _weapons.Select(x => x.GetUpkeepCost()).Sum() +
                _engines.Select(x => x.GetUpkeepCost()).Sum() +
                _crewDecks.Select(x => x.GetUpkeepCost()).Sum());
             if (Power < 0)
@@ -254,9 +279,9 @@ namespace Spacebattle.entity
 
         public void ShootAt(Ship otherShip) // this isn't great because we should ideally be able to pick the gun we are shooting with.
         {
-            foreach (var gun in _guns)
+            foreach (var gun in _weapons)
             {
-                gun.Shoot(DistanceTo(otherShip), otherShip);
+                gun.FireAt(otherShip);
             }
         }
 
@@ -281,7 +306,7 @@ namespace Spacebattle.entity
         {
             return _reactors.Select(x=>x.GetMass()).Sum() +
                 _shields.Select(x => x.GetMass()).Sum() +
-                _guns.Select(x => x.GetMass()).Sum() +
+                _weapons.Select(x => x.GetMass()).Sum() +
                 _engines.Select(x => x.GetMass()).Sum() +
                 _crewDecks.Select(x => x.GetMass()).Sum();
         }
@@ -339,7 +364,7 @@ namespace Spacebattle.entity
             List<IShipPart> damagedParts = new List<IShipPart>();
             damagedParts.AddRange( _reactors.Where(x => x.GetHealth() < x.GetMaxHealth()));
             damagedParts.AddRange( _engines.Where(x => x.GetHealth() < x.GetMaxHealth()));
-            damagedParts.AddRange(_guns.Where(x => x.GetHealth() < x.GetMaxHealth()));
+            damagedParts.AddRange(_weapons.Where(x => x.GetHealth() < x.GetMaxHealth()));
             damagedParts.AddRange(_shields.Where(x => x.GetHealth() < x.GetMaxHealth()));
             damagedParts.AddRange(_crewDecks.Where(x => x.GetHealth() < x.GetMaxHealth()));
 
@@ -359,7 +384,7 @@ namespace Spacebattle.entity
                 " Position:[X:"+Position.X+" Y:"+Position.Y+" Heading:"+Orientation+ "° Velocity: X:"+Velocity.X+ " Y:"+ Velocity.Y +" Mag:"+ Velocity.Magnitude()+"]\n";
             result +=  string.Join(" ", _reactors.Select(x => x.ToString())) + "\n";
             result += string.Join(" ", _shields.Select(x => x.ToString())) + "\n";
-            result += string.Join(" ", _guns.Select(x => x.ToString())) + "\n";
+            result += string.Join(" ", _weapons.Select(x => x.ToString())) + "\n";
             result += string.Join(" ", _engines.Select(x => x.ToString())) + "Max :"+GetMaxAcceleration()+"\n";
             result +=  string.Join(" ", _crewDecks.Select(x => x.ToString())) + "\n";
             if (IsDestroyed())

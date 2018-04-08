@@ -8,6 +8,8 @@ using Konsole;
 using System.Linq;
 using Konsole.Drawing;
 using Spacebattle.Visualizer;
+using Spacebattle.entity.parts.Weapon;
+using Spacebattle.Entity.parts.Weapon;
 
 namespace Spacebattle
 {
@@ -84,24 +86,24 @@ namespace Spacebattle
                 "Lance",
                 new List<Reactor>() {Reactor.BigReactor()},
                 new List<Shield>() {Shield.FastRegenshield()},
-                new List<Weapon>() { new Weapon("Lance", 50, 1, 10, 100, 500)},
+                new List<IWeapon>() { new Phaser("Lance", 50, 1, 10, 100, 500)},
                 new List<Engine>() {new Engine("MegaThruster", 50, 20, 100, 1000)},
                 new List<CrewDeck>() { CrewDeck.Bridge()});
 
-            var shipOne = new Ship(
+            var enterprise = new Ship(
                 "Enterprise",
                 new List<Reactor>() { Reactor.BigReactor(), Reactor.SmallReactor() },
                 new List<Shield>() { Shield.Bigshield(), Shield.FastRegenshield()},
-                new List<Weapon>() { new Weapon("Phaser",100,10,0, 30, 1200) , new Weapon("ScatterGun",100, 10, 0, 100, 200) },
+                new List<IWeapon>() { new Phaser("Phaser",100,10,0, 30, 1200) , new MassDriver("ScatterGun",100, 10, 0, 100, 20,200) },
                 new List<Engine>() { new Engine("Engine",100,20, 50,100) },
                 new List<CrewDeck>() { CrewDeck.MilitaryDeck(), CrewDeck.PleasureDeck()});
 
 
-            var shipTwo = new Ship(
+            var destroyer = new Ship(
                 "destroyer",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
                 new List<Shield>() {  Shield.FastRegenshield() },
-                new List<Weapon>() { new Weapon("Gun", 100, 10, 0, 30, 200), new Weapon("Gun", 100, 10, 0, 30, 200) },
+                new List<IWeapon>() { new Phaser("Gun", 100, 10, 0, 30, 200), new Phaser("Gun", 100, 10, 0, 30, 200) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck() , CrewDeck.Bridge()});
 
@@ -109,38 +111,38 @@ namespace Spacebattle
                 "Pooey",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
                 new List<Shield>() {  Shield.FastRegenshield() },
-                new List<Weapon>() { new Weapon("Gun", 100, 10, 0, 30, 200) },
+                new List<IWeapon>() { new Phaser("Gun", 100, 10, 0, 30, 200) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
 
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
             var redteam = new List<Ship> {
-                shipOne,
+                enterprise,
                 shaunShip,
                 new Ship(
                 "Cube",
                 new List<Reactor>() { Reactor.BigReactor(), Reactor.BigReactor(), Reactor.BigReactor() },
                 new List<Shield>() {  },
-                new List<Weapon>() { new Weapon("PlasmaBolt+", 100, 10, 0, 300, 400) },
+                new List<IWeapon>() { new PlasmaBolt("PlasmaBolt+", 100, 10, 0, 300, 400) },
                 new List<Engine>() { new Engine("Transwarp", 100, 20, 50, 1000) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(),CrewDeck.EngineeringDeck(),CrewDeck.EngineeringDeck() })
         };
             var blueteam = new List<Ship> {
                 pooey,
-                shipTwo,
+                destroyer,
                 new Ship(
                 "Vega",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
                 new List<Shield>() {  Shield.FastRegenshield(), Shield.FastRegenshield()},
-                new List<Weapon>() { new Weapon("PlasmaBolt", 100, 10, 20, 60, 500) },
+                new List<IWeapon>() { new PlasmaBolt("PlasmaBolt", 100, 10, 20, 60, 500) },
                 new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
                 new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) }),
                 new Ship(
                 "Vega2",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
                 new List<Shield>() {  Shield.FastRegenshield(), Shield.FastRegenshield()},
-                new List<Weapon>() { new Weapon("PlasmaBolt", 100, 10, 20, 60, 500) },
+                new List<IWeapon>() { new PlasmaBolt("PlasmaBolt", 100, 10, 20, 60, 500) },
                 new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
                 new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) })
         };
@@ -183,10 +185,10 @@ namespace Spacebattle
         {
             if ( e.team == -1)
                 output.WriteLine("["+e.name+"]: "+e.message);
-            if (e.team == 0)
-                output.WriteLine(ConsoleColor.Blue, "[" + e.name + "]: " + e.message);
+            if (e.team == 0 && e.name.Split('.').Count() ==1)
+                output.WriteLine(ConsoleColor.DarkBlue, "[" + e.name + "]: " + e.message);
             if (e.team == 1)
-                output.WriteLine(ConsoleColor.Red, "[" + e.name + "]: " + e.message);
+                output.WriteLine(ConsoleColor.DarkRed, "[" + e.name + "]: " + e.message);
         }
 
         static void setConsoleSize()
@@ -204,7 +206,7 @@ namespace Spacebattle
                 " Power:" + ship.Power);
             window.WriteLine(color, string.Join(" ", ship.Reactors.Select(x => x.ToString())));
             window.WriteLine(color, string.Join(" ", ship.Shields.Select(x => x.ToString())));
-            window.WriteLine(color, string.Join(" ", ship.Guns.Select(x => x.ToString())));
+            window.WriteLine(color, string.Join(" ", ship.Weapons.Select(x => x.ToString())));
             window.WriteLine(color, string.Join(" ", ship.Engines.Select(x => x.ToString())));
             window.WriteLine(color, string.Join(" ", ship.CrewDecks.Select(x => x.ToString())));
             if (ship.IsDestroyed())

@@ -89,7 +89,7 @@ namespace Spacebattle.Visualizer
             Console.SetCursorPosition(oldX, oldY);
         }
 
-        public static void  DrawRadar(IConsole window, List<Ship> ships, Entity centreEntity, float range)
+        public static void  DrawRadar(IConsole window, List<Ship> ships, IEntity centreEntity, float range)
         {
             window.Clear();
             var scaleX = window.WindowWidth / range;
@@ -123,13 +123,15 @@ namespace Spacebattle.Visualizer
             }
         }
 
-        public static void DrawShipList(IConsole window, List<Ship> ships, Entity centreEntity)
+        public static void DrawShipList(IConsole window, List<Ship> ships, IEntity centreEntity)
         {
             window.Clear();
             window.WriteLine(ConsoleColor.Yellow,"Name".PadLeft(12) + "\t" + "Range" + "\t" + "Bearing");
             foreach (var ship in ships.OrderBy(x => x.DistanceTo(centreEntity)))
             {
-                window.WriteLine(GetShipColor(ship), GetShipSymbol(ship) + " "+
+                var color = ship.IsDestroyed() ? ConsoleColor.Red : GetShipColor(ship);
+
+                window.WriteLine(color, GetShipSymbol(ship) + " "+
                     ship.GetName().PadLeft(10) + "\t" + 
                     (int)ship.DistanceTo(centreEntity) + "\t" + 
                     (int)centreEntity.DirectionInDegreesTo(ship) + '\t'+

@@ -4,13 +4,19 @@ using System;
 
 namespace Spacebattle.entity
 {
-    public class ShipPart:IShipPart,IDamageable,IFlavourTextProvider
+    public class ShipPart:IShipPart
     {
         protected float _currentHealth;
         protected float _maxHealth;
         protected float _mass;
         protected float _upkeepCost;
         protected string _name;
+
+        public Ship Parent
+        {
+            get;
+            set;
+        }
 
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
 

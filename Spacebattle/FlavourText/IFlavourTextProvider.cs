@@ -1,10 +1,8 @@
-﻿
-
-using System;
+﻿using System;
 
 namespace Spacebattle.entity
 {
-    interface IFlavourTextProvider
+    public interface IFlavourTextProvider
     {
         event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
     }

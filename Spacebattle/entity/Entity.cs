@@ -2,7 +2,7 @@
 using Spacebattle.physics;
 namespace Spacebattle.entity
 {
-    public class Entity
+    public class Entity : IEntity
     {
 
 
@@ -14,12 +14,12 @@ namespace Spacebattle.entity
 
         public float Mass { get; set; }
 
-        public float DistanceTo(Entity other)
+        public float DistanceTo(IEntity other)
         {
             return Position.DistanceTo(other.Position);
         }
 
-        public float DirectionInDegreesTo(Entity other)
+        public float DirectionInDegreesTo(IEntity other)
         {
             return Position.DirectionInDegreesTo(other.Position);
         }
