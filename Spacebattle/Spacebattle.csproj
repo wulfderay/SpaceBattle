@@ -51,6 +51,8 @@
     <Compile Include="Debug\IDebugProvider.cs" />
     <Compile Include="Entity\IEntity.cs" />
     <Compile Include="Entity\parts\Weapon\MassDriver.cs" />
+    <Compile Include="Entity\parts\Weapon\FireBreath.cs" />
+    <Compile Include="Entity\parts\Weapon\Lance.cs" />
     <Compile Include="Entity\parts\Weapon\Phaser.cs" />
     <Compile Include="Entity\IDamageableEntity.cs" />
     <Compile Include="Entity\parts\Weapon\PlasmaBolt.cs" />

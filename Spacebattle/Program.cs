@@ -83,27 +83,27 @@ namespace Spacebattle
                 ConsoleColor.Black);
 
             var shaunShip = new Ship(
-                "Lance",
+                "Narwhal",
                 new List<Reactor>() {Reactor.BigReactor()},
                 new List<Shield>() {Shield.FastRegenshield()},
-                new List<IWeapon>() { new Phaser("Lance", 50, 1, 10, 100, 500)},
+                new List<IWeapon>() { new Lance("Lance", 50, 1, 10, 20, 500)},
                 new List<Engine>() {new Engine("MegaThruster", 50, 20, 100, 1000)},
                 new List<CrewDeck>() { CrewDeck.Bridge()});
 
             var enterprise = new Ship(
                 "Enterprise",
                 new List<Reactor>() { Reactor.BigReactor(), Reactor.SmallReactor() },
-                new List<Shield>() { Shield.Bigshield(), Shield.FastRegenshield()},
-                new List<IWeapon>() { new Phaser("Phaser",100,10,0, 30, 1200) , new MassDriver("ScatterGun",100, 10, 0, 100, 20,200) },
+                new List<Shield>() { Shield.Bigshield()},
+                new List<IWeapon>() { new Phaser("Phaser",100,10,0, 30, 1200) , new MassDriver("ScatterGun",100, 10, 0, 90, 20,200) },
                 new List<Engine>() { new Engine("Engine",100,20, 50,100) },
                 new List<CrewDeck>() { CrewDeck.MilitaryDeck(), CrewDeck.PleasureDeck()});
 
 
             var destroyer = new Ship(
-                "destroyer",
+                "Dragon",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
                 new List<Shield>() {  Shield.FastRegenshield() },
-                new List<IWeapon>() { new Phaser("Gun", 100, 10, 0, 30, 200), new Phaser("Gun", 100, 10, 0, 30, 200) },
+                new List<IWeapon>() { new FireBreath("Gun", 100, 10, 0, 30, 200), new Phaser("Gun", 100, 10, 0, 30, 200) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck() , CrewDeck.Bridge()});
 
@@ -111,25 +111,29 @@ namespace Spacebattle
                 "Pooey",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
                 new List<Shield>() {  Shield.FastRegenshield() },
-                new List<IWeapon>() { new Phaser("Gun", 100, 10, 0, 30, 200) },
+                new List<IWeapon>() { new PlasmaBolt("Plasmabolt", 100, 10, 0, 30, 500) },
+                new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
+                new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
+
+            var trymwing = new Ship(
+                "Trymwing",
+                new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor(), Reactor.SmallReactor() },
+                new List<Shield>() { Shield.FastRegenshield() },
+                new List<IWeapon>() { new Phaser("Phaser", 100, 10, 0, 20, 500) , new Phaser("Phaser", 100, 10, 0, 20, 500) , new Phaser("Phaser", 100, 10, 0, 20, 500) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
 
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
             var redteam = new List<Ship> {
-                enterprise,
+                trymwing,
+                pooey,
                 shaunShip,
-                new Ship(
-                "Cube",
-                new List<Reactor>() { Reactor.BigReactor(), Reactor.BigReactor(), Reactor.BigReactor() },
-                new List<Shield>() {  },
-                new List<IWeapon>() { new PlasmaBolt("PlasmaBolt+", 100, 10, 0, 300, 400) },
-                new List<Engine>() { new Engine("Transwarp", 100, 20, 50, 1000) },
-                new List<CrewDeck>() { CrewDeck.EngineeringDeck(),CrewDeck.EngineeringDeck(),CrewDeck.EngineeringDeck() })
+                
+
         };
             var blueteam = new List<Ship> {
-                pooey,
+                enterprise,
                 destroyer,
                 new Ship(
                 "Vega",
@@ -139,7 +143,7 @@ namespace Spacebattle
                 new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
                 new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) }),
                 new Ship(
-                "Vega2",
+                "Pikachu",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
                 new List<Shield>() {  Shield.FastRegenshield(), Shield.FastRegenshield()},
                 new List<IWeapon>() { new PlasmaBolt("PlasmaBolt", 100, 10, 20, 60, 500) },
@@ -157,6 +161,7 @@ namespace Spacebattle
             while (!game.IsGameFinished())
             {
                 // TODO: Get order from console 
+                input.Clear();
                 input.WriteLine(ConsoleColor.Green,"Your orders, Sir?");
                 Console.SetCursorPosition(20, 40);
                 var order = OrderParser.ParseOrder(Console.ReadLine());

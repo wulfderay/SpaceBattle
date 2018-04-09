@@ -129,9 +129,9 @@ namespace Spacebattle.Visualizer
             window.WriteLine(ConsoleColor.Yellow,"Name".PadLeft(12) + "\t" + "Range" + "\t" + "Bearing");
             foreach (var ship in ships.OrderBy(x => x.DistanceTo(centreEntity)))
             {
-                var color = ship.IsDestroyed() ? ConsoleColor.Red : GetShipColor(ship);
-
-                window.WriteLine(color, GetShipSymbol(ship) + " "+
+                var shipColor = ship.IsDestroyed() ? ConsoleColor.Red : GetShipColor(ship);
+                window.Write(shipColor, GetShipSymbol(ship) + " ");
+                window.WriteLine(
                     ship.GetName().PadLeft(10) + "\t" + 
                     (int)ship.DistanceTo(centreEntity) + "\t" + 
                     (int)centreEntity.DirectionInDegreesTo(ship) + '\t'+
