@@ -170,21 +170,16 @@ namespace Spacebattle.entity
                 OnFlavourText(_name, "It passed right through the shields!");
                 return damage;
             }
-            var residualDamage = damage.Magnitude;
-            var modifier = 1f;
-            if (damage.Type == DamageType.DRAINING)
-                modifier = 2f;
-            if (damage.Type == DamageType.CONCUSSIVE)
-                modifier = 0.5f;
-            
+
+            DamageSource residualDamage = damage;
             foreach (var shield in _shields) //TODO: angled shields
             {
-                if (residualDamage == 0)
+                if (residualDamage.Magnitude == 0)
                     break;
-                residualDamage = shield.Absorb(residualDamage * modifier)/modifier; // apply a modifier to the damage to the sheild, but remove that modifire before it gets to the hull.
+                residualDamage = shield.Absorb(residualDamage); 
             }
-            OnFlavourText(_name, damage.Magnitude - residualDamage + " damage was absorbed by shields.");
-            return new DamageSource { Magnitude = residualDamage, Origin = damage.Origin, Type = damage.Type };
+            OnFlavourText(_name, damage.Magnitude - residualDamage.Magnitude + " damage was absorbed by shields.");
+            return new DamageSource { Magnitude = residualDamage.Magnitude, Origin = damage.Origin, Type = damage.Type };
         }
 
         public void AllStop()

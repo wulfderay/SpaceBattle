@@ -1,4 +1,5 @@
 ﻿
+using Spacebattle.Damage;
 using System;
 
 namespace Spacebattle.entity.parts
@@ -9,12 +10,16 @@ namespace Spacebattle.entity.parts
         float _maxAbsorbtion;
         float _regenRate;
         float _powerPerRegenUnit;
+        float _arcWidthDegrees;
+        float _baseAngle;
 
-        public Shield(string name, float maxHealth, float mass,float upkeepCost,float maxAbsorbtion, float regenRate, float powerPerRegenUnit): base(name, maxHealth, mass, upkeepCost)
+        public Shield(string name, float maxHealth, float mass,float upkeepCost,float maxAbsorbtion, float regenRate, float powerPerRegenUnit, float arcWidthDegrees, float baseAngle): base(name, maxHealth, mass, upkeepCost)
         {
             _maxAbsorbtion= _currentAbsorbtion = maxAbsorbtion;
             _regenRate = regenRate;
             _powerPerRegenUnit = powerPerRegenUnit;
+            _arcWidthDegrees = arcWidthDegrees;
+            _baseAngle = baseAngle;
         }
 
         public float Regen(float powerBudget)
@@ -36,16 +41,36 @@ namespace Spacebattle.entity.parts
         /// </summary>
         /// <param name="damage"></param>
         /// <returns>the residual damage that was not absorbed.</returns>
-        public float Absorb(float damage)
+        public DamageSource Absorb(DamageSource damage)
         {
-            _currentAbsorbtion -= damage;
+            if (!shieldInterceptsDamage(damage))
+                return damage;
+            OnFlavourText(_name, "Shield Hit!");
+            var residualDamage = damage.Magnitude;
+            var modifier = 1f;
+            if (damage.Type == DamageType.DRAINING)
+                modifier = 2f;
+            if (damage.Type == DamageType.CONCUSSIVE)
+                modifier = 0.5f;
+            // apply a modifier to the damage to the sheild, but remove that modifire before it gets to the hull.
+
+            _currentAbsorbtion -= damage.Magnitude * modifier;
             if (_currentAbsorbtion < 0)
             {
-                var residual = Math.Abs(_currentAbsorbtion);
+                var residual = Math.Abs(_currentAbsorbtion)/modifier;
                 _currentAbsorbtion = 0;
-                return residual;
+                return new DamageSource { Magnitude = residual, Origin = damage.Origin, Type = damage.Type };
             }
-            return 0;
+            return new DamageSource { Magnitude = 0, Origin = damage.Origin, Type = damage.Type };
+        }
+
+        private bool shieldInterceptsDamage(DamageSource damage)
+        {
+            // adding 360 and % 720 will get rid of the transition from 359 to 0
+            var direction = Parent.Position.DirectionInDegreesTo(damage.Origin) + 360;
+            direction %= 720;
+            var baseAngle = (((_baseAngle+ Parent.Orientation)%360) + 360 ) % 720;
+            return (direction >= baseAngle && direction <= baseAngle + _arcWidthDegrees); 
         }
 
         public override string ToString()
@@ -54,15 +79,15 @@ namespace Spacebattle.entity.parts
         }
 
         // fast but expensive and fragile
-        public static Shield FastRegenshield()
+        public static Shield FastRegenshield(string name, float arcWidthDegrees, float baseAngle)
         {
-            return new Shield("Fast shield",50, 50, 20, 100, 20f, 5);
+            return new Shield(name, 25, 10, 10, 40, 10f, 5, arcWidthDegrees, baseAngle);
         }
 
         // slow but efficient
-        public static Shield Bigshield()
+        public static Shield Bigshield(string name,float arcWidthDegrees, float baseAngle)
         {
-            return new Shield("Big shield",100, 100, 10, 200, 15f, 2);
+            return new Shield(name, 45, 15, 2, 100, 5f, 2, arcWidthDegrees, baseAngle);
         }
     }
 }

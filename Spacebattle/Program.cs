@@ -85,7 +85,7 @@ namespace Spacebattle
             var shaunShip = new Ship(
                 "Narwhal",
                 new List<Reactor>() {Reactor.BigReactor()},
-                new List<Shield>() {Shield.FastRegenshield()},
+                sixFastShields(),
                 new List<IWeapon>() { new Lance("Lance", 50, 1, 10, 20, 500)},
                 new List<Engine>() {new Engine("MegaThruster", 50, 20, 100, 1000)},
                 new List<CrewDeck>() { CrewDeck.Bridge()});
@@ -93,7 +93,7 @@ namespace Spacebattle
             var enterprise = new Ship(
                 "Enterprise",
                 new List<Reactor>() { Reactor.BigReactor(), Reactor.SmallReactor() },
-                new List<Shield>() { Shield.Bigshield()},
+                sixBigShields(),
                 new List<IWeapon>() { new Phaser("Phaser",100,10,0, 30, 1200) , new MassDriver("ScatterGun",100, 10, 0, 90, 20,200) },
                 new List<Engine>() { new Engine("Engine",100,20, 50,100) },
                 new List<CrewDeck>() { CrewDeck.MilitaryDeck(), CrewDeck.PleasureDeck()});
@@ -102,7 +102,7 @@ namespace Spacebattle
             var destroyer = new Ship(
                 "Dragon",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
-                new List<Shield>() {  Shield.FastRegenshield() },
+                sixFastShields(),
                 new List<IWeapon>() { new FireBreath("Gun", 100, 10, 0, 30, 200), new Phaser("Gun", 100, 10, 0, 30, 200) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck() , CrewDeck.Bridge()});
@@ -110,7 +110,7 @@ namespace Spacebattle
             var pooey = new Ship(
                 "Pooey",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
-                new List<Shield>() {  Shield.FastRegenshield() },
+                sixBigShields(),
                 new List<IWeapon>() { new PlasmaBolt("Plasmabolt", 100, 10, 0, 30, 500) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
@@ -118,7 +118,7 @@ namespace Spacebattle
             var trymwing = new Ship(
                 "Trymwing",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor(), Reactor.SmallReactor() },
-                new List<Shield>() { Shield.FastRegenshield() },
+                sixBigShields(),
                 new List<IWeapon>() { new Phaser("Phaser", 100, 10, 0, 20, 500) , new Phaser("Phaser", 100, 10, 0, 20, 500) , new Phaser("Phaser", 100, 10, 0, 20, 500) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
@@ -138,14 +138,14 @@ namespace Spacebattle
                 new Ship(
                 "Vega",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
-                new List<Shield>() {  Shield.FastRegenshield(), Shield.FastRegenshield()},
+                sixBigShields(),
                 new List<IWeapon>() { new PlasmaBolt("PlasmaBolt", 100, 10, 20, 60, 500) },
                 new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
                 new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) }),
                 new Ship(
                 "Pikachu",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
-                new List<Shield>() {  Shield.FastRegenshield(), Shield.FastRegenshield()},
+                sixBigShields(),
                 new List<IWeapon>() { new PlasmaBolt("PlasmaBolt", 100, 10, 20, 60, 500) },
                 new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
                 new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) })
@@ -184,6 +184,26 @@ namespace Spacebattle
             {
 
             }
+        }
+
+        private static List<Shield> sixFastShields()
+        {
+            var result = new List<Shield>();
+            for (int i = 0; i < 6; i++)
+            {
+                result.Add(Shield.FastRegenshield("Shield " + (i + 1), 60, 60 * i));
+            }
+            return result;
+        }
+
+        private static List<Shield> sixBigShields()
+        {
+            var result = new List<Shield>();
+            for (int i = 0; i < 6; i++)
+            {
+                result.Add(Shield.Bigshield("Shield " + (i + 1), 60, 60 * i));
+            }
+            return result;
         }
 
         private static void OnFlavourText(object sender, FlavourTextEventArgs e)

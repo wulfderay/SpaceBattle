@@ -18,11 +18,12 @@ namespace Spacebattle.entity
         {
             return Position.DistanceTo(other.Position);
         }
-
+        
         public float DirectionInDegreesTo(IEntity other)
         {
             return Position.DirectionInDegreesTo(other.Position);
         }
+        
 
         public void ApplyImpulse( Vector2d force)
         {
