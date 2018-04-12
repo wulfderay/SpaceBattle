@@ -159,5 +159,123 @@ namespace Spacebattle.Visualizer
             DebugEventHandler?.Invoke(null, new DebugEventArgs() { From = from, Message = message });
         }
 
+        public static void PrintShip(Ship ship, IConsole window, ConsoleColor color)
+        {
+            window.WriteLine(color, "Name:" + ship.GetName() +
+                " Crew:" + ship.CrewDecks.Select(x => (int)x.GetCrew()).Sum() +
+                " Mass: " + ship.Mass +
+                " Power:" + ship.Power);
+            PrintReactors(ship, window, color);
+            PrintShields(ship, window, color);
+            PrintWeapons(ship, window, color);
+            PrintEngines(ship, window, color);
+            PrintCrewDecks(ship, window, color);
+            if (ship.IsDestroyed())
+                window.WriteLine("(Destroyed)");
+        }
+
+        private static void PrintWeapons(Ship ship, IConsole window, ConsoleColor color)
+        {
+            window.Write(color, "Weapons: |");
+            foreach (var weapon in ship.Weapons)
+            {
+                window.Write(color, weapon.GetName()+" H:");
+                window.Write(ColorFromTuple(weapon.Health), HealthBarFromTuple(weapon.Health));
+                window.Write(color, " S:-");
+               // window.Write(ColorFromTuple(weapon.Strength), HealthBarFromTuple(weapon.Strength));
+                window.Write(color, "|");
+            }
+            window.WriteLine(color, string.Empty);
+        }
+
+        private static void PrintEngines(Ship ship, IConsole window, ConsoleColor color)
+        {
+            window.Write(color, "Engines: |");
+            foreach (var engine in ship.Engines)
+            {
+                window.Write(color, " H:");
+                window.Write(ColorFromTuple(engine.Health), HealthBarFromTuple(engine.Health));
+                window.Write(color, "|");
+            }
+            window.WriteLine(color, string.Empty);
+        }
+
+        private static void PrintCrewDecks(Ship ship, IConsole window, ConsoleColor color)
+        {
+            window.Write(color, "Crew Decks: |");
+            foreach (var crewDeck in ship.CrewDecks)
+            {
+                window.Write(color, crewDeck.GetName() + " H:");
+                window.Write(ColorFromTuple(crewDeck.Health), HealthBarFromTuple(crewDeck.Health));
+                window.Write(color, " C:" + crewDeck.GetCrew() + "|");
+            }
+            window.WriteLine(color, string.Empty);
+        }
+
+        private static void PrintShields(Ship ship, IConsole window, ConsoleColor color)
+        {
+            window.Write(color, "Shields: |");
+            foreach (var shield in ship.Shields)
+            {
+                window.Write(color, " H:");
+                window.Write(ColorFromTuple(shield.Health), HealthBarFromTuple(shield.Health));
+                window.Write(color, " S:");
+                window.Write(ColorFromTuple(shield.Strength), HealthBarFromTuple(shield.Strength) );
+                window.Write(color, "|");
+            }
+            window.WriteLine(color, string.Empty);
+        }
+
+        private static void PrintReactors(Ship ship, IConsole window, ConsoleColor color)
+        {
+            window.Write(color, "Reactors: |");
+            foreach (var reactor in ship.Reactors)
+            {
+                window.Write(color, " H:");
+                window.Write(ColorFromTuple(reactor.Health), HealthBarFromTuple(reactor.Health));
+                window.Write(color, " P:" + reactor.Produce() + "|");
+            }
+            window.WriteLine(color, string.Empty);
+        }
+        private static void PrintColorBand(IConsole window)
+        {
+
+            for (var i = 0; i < 100; i+=10)
+            {
+                window.Write(ColorFromTuple(new Tuple<float, float>(i,100)), HealthBarFromTuple(new Tuple<float, float>(i, 100)));
+            }
+            window.WriteLine( string.Empty);
+        }
+        private static string HealthBarFromTuple(Tuple<float, float> health)
+        {
+            var ratio = (health.Item1 / health.Item2) * 100;
+            if (ratio > 60)
+                return "▓";
+
+            if (ratio > 30)
+                return "▒";
+
+             if (ratio >1)
+                return "░";
+            return "X";
+        }
+
+        private static ConsoleColor ColorFromTuple(Tuple<float, float> health)
+        {
+            var ratio = (health.Item1 / health.Item2) * 100;
+            if (ratio > 80)
+                return ConsoleColor.Green;
+
+            if (ratio > 64)
+                return ConsoleColor.DarkGreen;
+            if (ratio > 48)
+                return ConsoleColor.Yellow;
+            if (ratio > 32)
+                return ConsoleColor.DarkYellow;
+            if (ratio > 16)
+                return ConsoleColor.Red;
+
+            return ConsoleColor.DarkRed;
+        }
     }
 }

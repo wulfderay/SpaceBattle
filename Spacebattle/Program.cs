@@ -70,13 +70,13 @@ namespace Spacebattle
              * 
              */
             setConsoleSize();
-            var DebugPanel = Window.Open(1, 41, 100, 5, "Debug", LineThickNess.Single, ConsoleColor.Red, ConsoleColor.Black);
+            var DebugPanel = Window.Open(1, 41, 100, 3, "Debug", LineThickNess.Single, ConsoleColor.Red, ConsoleColor.Black);
             ConsoleVisualizer.DebugEventHandler += (sender, eventArgs) =>
                 DebugPanel.WriteLine("[" + eventArgs.From + "] " + eventArgs.Message);
             var radarPanel = Window.Open(1, 1, 25, 14, "Radar", LineThickNess.Single, ConsoleColor.Green,
                 ConsoleColor.Black);
             radarPanel.WriteLine("Radar");
-            var ScanPanel = new Window(27, 1,100 ,14, ConsoleColor.Yellow, ConsoleColor.DarkGray);
+            var ScanPanel = new Window(27, 1,100 ,14, ConsoleColor.Yellow, ConsoleColor.DarkBlue);
             output = new Window(1, 16, 60, 24,  ConsoleColor.White, ConsoleColor.DarkCyan);
             var input = new Window(1, 40, 60, 1, ConsoleColor.DarkGray, ConsoleColor.DarkMagenta);
             var shipList = Window.Open(62, 16, 60, 24, "Ships In Range", LineThickNess.Single, ConsoleColor.Cyan,
@@ -219,33 +219,19 @@ namespace Spacebattle
         static void setConsoleSize()
         {
             Console.SetWindowPosition(0, 0);   // sets window position to upper left
-            Console.SetBufferSize(122, 46);   // make sure buffer is bigger than window
-            Console.SetWindowSize(122, 46);   //set window size to almost full screen 
+            Console.SetBufferSize(122, 100);   // make sure buffer is bigger than window
+            Console.SetWindowSize(122, 44);   //set window size to almost full screen 
         }  // End  setConsoleSize()
 
-        public static void PrintShip(Ship ship, IConsole window , ConsoleColor color)
-        {
-            window.WriteLine(color, "Name:" + ship.GetName() +
-                " Crew:" + ship.CrewDecks.Select(x => (int)x.GetCrew()).Sum() +
-                " Mass: " + ship.Mass +
-                " Power:" + ship.Power);
-            window.WriteLine(color, string.Join(" ", ship.Reactors.Select(x => x.ToString())));
-            window.WriteLine(color, string.Join(" ", ship.Shields.Select(x => x.ToString())));
-            window.WriteLine(color, string.Join(" ", ship.Weapons.Select(x => x.ToString())));
-            window.WriteLine(color, string.Join(" ", ship.Engines.Select(x => x.ToString())));
-            window.WriteLine(color, string.Join(" ", ship.CrewDecks.Select(x => x.ToString())));
-            if (ship.IsDestroyed())
-                window.WriteLine("(Destroyed)");
-        }
 
         public static void UpdateDisplay(Ship target, Ship flagship, List<Ship> ships, IConsole scanPanel, IConsole radarPanel, IConsole shipListPanel)
         {
             if (target != null)
             {
-                PrintShip(target, scanPanel, ConsoleColor.Black);
+                ConsoleVisualizer.PrintShip(target, scanPanel, ConsoleColor.Black);
                 scanPanel.WriteLine("");
             }
-            PrintShip(flagship, scanPanel, ConsoleColor.White);
+            ConsoleVisualizer.PrintShip(flagship, scanPanel, ConsoleColor.White);
             ConsoleVisualizer.DrawRadar(radarPanel, ships, flagship, 1000);
             ConsoleVisualizer.DrawShipList(shipListPanel, ships, flagship);
         }

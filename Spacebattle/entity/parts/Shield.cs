@@ -13,6 +13,8 @@ namespace Spacebattle.entity.parts
         float _arcWidthDegrees;
         float _baseAngle;
 
+        public Tuple<float, float> Strength { get { return new Tuple<float, float>(_currentAbsorbtion, _maxAbsorbtion); } }
+
         public Shield(string name, float maxHealth, float mass,float upkeepCost,float maxAbsorbtion, float regenRate, float powerPerRegenUnit, float arcWidthDegrees, float baseAngle): base(name, maxHealth, mass, upkeepCost)
         {
             _maxAbsorbtion= _currentAbsorbtion = maxAbsorbtion;

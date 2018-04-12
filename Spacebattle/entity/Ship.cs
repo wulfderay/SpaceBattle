@@ -357,11 +357,11 @@ namespace Spacebattle.entity
         private void repairARandomPartThatNeedsIt(CrewDeck crewDeck)
         {
             List<IShipPart> damagedParts = new List<IShipPart>();
-            damagedParts.AddRange( _reactors.Where(x => x.GetHealth() < x.GetMaxHealth()));
-            damagedParts.AddRange( _engines.Where(x => x.GetHealth() < x.GetMaxHealth()));
-            damagedParts.AddRange(_weapons.Where(x => x.GetHealth() < x.GetMaxHealth()));
-            damagedParts.AddRange(_shields.Where(x => x.GetHealth() < x.GetMaxHealth()));
-            damagedParts.AddRange(_crewDecks.Where(x => x.GetHealth() < x.GetMaxHealth()));
+            damagedParts.AddRange( _reactors.Where(x => x.Health.Item1 < x.Health.Item2));
+            damagedParts.AddRange( _engines.Where(x => x.Health.Item1 < x.Health.Item2));
+            damagedParts.AddRange(_weapons.Where(x => x.Health.Item1 < x.Health.Item2));
+            damagedParts.AddRange(_shields.Where(x => x.Health.Item1 < x.Health.Item2));
+            damagedParts.AddRange(_crewDecks.Where(x => x.Health.Item1 < x.Health.Item2));
 
             if (damagedParts.Count() == 0)
                 return;

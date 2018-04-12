@@ -18,6 +18,14 @@ namespace Spacebattle.entity
             set;
         }
 
+        public Tuple<float, float> Health
+        {
+            get
+            {
+                return new Tuple<float, float>(_currentHealth, _maxHealth);
+            }
+        }
+
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
 
         public ShipPart(string name, float maxHealth, float mass, float upkeepCost)
@@ -47,10 +55,7 @@ namespace Spacebattle.entity
         {
             return _mass;
         }
-        public float GetHealth()
-        {
-            return _currentHealth;
-        }
+        
 
         public void Repair(float repairAmount)
         {
@@ -63,10 +68,7 @@ namespace Spacebattle.entity
                 _currentHealth = _maxHealth;
         }
 
-        public float GetMaxHealth()
-        {
-            return _maxHealth;
-        }
+        
 
         public float GetUpkeepCost()
         {
@@ -78,6 +80,11 @@ namespace Spacebattle.entity
         protected void OnFlavourText(string name, string message)
         {
             FlavourTextEventHandler?.Invoke(this, new FlavourTextEventArgs { name = name, message = message });
+        }
+
+        public string GetName()
+        {
+            return _name;
         }
     }
 }

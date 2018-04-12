@@ -17,6 +17,7 @@ namespace Spacebattle.entity.parts
 
         /// <summary>
         /// returns the thrustPower of the engine given some throttle percentage
+        /// TODO: keep the throttle state on the engine
         /// </summary>
         /// <returns></returns>
         public float Throttle(float percent)
