@@ -1,6 +1,7 @@
 ﻿using Spacebattle.entity.parts.Weapon;
 using Spacebattle.entity;
 using Spacebattle.Damage;
+using System;
 
 namespace Spacebattle.Entity.parts.Weapon
 {
@@ -33,6 +34,11 @@ namespace Spacebattle.Entity.parts.Weapon
             }
             else
                 OnFlavourText(_name, "Target was too far away to hit!");
+        }
+
+        public WeaponType GetWeaponType()
+        {
+            return WeaponType.MASS_DRIVER;
         }
     }
 }

@@ -56,6 +56,8 @@
     <Compile Include="Entity\parts\Weapon\Phaser.cs" />
     <Compile Include="Entity\IDamageableEntity.cs" />
     <Compile Include="Entity\parts\Weapon\PlasmaBolt.cs" />
+    <Compile Include="Entity\parts\Weapon\WeaponType.cs" />
+    <Compile Include="orders\FireOrder.cs" />
     <Compile Include="Visualizer\ConsoleVisualizer.cs" />
     <Compile Include="Entity\Entity.cs" />
     <Compile Include="FlavourText\FlavourTextEventArgs.cs" />
@@ -75,8 +77,7 @@
     <Compile Include="orders\LockOrder.cs" />
     <Compile Include="orders\Order.cs" />
     <Compile Include="orders\OrderParser.cs" />
-    <Compile Include="orders\SetCourseOrder.cs" />
-    <Compile Include="orders\SetThrottleOrder.cs" />
+    <Compile Include="orders\HelmOrder.cs" />
     <Compile Include="physics\PhysicsEngine.cs" />
     <Compile Include="physics\Vector2d.cs" />
     <Compile Include="Program.cs" />
@@ -86,7 +87,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

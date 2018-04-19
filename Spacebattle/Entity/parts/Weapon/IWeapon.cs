@@ -10,5 +10,7 @@ namespace Spacebattle.entity.parts.Weapon
         /// </summary>
         /// <param name="target"></param>
         void FireAt(IDamageableEntity target);
+        WeaponType GetWeaponType();
+
     }
 }

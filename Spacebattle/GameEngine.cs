@@ -150,15 +150,18 @@ namespace Spacebattle
                 return;
             switch (order.Type)
             {
-                case OrderType.SET_COURSE:
-                    var setCourseOrder = (SetCourseOrder)order;
-                    ship.SetCourse(setCourseOrder.AngleInDegrees);
-                    OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Setting course for heading "+ setCourseOrder.AngleInDegrees });
-                    break;
-                case OrderType.SET_THROTTLE:
-                    var setThrottleOrder = (SetThrottleOrder)order;
-                    ship.Throttle = setThrottleOrder.ThrottlePercent;
-                    OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Setting throttle to  " + setThrottleOrder.ThrottlePercent });
+                case OrderType.HELM:
+                    var setCourseOrder = (HelmOrder)order;
+                    if (setCourseOrder.AngleInDegrees != null)
+                    {
+                        ship.SetCourse((float)setCourseOrder.AngleInDegrees);
+                        OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Setting course for heading " + setCourseOrder.AngleInDegrees });
+                    }
+                    if (setCourseOrder.ThrottlePercent != null)
+                    {
+                        ship.Throttle = (float)setCourseOrder.ThrottlePercent;
+                        OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Setting throttle to  " + setCourseOrder.ThrottlePercent });
+                    }
                     break;
                 case OrderType.LOCK:
                     var lockOrder = (LockOrder)order;
@@ -174,13 +177,14 @@ namespace Spacebattle
                     OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Locking weapons on to the " + shipToLockOn.GetName() });
                     break;
                 case OrderType.FIRE:
+                    var fireOrder = (FireOrder)order;
                     if ( ship.LockedShip == null)
                     {
                         OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "At which ship, Sir?"});
                         break;
                     }
-                    OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Firing weapons!" });
-                    ship.ShootAt(ship.LockedShip);
+                    
+                    ship.ShootAt(ship.LockedShip, fireOrder.WeaponType, fireOrder.WeaponName);
                     break;
                 case OrderType.ALL_STOP:
                     OnFlavourText(this, new FlavourTextEventArgs { name = ship.GetName(), message = "Stopping all motion, Capitain." });

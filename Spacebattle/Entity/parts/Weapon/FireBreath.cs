@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Spacebattle.Damage;
 
 namespace Spacebattle.entity.parts.Weapon
@@ -31,6 +32,11 @@ namespace Spacebattle.entity.parts.Weapon
                 target.Damage(new DamageSource() { Magnitude = _power -(_power *distance/_range) , Type = DamageType.FIRE, Origin = Parent.Position });
             else
                 OnFlavourText(_name, "Target was too far away to hit!");
+        }
+
+        public WeaponType GetWeaponType()
+        {
+            return WeaponType.ENERGY;
         }
 
         public override string ToString()

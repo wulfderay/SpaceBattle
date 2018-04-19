@@ -82,7 +82,7 @@ namespace Spacebattle
             var shipList = Window.Open(62, 16, 60, 24, "Ships In Range", LineThickNess.Single, ConsoleColor.Cyan,
                 ConsoleColor.Black);
 
-            var shaunShip = new Ship(
+            var narwhal = new Ship(
                 "Narwhal",
                 new List<Reactor>() {Reactor.BigReactor()},
                 sixFastShields(),
@@ -126,14 +126,14 @@ namespace Spacebattle
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
             var redteam = new List<Ship> {
+                enterprise,
                 trymwing,
-                pooey,
-                shaunShip,
+                narwhal,
                 
 
         };
             var blueteam = new List<Ship> {
-                enterprise,
+                pooey,
                 destroyer,
                 new Ship(
                 "Vega",
@@ -228,7 +228,7 @@ namespace Spacebattle
         {
             if (target != null)
             {
-                ConsoleVisualizer.PrintShip(target, scanPanel, ConsoleColor.Black);
+                ConsoleVisualizer.PrintShip(target, scanPanel, ConsoleColor.Red);
                 scanPanel.WriteLine("");
             }
             ConsoleVisualizer.PrintShip(flagship, scanPanel, ConsoleColor.White);
