@@ -1,10 +1,11 @@
 ﻿
+using Spacebattle.entity.parts.Weapon;
 using System;
 namespace Spacebattle.orders
 {
     public class Order
     {
-        public enum OrderType { NULL_ORDER = 0,SET_COURSE, SET_THROTTLE, FIRE, LOCK, ALL_STOP};
+        public enum OrderType { NULL_ORDER = 0,HELM, FIRE, LOCK, ALL_STOP};
 
         public OrderType Type;
 
@@ -18,21 +19,21 @@ namespace Spacebattle.orders
             return new Order() { Type = OrderType.NULL_ORDER };
         }
 
-        public static SetCourseOrder SetCourse(float angleInDegrees)
+        public static HelmOrder SetCourse(float angleInDegrees, float? percent = null)
         {
-            return new SetCourseOrder { Type = OrderType.SET_COURSE, AngleInDegrees = angleInDegrees};
+            return new HelmOrder { Type = OrderType.HELM, AngleInDegrees = angleInDegrees, ThrottlePercent = percent};
         }
 
-        public static SetThrottleOrder SetThrottle(float percent)
+        public static HelmOrder SetThrottle(float percent)
         {
             if (percent > 100 || percent < 0)
                 throw new ArgumentOutOfRangeException("You must specify a percent between 0 and 100. You specified " + percent);
-            return new SetThrottleOrder { Type = OrderType.SET_THROTTLE, ThrottlePercent = percent };
+            return new HelmOrder { Type = OrderType.HELM, ThrottlePercent = percent };
         }
 
-        public static Order Fire() //TODO: fire a specific weapon
+        public static FireOrder Fire(WeaponType? weaponType=null, string weaponName=null) //TODO: fire a specific weapon
         {
-            return new Order { Type = OrderType.FIRE };
+            return new FireOrder { Type = OrderType.FIRE, WeaponType = weaponType, WeaponName = weaponName};
         }
 
         public static Order AllStop() //TODO: fire a specific weapon

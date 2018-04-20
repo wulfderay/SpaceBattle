@@ -26,6 +26,11 @@ namespace Spacebattle.entity.parts.Weapon
                 OnFlavourText(_name, "Target was too far away to hit!");
         }
 
+        public WeaponType GetWeaponType()
+        {
+            return WeaponType.ENERGY;
+        }
+
         public override string ToString()
         {
             return "[" + _name + " H:" + _currentHealth + "/" + _maxHealth + " P:" + _power + " R:" + _range + "]";

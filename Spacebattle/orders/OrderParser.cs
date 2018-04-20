@@ -20,6 +20,7 @@ namespace Spacebattle.orders
             switch (tokens[0].ToLower())
             {
                 case "he":
+                case "helm":
                 case "setcourse":
                     if ( tokens.Length > 1)
                         return parseAsSetCourse(tokens);
@@ -33,12 +34,40 @@ namespace Spacebattle.orders
                         return Order.Lock(tokens[1]);
                     break;
                 case "fire":
+                    if (tokens.Length > 1)
+                        return parseAsFire(tokens);
                     return Order.Fire();
                 case "allstop":
                     return Order.AllStop();
 
             }
             return Order.NullOrder();
+        }
+
+        private static Order parseAsFire(string[] tokens)
+        {
+            switch (tokens[1].ToLower())
+            {
+                case "guns":
+                case "mass":
+                case "massdrivers":
+                    return Order.Fire(entity.parts.Weapon.WeaponType.MASS_DRIVER);
+                    break;
+                case "energy":
+                case "phasers":
+                    return Order.Fire(entity.parts.Weapon.WeaponType.ENERGY);
+                    break;
+                case "torpedoes":
+                case "torps":
+                    return Order.Fire(entity.parts.Weapon.WeaponType.TORPEDO);
+                    break;
+                case "probes":
+                    return Order.Fire(entity.parts.Weapon.WeaponType.PROBE);
+                    break;
+                default:
+                    return Order.Fire(weaponName: tokens[1]);
+                
+            }
         }
 
         private static Order parseAsSetThrottle(string[] tokens)
@@ -53,8 +82,23 @@ namespace Spacebattle.orders
         private static Order parseAsSetCourse(string[] tokens)
         {
             float angleInDegrees;
+            float throttle;
+              
             if (float.TryParse(tokens[1], out angleInDegrees))
-                return Order.SetCourse(angleInDegrees);// TODO: clamp angle to 0 - 360
+            {
+                if (tokens.Length == 2)
+                {
+                    return Order.SetCourse(angleInDegrees);
+                }
+                if (float.TryParse(tokens[2], out throttle))
+                {
+                    return Order.SetCourse(angleInDegrees, throttle);
+                }
+                else
+                {
+                    return Order.SetCourse(angleInDegrees);
+                }
+            }
             Console.WriteLine("Could not parse " + tokens[1] + " into an angle. :(");
             return Order.NullOrder();
         }

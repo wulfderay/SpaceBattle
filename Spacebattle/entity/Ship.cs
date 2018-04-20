@@ -272,11 +272,41 @@ namespace Spacebattle.entity
                 LockedShip = ship;
         }
 
-        public void ShootAt(Ship otherShip) // this isn't great because we should ideally be able to pick the gun we are shooting with.
+        //TODO: move the locking into each weapon so that we can fire 6 guns at 6 different targets.
+        public void ShootAt(Ship otherShip, WeaponType? weaponType = null, string weaponName = null) // this isn't great because we should ideally be able to pick the gun we are shooting with.
         {
-            foreach (var gun in _weapons)
+            if (weaponType != null) // preferentially shoot a type of weapon
             {
-                gun.FireAt(otherShip);
+                if (!_weapons.Where(x => x.GetWeaponType() == weaponType).Any())
+                {
+                    OnFlavourText(_name, "We don't have any weapons of that type, Sir!");
+                    return;
+                }
+                OnFlavourText(this, new FlavourTextEventArgs { name = _name, message = "Firing weapons!" });
+                foreach (var weapon in _weapons.Where(x=>x.GetWeaponType() == weaponType))
+                {
+                    weapon.FireAt(otherShip);
+                }
+                return;
+            }
+            if (weaponName != null) // or a named weapon
+            {
+                if (!_weapons.Where(x => x.GetName().ToLower() == weaponName.ToLower()).Any())
+                {
+                    OnFlavourText(_name, "Fire the "+weaponName+"?!");
+                    return;
+                }
+                OnFlavourText(this, new FlavourTextEventArgs { name = _name, message = "Firing weapons!!" });
+                foreach (var weapon in _weapons.Where(x => x.GetName().ToLower() == weaponName.ToLower()))
+                {
+                    weapon.FireAt(otherShip);
+                }
+                return;
+            }
+
+            foreach (var weapon in _weapons) // or just all of them.
+            {
+                weapon.FireAt(otherShip);
             }
         }
 
