@@ -6,8 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using static Spacebattle.orders.Order;
 
-namespace Spacebattle
+namespace Spacebattle.GameEngine
 {
+    /// <summary>
+    /// So after talking it through with Shaun, I have comt to an understanding about game engine's role...
+    /// part of the role f it is to listen for events percolating up through the ships and other entities..
+    /// ultimately most interactions between entitles should come through gameengine as events
+    /// that way it can control things like spawning, target resolution (i.e.,blocking a shot or missing)
+    /// and other things like that.
+    /// in general the model is that direct calls go down, and events go up.
+    /// </summary>
     public class GameEngine:IFlavourTextProvider
     {
 
@@ -59,16 +67,22 @@ namespace Spacebattle
             _redTeam.ForEach(x => {
                 _physicsEngine.Register(x);
                 x.FlavourTextEventHandler += OnRedFlavourText;
+                x.GameEngineEventHandler += OnGameEngineEvent;
                 x.Position = new Vector2d(rng.Next(0, 200), rng.Next(0, 200));
             });
             _blueTeam.ForEach(x => {
                 _physicsEngine.Register(x);
                 x.FlavourTextEventHandler += OnBlueFlavourText;
+                x.GameEngineEventHandler += OnGameEngineEvent;
                 x.Position = new Vector2d(rng.Next(500, 700), rng.Next(500, 700));
             });
         }
 
-       
+        private void OnGameEngineEvent(object sender, GameEngineEventArgs e)
+        {
+            // yep totally need to take  care of game engine events.
+            throw new NotImplementedException();
+        }
 
         public int GetWhichTeamWon()
         {

@@ -2,7 +2,7 @@
 
 namespace Spacebattle.entity
 {
-    public interface IEntity
+    public interface IEntity //should the gme engine event handler be here? will all entities emit events?
     {
         float Mass { get; set; }
         float Orientation { get; set; }

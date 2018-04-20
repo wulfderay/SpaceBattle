@@ -6,6 +6,7 @@ using System;
 using Spacebattle.physics;
 using Spacebattle.Damage;
 using Spacebattle.entity.parts.Weapon;
+using Spacebattle.GameEngine;
 
 namespace Spacebattle.entity
 {
@@ -23,6 +24,7 @@ namespace Spacebattle.entity
         private float _throttle;
 
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
+        public event EventHandler<GameEngineEventArgs> GameEngineEventHandler;
 
         public float Throttle
         {
@@ -131,11 +133,11 @@ namespace Spacebattle.entity
             {
                 OnFlavourText(_name, _name + " is on fire!");
             }
-            switch (GameEngine.Random(5))
+            switch (GameEngine.GameEngine.Random(5))
             {
                 case 0:
                     OnFlavourText(_name, residualDamage.Magnitude + " damage to reactors.");
-                    _reactors[GameEngine.Random(_reactors.Count)].Damage(damage);
+                    _reactors[GameEngine.GameEngine.Random(_reactors.Count)].Damage(damage);
                     break;
                 case 1:
                     if (_shields.Count == 0)
@@ -144,19 +146,19 @@ namespace Spacebattle.entity
                         break;
                     }
                     OnFlavourText(_name, residualDamage.Magnitude + " damage to shields.");
-                    _shields[GameEngine.Random(_shields.Count)].Damage(damage);
+                    _shields[GameEngine.GameEngine.Random(_shields.Count)].Damage(damage);
                     break;
                 case 2:
                     OnFlavourText(_name, residualDamage.Magnitude + " damage to weapons.");
-                    _weapons[GameEngine.Random(_weapons.Count)].Damage(damage);
+                    _weapons[GameEngine.GameEngine.Random(_weapons.Count)].Damage(damage);
                     break;
                 case 3:
                     OnFlavourText(_name, residualDamage.Magnitude + " damage to engines.");
-                    _engines[GameEngine.Random(_engines.Count)].Damage(damage);
+                    _engines[GameEngine.GameEngine.Random(_engines.Count)].Damage(damage);
                     break;
                 case 4:
                     OnFlavourText(_name, residualDamage.Magnitude + " damage to crew deck.");
-                    _crewDecks[GameEngine.Random(_crewDecks.Count)].Damage(damage);
+                    _crewDecks[GameEngine.GameEngine.Random(_crewDecks.Count)].Damage(damage);
                     break;
             }
         }
@@ -289,6 +291,7 @@ namespace Spacebattle.entity
                 }
                 return;
             }
+            
             if (weaponName != null) // or a named weapon
             {
                 if (!_weapons.Where(x => x.GetName().ToLower() == weaponName.ToLower()).Any())
@@ -396,7 +399,7 @@ namespace Spacebattle.entity
             if (damagedParts.Count() == 0)
                 return;
 
-            crewDeck.PerformRepair(damagedParts[GameEngine.Random(damagedParts.Count)]);
+            crewDeck.PerformRepair(damagedParts[GameEngine.GameEngine.Random(damagedParts.Count)]);
         }
 
 

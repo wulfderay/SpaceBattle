@@ -118,7 +118,7 @@ namespace Spacebattle
                 "Trymwing",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor(), Reactor.SmallReactor() },
                 sixBigShields(),
-                new List<IWeapon>() { new Phaser("Phaser", 100, 10, 0, 20, 500) , new Phaser("Phaser", 100, 10, 0, 20, 500) , new Phaser("Phaser", 100, 10, 0, 20, 500) },
+                new List<IWeapon>() { new Phaser("Phaser", 100, 10, 0, 20, 700) , new MassDriver("gun", 100, 10, 0, 70,20, 500) , new Lance("Lance", 100, 10, 0, 20, 1500) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
 
