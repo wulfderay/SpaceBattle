@@ -172,7 +172,7 @@ namespace Spacebattle.entity
             }
 
             DamageSource residualDamage = damage;
-            foreach (var shield in _shields) //TODO: angled shields
+            foreach (var shield in _shields) 
             {
                 if (residualDamage.Magnitude == 0)
                     break;

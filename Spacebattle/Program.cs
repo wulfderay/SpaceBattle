@@ -36,7 +36,6 @@ namespace Spacebattle
              *  
              *  
              *  
-             *  TODO: guns should shoot at an angle.... and the shields should provide protection so long as they are in the way.
              *  Commands to implement:
              *  Report
              *  fire
@@ -160,7 +159,6 @@ namespace Spacebattle
             
             while (!game.IsGameFinished())
             {
-                // TODO: Get order from console 
                 input.Clear();
                 input.WriteLine(ConsoleColor.Green,"Your orders, Sir?");
                 Console.SetCursorPosition(20, 40);
