@@ -4,9 +4,10 @@ using Spacebattle.physics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Spacebattle.Game.GameEngineEventArgs;
 using static Spacebattle.orders.Order;
 
-namespace Spacebattle
+namespace Spacebattle.Game
 {
     public class GameEngine:IFlavourTextProvider
     {
@@ -59,16 +60,48 @@ namespace Spacebattle
             _redTeam.ForEach(x => {
                 _physicsEngine.Register(x);
                 x.FlavourTextEventHandler += OnRedFlavourText;
+                x.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
                 x.Position = new Vector2d(rng.Next(0, 200), rng.Next(0, 200));
             });
             _blueTeam.ForEach(x => {
                 _physicsEngine.Register(x);
                 x.FlavourTextEventHandler += OnBlueFlavourText;
+                x.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
                 x.Position = new Vector2d(rng.Next(500, 700), rng.Next(500, 700));
             });
         }
 
-       
+        private void OnGameEngineEvent(object sender, GameEngineEventArgs e)
+        {
+            switch ( e.Type)
+            {
+                case GameEngineEventType.DAMAGE:
+                    doDamageEvent((DamageEvent)e);
+                    break;
+                case GameEngineEventType.DESTROYED:
+                    doDestroyedEvent((DestroyEvent)e);
+                    break;
+                case GameEngineEventType.SPAWN:
+                    doSpawnEvent((SpawnEvent)e);
+                    break;
+            }
+        }
+
+        private void doSpawnEvent(SpawnEvent e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void doDestroyedEvent(DestroyEvent e)
+        {
+            _physicsEngine.DeRegister(e.Entity);
+        }
+
+        private void doDamageEvent(DamageEvent e)
+        {// TODO: queue this and do all damage in the same step.
+            // Also, do line of sight checks etc.
+            e.Entity.Damage(e.DamageSource);
+        }
 
         public int GetWhichTeamWon()
         {

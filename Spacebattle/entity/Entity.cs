@@ -1,10 +1,13 @@
 ﻿using System;
 using Spacebattle.physics;
+using Spacebattle.Game;
+
 namespace Spacebattle.entity
 {
     public class Entity : IEntity
     {
 
+        public event EventHandler<GameEngineEventArgs> GameEngineEventHandler;
 
         public Vector2d Position { get; set; }
 
@@ -13,6 +16,8 @@ namespace Spacebattle.entity
         public Vector2d Velocity { get; set; } // where x is magnitude and y is direction // or is that what we want?
 
         public float Mass { get; set; }
+
+        
 
         public float DistanceTo(IEntity other)
         {
@@ -39,6 +44,11 @@ namespace Spacebattle.entity
         public void DoPhysicsStep()
         {
             Position += Velocity; // no drag in space. 
+        }
+
+        protected void OnGameEngineEvent(object sender, GameEngineEventArgs e)
+        {
+            GameEngineEventHandler?.Invoke(sender, e);
         }
     }
 }

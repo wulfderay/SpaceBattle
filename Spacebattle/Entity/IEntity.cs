@@ -1,8 +1,10 @@
-﻿using Spacebattle.physics;
+﻿using Spacebattle.Game;
+using Spacebattle.physics;
+using System;
 
 namespace Spacebattle.entity
 {
-    public interface IEntity
+    public interface IEntity: IGameEngineEventProvider
     {
         float Mass { get; set; }
         float Orientation { get; set; }

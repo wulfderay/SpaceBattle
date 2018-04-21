@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Spacebattle.Game;
+using System;
 
 namespace Spacebattle.entity
 {
-    public interface IShipPart: IDamageable, IFlavourTextProvider
+    public interface IShipPart: IDamageable, IFlavourTextProvider, IGameEngineEventProvider
     {
         Tuple<float, float> Health { get; } // current, max
         void Repair(float repairAmount);

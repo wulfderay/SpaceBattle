@@ -10,6 +10,7 @@ using Konsole.Drawing;
 using Spacebattle.Visualizer;
 using Spacebattle.entity.parts.Weapon;
 using Spacebattle.Entity.parts.Weapon;
+using Spacebattle.Game;
 
 namespace Spacebattle
 {
@@ -118,15 +119,15 @@ namespace Spacebattle
                 "Trymwing",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor(), Reactor.SmallReactor() },
                 sixBigShields(),
-                new List<IWeapon>() { new Phaser("Phaser", 100, 10, 0, 20, 500) , new Phaser("Phaser", 100, 10, 0, 20, 500) , new Phaser("Phaser", 100, 10, 0, 20, 500) },
+                new List<IWeapon>() { new MassDriver("Gun", 100, 10, 0, 200, 20, 500) , new Phaser("Phaser", 100, 10, 0, 20, 500) , new Lance("Lance", 100, 10, 0, 20, 1500) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
 
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
             var redteam = new List<Ship> {
-                enterprise,
                 trymwing,
+                enterprise,
                 narwhal,
                 
 

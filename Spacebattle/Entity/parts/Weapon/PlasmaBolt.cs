@@ -2,6 +2,7 @@
 using Spacebattle.entity;
 using Spacebattle.entity.parts.Weapon;
 using Spacebattle.Damage;
+using Spacebattle.Game;
 
 namespace Spacebattle.Entity.parts.Weapon
 {
@@ -32,8 +33,8 @@ namespace Spacebattle.Entity.parts.Weapon
             var distance = Parent.DistanceTo(target);
             if (distance < _range)
             {
-                target.Damage(new DamageSource() { Magnitude = (_power  - (_power * distance / _range))/2, Type = DamageType.DRAINING, Origin = Parent.Position });
-                target.Damage(new DamageSource() { Magnitude = _power / 2, Type = DamageType.FIRE, Origin = Parent.Position });
+                OnGameEngineEvent(this, GameEngineEventArgs.Damage(target, new DamageSource() { Magnitude = (_power  - (_power * distance / _range))/2, Type = DamageType.DRAINING, Origin = Parent.Position }));
+                OnGameEngineEvent(this, GameEngineEventArgs.Damage(target, new DamageSource() { Magnitude = _power / 2, Type = DamageType.FIRE, Origin = Parent.Position }));
             }
             else
                 OnFlavourText(_name, "Target was too far away to hit!");

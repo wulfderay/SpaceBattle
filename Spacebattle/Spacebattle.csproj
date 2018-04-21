@@ -49,6 +49,9 @@
   <ItemGroup>
     <Compile Include="Damage\DamageSource.cs" />
     <Compile Include="Debug\IDebugProvider.cs" />
+    <Compile Include="Game\DamageEvent.cs" />
+    <Compile Include="Game\DestroyEvent.cs" />
+    <Compile Include="Game\GameEngineEventArgs.cs" />
     <Compile Include="Entity\IEntity.cs" />
     <Compile Include="Entity\parts\Weapon\MassDriver.cs" />
     <Compile Include="Entity\parts\Weapon\FireBreath.cs" />
@@ -57,6 +60,8 @@
     <Compile Include="Entity\IDamageableEntity.cs" />
     <Compile Include="Entity\parts\Weapon\PlasmaBolt.cs" />
     <Compile Include="Entity\parts\Weapon\WeaponType.cs" />
+    <Compile Include="Game\IGameEngineEventProvider.cs" />
+    <Compile Include="Game\SpawnEvent.cs" />
     <Compile Include="orders\FireOrder.cs" />
     <Compile Include="Visualizer\ConsoleVisualizer.cs" />
     <Compile Include="Entity\Entity.cs" />
@@ -73,7 +78,7 @@
     <Compile Include="Entity\parts\Shield.cs" />
     <Compile Include="Entity\Ship.cs" />
     <Compile Include="Extensions\ConversionExtensions.cs" />
-    <Compile Include="GameEngine.cs" />
+    <Compile Include="Game\GameEngine.cs" />
     <Compile Include="orders\LockOrder.cs" />
     <Compile Include="orders\Order.cs" />
     <Compile Include="orders\OrderParser.cs" />

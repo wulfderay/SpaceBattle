@@ -6,6 +6,7 @@ using System;
 using Spacebattle.physics;
 using Spacebattle.Damage;
 using Spacebattle.entity.parts.Weapon;
+using Spacebattle.Game;
 
 namespace Spacebattle.entity
 {
@@ -23,6 +24,7 @@ namespace Spacebattle.entity
         private float _throttle;
 
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
+        
 
         public float Throttle
         {
@@ -106,7 +108,7 @@ namespace Spacebattle.entity
 
             _reactors.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; });
             _shields.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; });
-            _weapons.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; });
+            _weapons.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; x.GameEngineEventHandler += OnGameEngineEvent; });
             _engines.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; });
             _crewDecks.ForEach(x => { x.FlavourTextEventHandler += OnFlavourText; x.Parent = this; });
 
@@ -117,6 +119,7 @@ namespace Spacebattle.entity
             Orientation = 0;
         }
 
+        
 
         public void Damage(DamageSource damage)
         {
@@ -426,5 +429,7 @@ namespace Spacebattle.entity
         {
             FlavourTextEventHandler?.Invoke(sender, new FlavourTextEventArgs { name = _name+"."+e.name, message = e.message });
         }
+
+        
     }
 }

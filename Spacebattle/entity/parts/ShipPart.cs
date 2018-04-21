@@ -1,5 +1,6 @@
 ﻿
 using Spacebattle.Damage;
+using Spacebattle.Game;
 using System;
 
 namespace Spacebattle.entity
@@ -27,6 +28,7 @@ namespace Spacebattle.entity
         }
 
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
+        public event EventHandler<GameEngineEventArgs> GameEngineEventHandler;
 
         public ShipPart(string name, float maxHealth, float mass, float upkeepCost)
         {
@@ -38,7 +40,7 @@ namespace Spacebattle.entity
 
         public virtual void Damage(DamageSource damage)
         {
-            if (IsDestroyed())
+            if (IsDestroyed()) // maybe send an event?
                 return;
             _currentHealth -= damage.Magnitude;
             if (_currentHealth < 0)
@@ -68,7 +70,11 @@ namespace Spacebattle.entity
                 _currentHealth = _maxHealth;
         }
 
-        
+        public string GetName()
+        {
+            return _name;
+        }
+
 
         public float GetUpkeepCost()
         {
@@ -82,9 +88,11 @@ namespace Spacebattle.entity
             FlavourTextEventHandler?.Invoke(this, new FlavourTextEventArgs { name = name, message = message });
         }
 
-        public string GetName()
+        protected void OnGameEngineEvent(object sender, GameEngineEventArgs e)
         {
-            return _name;
+            GameEngineEventHandler?.Invoke(sender, e);
         }
+
+        
     }
 }

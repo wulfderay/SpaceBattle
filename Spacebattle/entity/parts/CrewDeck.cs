@@ -1,4 +1,5 @@
 ﻿using Spacebattle.Damage;
+using Spacebattle.Game;
 using System;
 
 namespace Spacebattle.entity.parts
