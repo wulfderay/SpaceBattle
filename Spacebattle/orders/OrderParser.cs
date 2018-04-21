@@ -35,7 +35,10 @@ namespace Spacebattle.orders
                     break;
                 case "fire":
                     if (tokens.Length > 1)
+                    {
                         return parseAsFire(tokens);
+                    }
+                    
                     return Order.Fire();
                 case "allstop":
                     return Order.AllStop();
