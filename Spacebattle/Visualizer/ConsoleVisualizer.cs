@@ -105,7 +105,7 @@ namespace Spacebattle.Visualizer
                 var y = (int)(distanceFromCenter.Y * scaleY) + centreY;
                 if (x < 0 || y < 0)
                 {
-                    OnDebug("Radar", "Didn't draw " + ship.GetName() + " at " + x + " " + y);
+                    OnDebug("Radar", "Didn't draw " + ship.Name + " at " + x + " " + y);
                     continue;
                 }
 
@@ -118,7 +118,7 @@ namespace Spacebattle.Visualizer
                     window.ForegroundColor = GetShipColor(ship);
                 }
                 window.PrintAt(x,y, GetShipSymbol(ship));
-                OnDebug("Radar", "Drew "+ship.GetName()+" at "+x+" "+y);
+                OnDebug("Radar", "Drew "+ship.Name+" at "+x+" "+y);
 
             }
         }
@@ -132,7 +132,7 @@ namespace Spacebattle.Visualizer
                 var shipColor = ship.IsDestroyed() ? ConsoleColor.Red : GetShipColor(ship);
                 window.Write(shipColor, GetShipSymbol(ship) + " ");
                 window.WriteLine(
-                    ship.GetName().PadLeft(10) + "\t" + 
+                    ship.Name.PadLeft(10) + "\t" + 
                     (int)ship.DistanceTo(centreEntity) + "\t" + 
                     (int)centreEntity.DirectionInDegreesTo(ship) + '\t'+
                     (int)ship.Position.X+ "\t"+
@@ -143,14 +143,14 @@ namespace Spacebattle.Visualizer
         public static char GetShipSymbol(Ship ship)
         {
             List<char> symbols = new List<char> { '@', '#', '$', '%', '&', '*', 'π', 'Σ', 'Φ', 'φ', 'α', 'ß', 'δ', '■', 'Ω', '¥', 'Θ', '≡', '±', };
-            var index = (Math.Abs(ship.GetName().GetHashCode()) % symbols.Count);
+            var index = (Math.Abs(ship.Name.GetHashCode()) % symbols.Count);
             return symbols[index];
         }
 
         public static ConsoleColor GetShipColor(Ship ship)
         {
             List<ConsoleColor> colors = new List<ConsoleColor> { ConsoleColor.Yellow, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.DarkGray, ConsoleColor.DarkYellow, ConsoleColor.White , ConsoleColor.DarkMagenta};
-            var index = (Math.Abs(ship.GetName().GetHashCode()) % colors.Count);
+            var index = (Math.Abs(ship.Name.GetHashCode()) % colors.Count);
             return colors[index];
         }
 
@@ -161,7 +161,7 @@ namespace Spacebattle.Visualizer
 
         public static void PrintShip(Ship ship, IConsole window, ConsoleColor color)
         {
-            window.WriteLine(color, "Name:" + ship.GetName() +
+            window.WriteLine(color, "Name:" + ship.Name +
                 " Crew:" + ship.CrewDecks.Select(x => (int)x.GetCrew()).Sum() +
                 " Mass: " + ship.Mass +
                 " Power:" + ship.Power);

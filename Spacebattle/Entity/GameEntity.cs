@@ -4,7 +4,7 @@ using Spacebattle.Game;
 
 namespace Spacebattle.entity
 {
-    public class Entity : IEntity
+    public class GameEntity : IEntity
     {
 
         public event EventHandler<GameEngineEventArgs> GameEngineEventHandler;
@@ -17,7 +17,7 @@ namespace Spacebattle.entity
 
         public float Mass { get; set; }
 
-        
+        public string Name { get; set; }
 
         public float DistanceTo(IEntity other)
         {
@@ -50,5 +50,6 @@ namespace Spacebattle.entity
         {
             GameEngineEventHandler?.Invoke(sender, e);
         }
+
     }
 }

@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="Damage\DamageSource.cs" />
     <Compile Include="Debug\IDebugProvider.cs" />
+    <Compile Include="Entity\parts\Weapon\Torpedo.cs" />
+    <Compile Include="Entity\parts\Weapon\TorpedoTube.cs" />
     <Compile Include="Game\DamageEvent.cs" />
     <Compile Include="Game\DestroyEvent.cs" />
     <Compile Include="Game\GameEngineEventArgs.cs" />
@@ -63,8 +65,9 @@
     <Compile Include="Game\IGameEngineEventProvider.cs" />
     <Compile Include="Game\SpawnEvent.cs" />
     <Compile Include="orders\FireOrder.cs" />
+    <Compile Include="orders\ScanOrder.cs" />
     <Compile Include="Visualizer\ConsoleVisualizer.cs" />
-    <Compile Include="Entity\Entity.cs" />
+    <Compile Include="Entity\GameEntity.cs" />
     <Compile Include="FlavourText\FlavourTextEventArgs.cs" />
     <Compile Include="Damage\IDamageable.cs" />
     <Compile Include="FlavourText\IFlavourTextProvider.cs" />

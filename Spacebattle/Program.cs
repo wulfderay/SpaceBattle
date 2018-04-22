@@ -155,7 +155,7 @@ namespace Spacebattle
             bothTeams.AddRange(blueteam);
             game.StartNewGame(redteam, blueteam, 1000);
 
-            UpdateDisplay(redteam[0].LockedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
+            UpdateDisplay(redteam[0].ScannedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
 
             
             while (!game.IsGameFinished())
@@ -166,7 +166,7 @@ namespace Spacebattle
                 var order = OrderParser.ParseOrder(Console.ReadLine());
 
                 game.RunOneRound(order);
-                UpdateDisplay(redteam[0].LockedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
+                UpdateDisplay(redteam[0].ScannedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
 
 
             }

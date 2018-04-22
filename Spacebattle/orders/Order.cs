@@ -5,7 +5,7 @@ namespace Spacebattle.orders
 {
     public class Order
     {
-        public enum OrderType { NULL_ORDER = 0,HELM, FIRE, LOCK, ALL_STOP};
+        public enum OrderType { NULL_ORDER = 0,HELM, FIRE, LOCK, ALL_STOP, SCAN };
 
         public OrderType Type;
 
@@ -41,9 +41,18 @@ namespace Spacebattle.orders
             return new Order { Type = OrderType.ALL_STOP};
         }
 
-        public static LockOrder Lock(string shipName)
+        public static LockOrder Lock(string shipName, WeaponType? weaponType = null, string weaponName = null)
         {
-            return new LockOrder { Type = OrderType.LOCK, ShipToLockOn = shipName };
+            return new LockOrder { Type = OrderType.LOCK, ShipToLockOn = shipName ,  WeaponType = weaponType, WeaponName = weaponName };
+        }
+
+        internal static ScanOrder Scan(string shipName)
+        {
+            return new ScanOrder
+            {
+                Type = OrderType.SCAN,
+                ShipToScan = shipName,
+            };
         }
     }
 }

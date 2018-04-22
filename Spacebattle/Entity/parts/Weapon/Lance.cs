@@ -9,6 +9,7 @@ namespace Spacebattle.entity.parts.Weapon
     {
         float _power;
         float _range;
+        private IDamageableEntity _target;
 
         public Lance(string name, float maxHealth, float mass, float upkeepCost, float power, float range): base(name, maxHealth, mass, upkeepCost)
         {
@@ -16,20 +17,36 @@ namespace Spacebattle.entity.parts.Weapon
             _range = range;
         }
 
-        public void FireAt(IDamageableEntity target)
+        public void Fire()
         {
             if (IsDestroyed())
                 return;
-            var distance = Parent.DistanceTo(target);
-            if ( distance < _range)
-                OnGameEngineEvent(this, GameEngineEventArgs.Damage(target, new DamageSource() { Magnitude = _power -(_power *distance/_range) , Type = DamageType.PIERCING, Origin = Parent.Position }));
+            if (_target == null)
+            {
+                OnFlavourText(_name, "No target to fire at!");
+                return;
+            }
+            var distance = Parent.DistanceTo(_target);
+            if (distance < _range)
+                OnGameEngineEvent(this, GameEngineEventArgs.Damage(_target, new DamageSource() { Magnitude = _power - (_power * distance / _range), Type = DamageType.PIERCING, Origin = Parent.Position }));
             else
                 OnFlavourText(_name, "Target was too far away to hit!");
+        }
+
+       
+        public IDamageableEntity GetLockTarget()
+        {
+            return _target;
         }
 
         public WeaponType GetWeaponType()
         {
             return WeaponType.ENERGY;
+        }
+
+        public void Lock(IDamageableEntity target)
+        {
+            _target = target;
         }
 
         public override string ToString()
