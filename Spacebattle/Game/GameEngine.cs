@@ -161,11 +161,11 @@ namespace Spacebattle.Game
                 ship.Shoot();
             }
             
-            if (ship.DistanceTo(ship.ScannedShip) > 190)
+            if (ship.Position.DistanceTo(ship.ScannedShip.Position) > 190)
             {
-                if (ship.DistanceTo(ship.ScannedShip) > 200)
+                if (ship.Position.DistanceTo(ship.ScannedShip.Position) > 200)
                 {
-                    ship.SetCourse(ship.DirectionInDegreesTo(ship.ScannedShip));
+                    ship.SetCourse(ship.Position.DirectionInDegreesTo(ship.ScannedShip.Position));
                     ship.Throttle = rng.Next(10);
                 }
                 else

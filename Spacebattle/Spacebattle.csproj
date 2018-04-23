@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviours\IBehaviour.cs" />
+    <Compile Include="Behaviours\Pursue.cs" />
     <Compile Include="Damage\DamageSource.cs" />
     <Compile Include="Debug\IDebugProvider.cs" />
     <Compile Include="Entity\parts\Weapon\Torpedo.cs" />
@@ -64,8 +66,8 @@
     <Compile Include="Entity\parts\Weapon\WeaponType.cs" />
     <Compile Include="Game\IGameEngineEventProvider.cs" />
     <Compile Include="Game\SpawnEvent.cs" />
-    <Compile Include="orders\FireOrder.cs" />
-    <Compile Include="orders\ScanOrder.cs" />
+    <Compile Include="Orders\FireOrder.cs" />
+    <Compile Include="Orders\ScanOrder.cs" />
     <Compile Include="Visualizer\ConsoleVisualizer.cs" />
     <Compile Include="Entity\GameEntity.cs" />
     <Compile Include="FlavourText\FlavourTextEventArgs.cs" />
@@ -82,12 +84,12 @@
     <Compile Include="Entity\Ship.cs" />
     <Compile Include="Extensions\ConversionExtensions.cs" />
     <Compile Include="Game\GameEngine.cs" />
-    <Compile Include="orders\LockOrder.cs" />
-    <Compile Include="orders\Order.cs" />
-    <Compile Include="orders\OrderParser.cs" />
-    <Compile Include="orders\HelmOrder.cs" />
-    <Compile Include="physics\PhysicsEngine.cs" />
-    <Compile Include="physics\Vector2d.cs" />
+    <Compile Include="Orders\LockOrder.cs" />
+    <Compile Include="Orders\Order.cs" />
+    <Compile Include="Orders\OrderParser.cs" />
+    <Compile Include="Orders\HelmOrder.cs" />
+    <Compile Include="Physics\PhysicsEngine.cs" />
+    <Compile Include="Physics\Vector2d.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -25,17 +25,13 @@ namespace Spacebattle.physics
             var y = (Y - other.Y);
             return (float)Math.Sqrt((x * x) + (y * y));
         }
-
-        public float DirectionInRadiansTo(Vector2d other)
-        {
-            var difference = other - this;
-            return (float)((2 * Math.PI)+ Math.Atan2(difference.Y, difference.X) % (2 * Math.PI));
-        }
+       
 
         public float DirectionInDegreesTo(Vector2d other)
         {
             var difference = other - this;
-            return (360 + (float)(Math.Atan2(difference.Y, difference.X)).ToDegrees()) % 360;
+            return (360 + 90+ (float)(Math.Atan2(difference.Y, difference.X)).ToDegrees()) % 360; // the + 90 accounts for the rotation of the coordinate system to put north at 0.
+            // the extra 360 takes care of the problem of comparing angles that crosss the rollover at 360 ( 270 and 30) for example... the distance is 60, not 210 or whatever.
         }
 
         public float Magnitude()
@@ -46,17 +42,8 @@ namespace Spacebattle.physics
         public static Vector2d fromAngleDegrees(float angleInDegrees)
         {
             return new Vector2d {
-                X = (float)Math.Cos(angleInDegrees.ToRadians()),
-                Y = (float)Math.Sin(angleInDegrees.ToRadians())
-            };
-        }
-
-        public static Vector2d fromAngleRadains(float angleInRadians)
-        {
-            return new Vector2d
-            {
-                X = (float)Math.Cos(angleInRadians),
-                Y = (float)Math.Sin(angleInRadians)
+                X = (float)Math.Cos((angleInDegrees -90).ToRadians()), // the -90s account for the rotation of the coordinate system to put north at 0.
+                Y = (float)Math.Sin((angleInDegrees- 90).ToRadians())
             };
         }
 

@@ -34,7 +34,7 @@ namespace Spacebattle.Entity.parts.Weapon
                 OnFlavourText(_name, "No more ammo!");
                 return;
             }
-            var distance = Parent.DistanceTo(_target);
+            var distance = Parent.Position.DistanceTo(_target.Position);
             if (distance < _range)
             {
                 _ammo--;

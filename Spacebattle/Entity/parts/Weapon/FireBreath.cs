@@ -35,7 +35,7 @@ namespace Spacebattle.entity.parts.Weapon
                 OnFlavourText(_name, "No target to fire at!");
                 return;
             }
-            var distance = Parent.DistanceTo(_target);
+            var distance = Parent.Position.DistanceTo(_target.Position);
             if (distance < _range)
                 OnGameEngineEvent(this, GameEngineEventArgs.Damage(_target, new DamageSource() { Magnitude = _power - (_power * distance / _range), Type = DamageType.FIRE, Origin = Parent.Position }));
             else

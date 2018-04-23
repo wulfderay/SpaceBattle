@@ -13,8 +13,6 @@ namespace Spacebattle.entity
         string Name { get;  set; }
 
         void ApplyImpulse(Vector2d force);
-        float DirectionInDegreesTo(IEntity other);
-        float DistanceTo(IEntity other);
         void DoPhysicsStep();
         
     }

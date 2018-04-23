@@ -98,7 +98,7 @@ namespace Spacebattle.Visualizer
             var centreY = window.WindowHeight / 2;
             foreach (var ship in ships)
             {
-                if (ship.DistanceTo(centreEntity) > range)
+                if (ship.Position.DistanceTo(centreEntity.Position) > range)
                     continue;
                 var distanceFromCenter = ship.Position - centreEntity.Position;
                 var x = (int)(distanceFromCenter.X * scaleX) + centreX;
@@ -127,14 +127,14 @@ namespace Spacebattle.Visualizer
         {
             window.Clear();
             window.WriteLine(ConsoleColor.Yellow,"Name".PadLeft(12) + "\t" + "Range" + "\t" + "Bearing");
-            foreach (var ship in ships.OrderBy(x => x.DistanceTo(centreEntity)))
+            foreach (var ship in ships.OrderBy(x => x.Position.DistanceTo(centreEntity.Position)))
             {
                 var shipColor = ship.IsDestroyed() ? ConsoleColor.Red : GetShipColor(ship);
                 window.Write(shipColor, GetShipSymbol(ship) + " ");
                 window.WriteLine(
                     ship.Name.PadLeft(10) + "\t" + 
-                    (int)ship.DistanceTo(centreEntity) + "\t" + 
-                    (int)centreEntity.DirectionInDegreesTo(ship) + '\t'+
+                    (int)ship.Position.DistanceTo(centreEntity.Position) + "\t" + 
+                    (int)centreEntity.Position.DirectionInDegreesTo(ship.Position)+  '\t'+
                     (int)ship.Position.X+ "\t"+
                     (int)ship.Position.Y);
             }
