@@ -12,6 +12,8 @@ namespace Spacebattle.entity
         Vector2d Velocity { get; set; }
         string Name { get;  set; }
 
+        int Team { get; set; }
+
         void ApplyImpulse(Vector2d force);
         void DoPhysicsStep();
         

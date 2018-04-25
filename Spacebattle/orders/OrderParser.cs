@@ -35,7 +35,7 @@ namespace Spacebattle.orders
                         return parseAsLock(tokens);
                     }
                     if (tokens.Length > 1)
-                        Order.Lock(tokens[1]);
+                        return Order.Lock(tokens[1]);
                     break;
                 case "fire":
                     if (tokens.Length > 1)

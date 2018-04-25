@@ -51,6 +51,7 @@
     <Compile Include="Behaviours\Pursue.cs" />
     <Compile Include="Damage\DamageSource.cs" />
     <Compile Include="Debug\IDebugProvider.cs" />
+    <Compile Include="Entity\IControllableEntity.cs" />
     <Compile Include="Entity\parts\Weapon\Torpedo.cs" />
     <Compile Include="Entity\parts\Weapon\TorpedoTube.cs" />
     <Compile Include="Game\DamageEvent.cs" />
@@ -65,7 +66,9 @@
     <Compile Include="Entity\parts\Weapon\PlasmaBolt.cs" />
     <Compile Include="Entity\parts\Weapon\WeaponType.cs" />
     <Compile Include="Game\IGameEngineEventProvider.cs" />
+    <Compile Include="Game\ScanEvent.cs" />
     <Compile Include="Game\SpawnEvent.cs" />
+    <Compile Include="Game\ViewEventArgs.cs" />
     <Compile Include="Orders\FireOrder.cs" />
     <Compile Include="Orders\ScanOrder.cs" />
     <Compile Include="Visualizer\ConsoleVisualizer.cs" />

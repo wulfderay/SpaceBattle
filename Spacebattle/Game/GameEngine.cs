@@ -1,5 +1,6 @@
 ﻿using Spacebattle.entity;
 using Spacebattle.entity.parts.Weapon;
+using Spacebattle.Entity;
 using Spacebattle.orders;
 using Spacebattle.physics;
 using System;
@@ -12,8 +13,11 @@ namespace Spacebattle.Game
 {
     public class GameEngine:IFlavourTextProvider
     {
+        public const int TEAM_GAIA = -1;
+        public const int RED_TEAM = 1;
+        public const int BLUE_TEAM = 0;
 
-        private List<Ship> _redTeam;
+        private List<Ship> _redTeam; // do we want to split these up? dunno anymore.
         private List<Ship> _blueTeam;
         private PhysicsEngine _physicsEngine;
         
@@ -21,6 +25,7 @@ namespace Spacebattle.Game
         
 
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
+        public event EventHandler<ViewEventArgs> ViewEventHandler;
 
         public uint CurrentRound { get; private set; }
         public uint RoundLimit { get; private set; }
@@ -60,11 +65,13 @@ namespace Spacebattle.Game
             _physicsEngine = new PhysicsEngine();
             _redTeam.ForEach(x => {
                 _physicsEngine.Register(x);
+                x.Team = RED_TEAM;
                 x.FlavourTextEventHandler += OnRedFlavourText;
                 x.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
                 x.Position = new Vector2d(rng.Next(0, 200), rng.Next(0, 200));
             });
             _blueTeam.ForEach(x => {
+                x.Team = BLUE_TEAM;
                 _physicsEngine.Register(x);
                 x.FlavourTextEventHandler += OnBlueFlavourText;
                 x.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
@@ -149,11 +156,11 @@ namespace Spacebattle.Game
         {
             if (ship.IsDestroyed())
                 return;
-            if (ship.ScannedShip == null || ship.ScannedShip.IsDestroyed())
+            if (ship.Target == null || ship.Target.IsDestroyed())
             {
                 var ShipToKill = enemies[rng.Next(enemies.Count)];
                 ship.LockOn(ShipToKill);
-                ship.Scan(ShipToKill);
+                ship.Target = ShipToKill;
                 return; // don't give unfair turn advantage
             }
             else
@@ -161,12 +168,12 @@ namespace Spacebattle.Game
                 ship.Shoot();
             }
             
-            if (ship.Position.DistanceTo(ship.ScannedShip.Position) > 190)
+            if (ship.Position.DistanceTo(ship.Target.Position) > 190)
             {
-                if (ship.Position.DistanceTo(ship.ScannedShip.Position) > 200)
+                if (ship.Position.DistanceTo(ship.Target.Position) > 200)
                 {
-                    ship.SetCourse(ship.Position.DirectionInDegreesTo(ship.ScannedShip.Position));
-                    ship.Throttle = rng.Next(10);
+                    ship.SetCourse(ship.Position.DirectionInDegreesTo(ship.Target.Position));
+                    ship.SetThrottle(rng.Next(10));
                 }
                 else
                 {
@@ -176,11 +183,11 @@ namespace Spacebattle.Game
             else
             {
                 ship.SetCourse(rng.Next(360));
-                ship.Throttle = rng.Next(10);
+                ship.SetThrottle(rng.Next(10));
             }
         }
 
-        private void DoOrder(Order order, Ship ship)
+        private void DoOrder(Order order, IControllableEntity ship)
         {
             if (ship.IsDestroyed()) // you are dead... no orders for you :)
                 return;
@@ -195,7 +202,7 @@ namespace Spacebattle.Game
                     }
                     if (setCourseOrder.ThrottlePercent != null)
                     {
-                        ship.Throttle = (float)setCourseOrder.ThrottlePercent;
+                        ship.SetThrottle((float)setCourseOrder.ThrottlePercent);
                         OnFlavourText(this, new FlavourTextEventArgs { name = ship.Name, message = "Setting throttle to  " + setCourseOrder.ThrottlePercent });
                     }
                     break;
@@ -235,7 +242,7 @@ namespace Spacebattle.Game
                     }
                     ship.Shoot();
                     break;
-                case OrderType.SCAN:
+                case OrderType.SCAN: // this shouldn't take up a turn.
                     var scanOrder = (ScanOrder)order;
                     var shipToScan = _blueTeam.FirstOrDefault(x => x.Name.ToLower() == scanOrder.ShipToScan.ToLower());
                     if (shipToScan == null)
@@ -245,7 +252,8 @@ namespace Spacebattle.Game
                         OnFlavourText(this, new FlavourTextEventArgs { name = ship.Name, message = "No ship found with that name, Sir!" });
                         break;
                     }
-                    ship.Scan( shipToScan);
+                    OnViewEvent(this, ViewEventArgs.Scan(shipToScan));
+                   
                     OnFlavourText(this, new FlavourTextEventArgs { name = ship.Name, message = "Targetting scanners on the " + shipToScan.Name });
                     break;
                 case OrderType.ALL_STOP:
@@ -256,6 +264,12 @@ namespace Spacebattle.Game
                     OnFlavourText(this, new FlavourTextEventArgs { name=ship.Name, message="Sorry, what was that, Captain?" });
                     break;
             }
+        }
+
+
+        private void OnViewEvent(object sender, ViewEventArgs e)
+        {
+            ViewEventHandler?.Invoke(sender, e);
         }
 
         private void OnBlueFlavourText(object sender, FlavourTextEventArgs e)

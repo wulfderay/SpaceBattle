@@ -39,6 +39,8 @@ namespace Spacebattle.physics
             if (entities.Contains(entity))
                 entities.Remove(entity);
         }
+
+        //TODO: add some utilities to solve for intercepts etc.
     }
 
 

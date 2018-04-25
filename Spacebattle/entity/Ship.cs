@@ -7,10 +7,11 @@ using Spacebattle.physics;
 using Spacebattle.Damage;
 using Spacebattle.entity.parts.Weapon;
 using Spacebattle.Game;
+using Spacebattle.Entity;
 
 namespace Spacebattle.entity
 {
-    public class Ship : GameEntity,IDamageableEntity, IUpdateable, IFlavourTextProvider
+    public class Ship : GameEntity, IUpdateable, IFlavourTextProvider, IControllableEntity
     {
         //TODO: make reactor power be used by other parts... have a power requirement for each other type that is refreshed each tick.
         private List<Reactor> _reactors;
@@ -19,27 +20,22 @@ namespace Spacebattle.entity
         private List<Engine> _engines;
         private List<CrewDeck> _crewDecks;
 
-        private Ship _scannedShip;
-
         private float _throttle;
 
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
         
-
-        public float Throttle
+        public float GetThrottle()
         {
-            get
-            {
-                return _throttle;
-            }
-            set
-            {
-                if (value < 0)
-                    return;
-                if (value > 100)
-                    return;
-                _throttle = value;
-            }
+            return _throttle;
+        }
+
+        public void SetThrottle(float percent)
+        {
+            if (percent < 0)
+                return;
+            if (percent > 100)
+                return;
+            _throttle = percent;
         }
 
         public float Power { get; private set; }
@@ -84,18 +80,7 @@ namespace Spacebattle.entity
             }
         }
 
-        public Ship ScannedShip 
-        {
-            get
-            {
-                return _scannedShip;
-            }
-
-            private set
-            {
-                _scannedShip = value;
-            }
-        }
+        public IDamageableEntity Target { get; internal set; }
 
         public Ship ( string name, List<Reactor> reactors, List<Shield> shields, List<IWeapon> weapons, List<Engine> engines, List<CrewDeck> crewDecks)
         {
@@ -188,7 +173,7 @@ namespace Spacebattle.entity
         public void AllStop()
         {
             Velocity = Vector2d.Zero;
-            Throttle = 0;
+            SetThrottle(0);
             //TODO: get this done the correct way.
             /*
             var accelerationNeeded = Mass * Velocity.Magnitude();
@@ -289,11 +274,6 @@ namespace Spacebattle.entity
                 weaponsToLock.ForEach(x => x.Lock(ship));
                 OnFlavourText(this, new FlavourTextEventArgs { name = Name, message = "Locking weapons on to the " + ship.Name });
             }
-        }
-
-        internal void Scan(Ship shipToScan)
-        {
-            ScannedShip = shipToScan;
         }
 
         public void LockOn(IDamageableEntity ship)
@@ -404,9 +384,9 @@ namespace Spacebattle.entity
 
         private void moveShip()
         {
-            if (Throttle == 0)
+            if (GetThrottle() == 0)
                 return;
-            var enginePower = _engines.Select(x => x.Throttle(Throttle)).Sum();
+            var enginePower = _engines.Select(x => x.Throttle(GetThrottle())).Sum();
             var impulse = Vector2d.fromAngleDegrees(Orientation) * enginePower;
             ApplyImpulse(impulse);
         }
@@ -475,5 +455,6 @@ namespace Spacebattle.entity
         }
 
         
+
     }
 }

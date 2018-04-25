@@ -19,6 +19,8 @@ namespace Spacebattle.entity
 
         public string Name { get; set; }
 
+        public int Team { get; set; }
+
         public void ApplyImpulse( Vector2d force)
         {
             // F = ma

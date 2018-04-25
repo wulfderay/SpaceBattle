@@ -18,6 +18,8 @@ namespace Spacebattle
     {
         private static Window output;
 
+        public static Ship scannedShip = null;
+
         static void Main(string[] args)
         {
             /*
@@ -125,13 +127,12 @@ namespace Spacebattle
 
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
+            game.ViewEventHandler += OnViewEvent;
             var redteam = new List<Ship> {
                 trymwing,
                 enterprise,
                 narwhal,
-                
-
-        };
+            };
             var blueteam = new List<Ship> {
                 pooey,
                 destroyer,
@@ -149,13 +150,13 @@ namespace Spacebattle
                 new List<IWeapon>() { new PlasmaBolt("PlasmaBolt", 100, 10, 20, 60, 500) },
                 new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
                 new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) })
-        };
+            };
             var bothTeams = new List<Ship>();
             bothTeams.AddRange(redteam);
             bothTeams.AddRange(blueteam);
             game.StartNewGame(redteam, blueteam, 1000);
 
-            UpdateDisplay(redteam[0].ScannedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
+            UpdateDisplay(scannedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
 
             
             while (!game.IsGameFinished())
@@ -166,7 +167,7 @@ namespace Spacebattle
                 var order = OrderParser.ParseOrder(Console.ReadLine());
 
                 game.RunOneRound(order);
-                UpdateDisplay(redteam[0].ScannedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
+                UpdateDisplay(scannedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
 
 
             }
@@ -183,6 +184,12 @@ namespace Spacebattle
             {
 
             }
+        }
+
+        private static void OnViewEvent(object sender, ViewEventArgs e)
+        {
+            scannedShip = ((ScanEvent)e).Ship;
+
         }
 
         private static List<Shield> sixFastShields()
