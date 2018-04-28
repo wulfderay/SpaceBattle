@@ -1,4 +1,5 @@
 ﻿using Spacebattle.entity;
+using Spacebattle.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,11 @@ namespace Spacebattle.Behaviours
     class Pursue: IBehaviour
     {
         private float _maxSpeed;
-        private IEntity _parent;
+        private IControllableEntity _parent;
         private float _preferredDistance;
         private IEntity _target;
 
-        public Pursue(IEntity parent, IEntity target, float preferredDistance, float maxSpeed)
+        public Pursue(IControllableEntity parent, IEntity target, float preferredDistance, float maxSpeed)
         {
             _parent = parent;
             _target = target;
@@ -22,7 +23,7 @@ namespace Spacebattle.Behaviours
             _maxSpeed = maxSpeed;
         }
 
-        public void Update(uint roundNumber)
+        public void Execute()
         {
             if ( _parent.Position.DistanceTo(_target.Position) > _preferredDistance)
             {

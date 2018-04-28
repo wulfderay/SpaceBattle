@@ -8,10 +8,11 @@ using Spacebattle.Damage;
 using Spacebattle.entity.parts.Weapon;
 using Spacebattle.Game;
 using Spacebattle.Entity;
+using Spacebattle.Behaviours;
 
 namespace Spacebattle.entity
 {
-    public class Ship : GameEntity, IUpdateable, IFlavourTextProvider, IControllableEntity
+    public class Ship : GameEntity, IShip
     {
         //TODO: make reactor power be used by other parts... have a power requirement for each other type that is refreshed each tick.
         private List<Reactor> _reactors;
@@ -21,6 +22,7 @@ namespace Spacebattle.entity
         private List<CrewDeck> _crewDecks;
 
         private float _throttle;
+        private List<IBehaviour> _behaviours = new List<IBehaviour>();
 
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
         
@@ -81,6 +83,13 @@ namespace Spacebattle.entity
         }
 
         public IDamageableEntity Target { get; internal set; }
+
+        public IGameState gameState
+        {
+            get;
+
+            set;
+        }
 
         public Ship ( string name, List<Reactor> reactors, List<Shield> shields, List<IWeapon> weapons, List<Engine> engines, List<CrewDeck> crewDecks)
         {
@@ -454,7 +463,32 @@ namespace Spacebattle.entity
             FlavourTextEventHandler?.Invoke(sender, new FlavourTextEventArgs { name = Name+"."+e.name, message = e.message });
         }
 
-        
+        public List<IDamageableEntity> GetVisibleEntites()
+        {
+            // hmm... don't know how to do this yet.
+            // should we always have  gameengine to see? that seems bad.
+            // what if we get a list of game state every update?
+            // I wish there was a a way to throw an event that would return synchronously
 
+            return gameState.GetDamageableEntities().ToList();
+        }
+
+        public void AddBehaviour(IBehaviour behaviour)
+        {
+            _behaviours.Add(behaviour);
+        }
+
+        public void RemoveBehaviour(IBehaviour behaviour)
+        {
+            if (_behaviours.Contains(behaviour))
+                _behaviours.Remove(behaviour);
+        }
+
+        public void ExecuteBehaviours()
+        {
+            foreach (var behaviour in _behaviours)
+                behaviour.Execute();
+
+        }
     }
 }

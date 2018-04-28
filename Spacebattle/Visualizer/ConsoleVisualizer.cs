@@ -89,7 +89,7 @@ namespace Spacebattle.Visualizer
             Console.SetCursorPosition(oldX, oldY);
         }
 
-        public static void  DrawRadar(IConsole window, List<Ship> ships, IEntity centreEntity, float range)
+        public static void  DrawRadar(IConsole window, List<IShip> ships, IEntity centreEntity, float range)
         {
             window.Clear();
             var scaleX = window.WindowWidth / range;
@@ -123,7 +123,7 @@ namespace Spacebattle.Visualizer
             }
         }
 
-        public static void DrawShipList(IConsole window, List<Ship> ships, IEntity centreEntity)
+        public static void DrawShipList(IConsole window, List<IShip> ships, IEntity centreEntity)
         {
             window.Clear();
             window.WriteLine(ConsoleColor.Yellow,"Name".PadLeft(12) + "\t" + "Range" + "\t" + "Bearing");
@@ -140,14 +140,14 @@ namespace Spacebattle.Visualizer
             }
         }
 
-        public static char GetShipSymbol(Ship ship)
+        public static char GetShipSymbol(IShip ship)
         {
             List<char> symbols = new List<char> { '@', '#', '$', '%', '&', '*', 'π', 'Σ', 'Φ', 'φ', 'α', 'ß', 'δ', '■', 'Ω', '¥', 'Θ', '≡', '±', };
             var index = (Math.Abs(ship.Name.GetHashCode()) % symbols.Count);
             return symbols[index];
         }
 
-        public static ConsoleColor GetShipColor(Ship ship)
+        public static ConsoleColor GetShipColor(IShip ship)
         {
             List<ConsoleColor> colors = new List<ConsoleColor> { ConsoleColor.Yellow, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.DarkGray, ConsoleColor.DarkYellow, ConsoleColor.White , ConsoleColor.DarkMagenta};
             var index = (Math.Abs(ship.Name.GetHashCode()) % colors.Count);

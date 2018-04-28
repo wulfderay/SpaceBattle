@@ -4,8 +4,11 @@ using System;
 
 namespace Spacebattle.entity
 {
+    
     public interface IEntity: IGameEngineEventProvider
     {
+        
+
         float Mass { get; set; }
         float Orientation { get; set; }
         Vector2d Position { get; set; }

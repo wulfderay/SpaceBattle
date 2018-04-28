@@ -18,7 +18,7 @@ namespace Spacebattle
     {
         private static Window output;
 
-        public static Ship scannedShip = null;
+        public static IShip scannedShip = null;
 
         static void Main(string[] args)
         {
@@ -128,12 +128,12 @@ namespace Spacebattle
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
             game.ViewEventHandler += OnViewEvent;
-            var redteam = new List<Ship> {
+            var redteam = new List<IShip> {
                 trymwing,
                 enterprise,
                 narwhal,
             };
-            var blueteam = new List<Ship> {
+            var blueteam = new List<IShip> {
                 pooey,
                 destroyer,
                 new Ship(
@@ -151,7 +151,7 @@ namespace Spacebattle
                 new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
                 new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) })
             };
-            var bothTeams = new List<Ship>();
+            var bothTeams = new List<IShip>();
             bothTeams.AddRange(redteam);
             bothTeams.AddRange(blueteam);
             game.StartNewGame(redteam, blueteam, 1000);
@@ -230,14 +230,14 @@ namespace Spacebattle
         }  // End  setConsoleSize()
 
 
-        public static void UpdateDisplay(Ship target, Ship flagship, List<Ship> ships, IConsole scanPanel, IConsole radarPanel, IConsole shipListPanel)
+        public static void UpdateDisplay(IShip target, IShip flagship, List<IShip> ships, IConsole scanPanel, IConsole radarPanel, IConsole shipListPanel)
         {
             if (target != null)
             {
-                ConsoleVisualizer.PrintShip(target, scanPanel, ConsoleColor.Red);
+                ConsoleVisualizer.PrintShip((Ship)target, scanPanel, ConsoleColor.Red);
                 scanPanel.WriteLine("");
             }
-            ConsoleVisualizer.PrintShip(flagship, scanPanel, ConsoleColor.White);
+            ConsoleVisualizer.PrintShip((Ship)flagship, scanPanel, ConsoleColor.White);
             ConsoleVisualizer.DrawRadar(radarPanel, ships, flagship, 1000);
             ConsoleVisualizer.DrawShipList(shipListPanel, ships, flagship);
         }

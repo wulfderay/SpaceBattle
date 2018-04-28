@@ -1,4 +1,5 @@
-﻿using Spacebattle.entity;
+﻿using Spacebattle.Behaviours;
+using Spacebattle.entity;
 using Spacebattle.entity.parts.Weapon;
 using Spacebattle.Entity;
 using Spacebattle.orders;
@@ -11,14 +12,14 @@ using static Spacebattle.orders.Order;
 
 namespace Spacebattle.Game
 {
-    public class GameEngine:IFlavourTextProvider
+    public class GameEngine:IFlavourTextProvider, IGameState
     {
-        public const int TEAM_GAIA = -1;
+        public const int GAIA_TEAM = -1;
         public const int RED_TEAM = 1;
         public const int BLUE_TEAM = 0;
 
-        private List<Ship> _redTeam; // do we want to split these up? dunno anymore.
-        private List<Ship> _blueTeam;
+        private List<IShip> _redTeam; // do we want to split these up? dunno anymore.
+        private List<IShip> _blueTeam;
         private PhysicsEngine _physicsEngine;
         
         private static  Random rng = new Random();
@@ -48,7 +49,7 @@ namespace Spacebattle.Game
                 CurrentRound >= RoundLimit);
         }
 
-        public void StartNewGame(List<Ship> redTeam, List<Ship> blueTeam, uint roundLimit)
+        public void StartNewGame(List<IShip> redTeam, List<IShip> blueTeam, uint roundLimit)
         {
             if (redTeam.Count == 0)
                 throw new ArgumentException("Each team must have at least one ship! Red team does not :(");
@@ -61,18 +62,23 @@ namespace Spacebattle.Game
             _blueTeam = blueTeam;
             RoundLimit = roundLimit;
             CurrentRound = 0;
-
+            var playerShip = _redTeam[0];
             _physicsEngine = new PhysicsEngine();
             _redTeam.ForEach(x => {
                 _physicsEngine.Register(x);
                 x.Team = RED_TEAM;
-                x.FlavourTextEventHandler += OnRedFlavourText;
+                if (x != playerShip)
+                    x.AddBehaviour(new BasicAiBehaviour(x));
+                x.gameState = this;
+                x.FlavourTextEventHandler += OnRedFlavourText; // should this just be a gameengine event?
                 x.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
                 x.Position = new Vector2d(rng.Next(0, 200), rng.Next(0, 200));
             });
             _blueTeam.ForEach(x => {
                 x.Team = BLUE_TEAM;
                 _physicsEngine.Register(x);
+                x.AddBehaviour(new BasicAiBehaviour(x));
+                x.gameState = this;
                 x.FlavourTextEventHandler += OnBlueFlavourText;
                 x.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
                 x.Position = new Vector2d(rng.Next(500, 700), rng.Next(500, 700));
@@ -139,52 +145,17 @@ namespace Spacebattle.Game
             DoOrder(order, _redTeam[0]);
             for ( var i = 1; i < _redTeam.Count; i++)
             {
-                DoAIOrder(_redTeam[i], _blueTeam);
+                _redTeam[i].ExecuteBehaviours();
             }
             _blueTeam.ForEach(x =>
             {
-                DoAIOrder(x, _redTeam);
+                x.ExecuteBehaviours();
             });
             CurrentRound += 1;
             _physicsEngine.Update(CurrentRound);
             _redTeam.ForEach(x => x.Update(CurrentRound));
             _blueTeam.ForEach(x => x.Update(CurrentRound));
 
-        }
-
-        private void DoAIOrder(Ship ship, List<Ship> enemies)
-        {
-            if (ship.IsDestroyed())
-                return;
-            if (ship.Target == null || ship.Target.IsDestroyed())
-            {
-                var ShipToKill = enemies[rng.Next(enemies.Count)];
-                ship.LockOn(ShipToKill);
-                ship.Target = ShipToKill;
-                return; // don't give unfair turn advantage
-            }
-            else
-            {
-                ship.Shoot();
-            }
-            
-            if (ship.Position.DistanceTo(ship.Target.Position) > 190)
-            {
-                if (ship.Position.DistanceTo(ship.Target.Position) > 200)
-                {
-                    ship.SetCourse(ship.Position.DirectionInDegreesTo(ship.Target.Position));
-                    ship.SetThrottle(rng.Next(10));
-                }
-                else
-                {
-                    ship.AllStop();
-                }
-            }
-            else
-            {
-                ship.SetCourse(rng.Next(360));
-                ship.SetThrottle(rng.Next(10));
-            }
         }
 
         private void DoOrder(Order order, IControllableEntity ship)
@@ -288,6 +259,11 @@ namespace Spacebattle.Game
         {
             e.team = -1; //gaia
             FlavourTextEventHandler?.Invoke(sender, e);
+        }
+
+        public IEnumerable<IDamageableEntity> GetDamageableEntities()
+        {
+            return new List<IDamageableEntity>().Concat(_redTeam).Concat(_blueTeam);
         }
     }
 }

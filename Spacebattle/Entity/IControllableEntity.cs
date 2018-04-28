@@ -1,8 +1,10 @@
-﻿using Spacebattle.entity.parts.Weapon;
+﻿using Spacebattle.entity;
+using Spacebattle.entity.parts.Weapon;
+using System.Collections.Generic;
 
 namespace Spacebattle.Entity
 {
-    interface IControllableEntity:IDamageableEntity
+    public interface IControllableEntity: IDamageableEntity, IUpdateable
     {
         void AllStop();
         float GetMaxAcceleration(); // is this really needed?
@@ -16,5 +18,7 @@ namespace Spacebattle.Entity
         void Shoot();
         void Shoot(WeaponType weaponType);
         void Shoot(string weaponName);
+        List<IDamageableEntity> GetVisibleEntites(); // this will end up relying on scanners... that's why it's here.
+        
     }
 }

@@ -4,6 +4,6 @@ namespace Spacebattle.Game
 {
     internal class ScanEvent :ViewEventArgs
     {
-        public Ship Ship { get; set; }
+        public IShip Ship { get; set; }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Spacebattle.Behaviours
 {
-    internal interface IBehaviour: IUpdateable
+    public interface IBehaviour
     {
-
+        void Execute();
     }
 }

@@ -1,7 +1,11 @@
-﻿namespace Spacebattle.entity
+﻿using Spacebattle.Entity;
+using Spacebattle.Game;
+
+namespace Spacebattle.entity
 {
-    internal interface IShip
+    public interface IShip : IControllableEntity, IFlavourTextProvider, IBehave
     {
         // Shaun reccommended that I make an IShip for id purposes.
+        IGameState gameState { get; set; }
     }
 }
