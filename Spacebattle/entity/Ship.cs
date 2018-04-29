@@ -382,14 +382,7 @@ namespace Spacebattle.entity
             Orientation = angle;
         }
 
-        /// <summary>
-        /// set a desired velocity relative to the center of the galaxy. 
-        /// </summary>
-        /// <param name="speed"></param>
-        public void SetVelocity(float speed)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         private void moveShip()
         {

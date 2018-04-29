@@ -158,7 +158,7 @@ namespace Spacebattle.Game
 
         }
 
-        private void DoOrder(Order order, IControllableEntity ship)
+        private void DoOrder(Order order, IShip ship)
         {
             if (ship.IsDestroyed()) // you are dead... no orders for you :)
                 return;

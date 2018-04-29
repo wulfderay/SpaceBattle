@@ -10,17 +10,17 @@ namespace Spacebattle.Behaviours
 {
     class Pursue: IBehaviour
     {
-        private float _maxSpeed;
+        private float _maxThrottle;
         private IControllableEntity _parent;
         private float _preferredDistance;
         private IEntity _target;
 
-        public Pursue(IControllableEntity parent, IEntity target, float preferredDistance, float maxSpeed)
+        public Pursue(IControllableEntity parent, IEntity target, float preferredDistance, float maxThrottle)
         {
             _parent = parent;
             _target = target;
             _preferredDistance = preferredDistance;
-            _maxSpeed = maxSpeed;
+            _maxThrottle = maxThrottle;
         }
 
         public void Execute()
@@ -28,12 +28,14 @@ namespace Spacebattle.Behaviours
             if ( _parent.Position.DistanceTo(_target.Position) > _preferredDistance)
             {
                 // head toward the target and/or speed up
-                
+                _parent.SetCourse(_parent.Position.DirectionInDegreesTo(_target.Position));
+                _parent.SetThrottle(_maxThrottle); // just punch it, I guess.
                 return;
             }
             if (_parent.Position.DistanceTo(_target.Position) < _preferredDistance)
             {
-                // back off a bit
+                _parent.SetCourse(_target.Position.DirectionInDegreesTo(_parent.Position)); // opposite direction.
+                _parent.SetThrottle(_maxThrottle); // just punch it, I guess.
                 return;
             }
 
