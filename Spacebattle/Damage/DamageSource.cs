@@ -6,7 +6,7 @@ namespace Spacebattle.Damage
     public class DamageSource
     {
         public Vector2d Origin;
-        public DamageType Type;
+        public DamageType DamageType;
         public float Magnitude;
     }
 

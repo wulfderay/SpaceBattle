@@ -47,6 +47,7 @@ namespace Spacebattle
              *  unload
              *  destruct
              *  lock
+             *  status
              * 
              * TODo: How should parts consume power?
              * I guess there are two ways.... an upkeep step and a per use charge..
@@ -151,12 +152,13 @@ namespace Spacebattle
                 new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
                 new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) })
             };
-            var bothTeams = new List<IShip>();
+          /*  var bothTeams = new List<IDamageableEntity>();
             bothTeams.AddRange(redteam);
             bothTeams.AddRange(blueteam);
+            */
             game.StartNewGame(redteam, blueteam, 1000);
 
-            UpdateDisplay(scannedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
+            UpdateDisplay(scannedShip, redteam[0], game.Entities, ScanPanel, radarPanel, shipList);
 
             
             while (!game.IsGameFinished())
@@ -167,7 +169,7 @@ namespace Spacebattle
                 var order = OrderParser.ParseOrder(Console.ReadLine());
 
                 game.RunOneRound(order);
-                UpdateDisplay(scannedShip, redteam[0], bothTeams, ScanPanel, radarPanel, shipList);
+                UpdateDisplay(scannedShip, redteam[0], game.Entities, ScanPanel, radarPanel, shipList);
 
 
             }
@@ -230,7 +232,7 @@ namespace Spacebattle
         }  // End  setConsoleSize()
 
 
-        public static void UpdateDisplay(IShip target, IShip flagship, List<IShip> ships, IConsole scanPanel, IConsole radarPanel, IConsole shipListPanel)
+        public static void UpdateDisplay(IDamageableEntity target, IDamageableEntity flagship, List<IGameEntity> ships, IConsole scanPanel, IConsole radarPanel, IConsole shipListPanel)
         {
             if (target != null)
             {

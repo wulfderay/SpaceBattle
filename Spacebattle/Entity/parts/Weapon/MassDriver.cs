@@ -38,7 +38,7 @@ namespace Spacebattle.Entity.parts.Weapon
             if (distance < _range)
             {
                 _ammo--;
-                OnGameEngineEvent(this, GameEngineEventArgs.Damage(_target, new DamageSource() { Magnitude = _power, Type = DamageType.CONCUSSIVE, Origin = Parent.Position })); // power is not attenuated because there is no drag.
+                OnGameEngineEvent(this, GameEngineEventArgs.Damage(_target, new DamageSource() { Magnitude = _power, DamageType = DamageType.CONCUSSIVE, Origin = Parent.Position })); // power is not attenuated because there is no drag.
             }
             else
                 OnFlavourText(_name, "Target was too far away to hit!");

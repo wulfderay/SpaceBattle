@@ -1,7 +1,6 @@
 ﻿using Spacebattle.Behaviours;
 using Spacebattle.entity;
 using Spacebattle.entity.parts.Weapon;
-using Spacebattle.Entity;
 using Spacebattle.orders;
 using Spacebattle.physics;
 using System;
@@ -12,7 +11,7 @@ using static Spacebattle.orders.Order;
 
 namespace Spacebattle.Game
 {
-    public class GameEngine:IFlavourTextProvider, IGameState
+    public class GameEngine : IFlavourTextProvider, IGameState
     {
         public const int GAIA_TEAM = -1;
         public const int RED_TEAM = 1;
@@ -20,11 +19,12 @@ namespace Spacebattle.Game
 
         private List<IShip> _redTeam; // do we want to split these up? dunno anymore.
         private List<IShip> _blueTeam;
+        private List<IGameEntity> _entities = new List<IGameEntity>();
         private PhysicsEngine _physicsEngine;
-        
-        private static  Random rng = new Random();
-        
 
+        private static Random rng = new Random();
+
+        public List<IGameEntity>  Entities {get { return _entities;}}
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
         public event EventHandler<ViewEventArgs> ViewEventHandler;
 
@@ -66,6 +66,7 @@ namespace Spacebattle.Game
             _physicsEngine = new PhysicsEngine();
             _redTeam.ForEach(x => {
                 _physicsEngine.Register(x);
+                _entities.Add(x);
                 x.Team = RED_TEAM;
                 if (x != playerShip)
                     x.AddBehaviour(new BasicAiBehaviour(x));
@@ -76,6 +77,7 @@ namespace Spacebattle.Game
             });
             _blueTeam.ForEach(x => {
                 x.Team = BLUE_TEAM;
+                _entities.Add(x);
                 _physicsEngine.Register(x);
                 x.AddBehaviour(new BasicAiBehaviour(x));
                 x.gameState = this;
@@ -92,6 +94,9 @@ namespace Spacebattle.Game
                 case GameEngineEventType.DAMAGE:
                     doDamageEvent((DamageEvent)e);
                     break;
+                case GameEngineEventType.SPLASH_DAMAGE:
+                    doSplashDamageEvent((SplashDamageEvent)e);
+                    break;
                 case GameEngineEventType.DESTROYED:
                     doDestroyedEvent((DestroyEvent)e);
                     break;
@@ -101,13 +106,27 @@ namespace Spacebattle.Game
             }
         }
 
+        private void doSplashDamageEvent(SplashDamageEvent e)
+        {
+            foreach (var entity in _entities.Where(entity => entity.Position.DistanceTo(e.DamageSource.Origin) < e.Radius))
+            {
+                entity.Damage(e.DamageSource);
+            }
+        }
+
         private void doSpawnEvent(SpawnEvent e)
         {
-            throw new NotImplementedException();
+            _entities.Add(e.Entity);
+            e.Entity.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
+            _physicsEngine.Register(e.Entity);
         }
 
         private void doDestroyedEvent(DestroyEvent e)
         {
+            _entities.Remove(e.Entity);
+            // hmm. Can't add flavour text here.. :/
+            e.Entity.GameEngineEventHandler -= (sender, args) => OnGameEngineEvent(sender, args);
+            // we probably want to remove from drawing and from updating, too....
             _physicsEngine.DeRegister(e.Entity);
         }
 

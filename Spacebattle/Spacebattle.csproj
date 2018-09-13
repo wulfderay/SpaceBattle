@@ -52,12 +52,14 @@
     <Compile Include="Behaviours\Pursue.cs" />
     <Compile Include="Damage\DamageSource.cs" />
     <Compile Include="Debug\IDebugProvider.cs" />
+    <Compile Include="Entity\IGameEntity.cs" />
     <Compile Include="Entity\IBehave.cs" />
     <Compile Include="Entity\IControllableEntity.cs" />
     <Compile Include="Entity\IGameState.cs" />
     <Compile Include="Entity\IShip.cs" />
     <Compile Include="Entity\parts\Weapon\Torpedo.cs" />
     <Compile Include="Entity\parts\Weapon\TorpedoTube.cs" />
+    <Compile Include="Game\SplashDamageEvent.cs" />
     <Compile Include="Game\DamageEvent.cs" />
     <Compile Include="Game\DestroyEvent.cs" />
     <Compile Include="Game\GameEngineEventArgs.cs" />

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Spacebattle.Behaviours;
 using Spacebattle.Damage;
 using Spacebattle.entity;
-using Spacebattle.entity.parts.Weapon;
 using Spacebattle.Game;
 using Spacebattle.physics;
 
@@ -21,10 +20,19 @@ namespace Spacebattle.Entity.parts.Weapon
         private bool _isDestroyed;
         private List<IBehaviour> _behaviours;
         private float _throttle;
-
-        public Torpedo(IDamageableEntity target)
+        private int _TTL;
+        private float _proximityFuse;
+        private float _damage;
+        private float _damageRadius;
+        public Torpedo(IDamageableEntity target, int ttl, float proximityFuse, float damage, float damageRadius)
         {
+            Team = GameEngine.GAIA_TEAM;
+            Name = "Torpedo";
+            _TTL = ttl;
+            _proximityFuse = proximityFuse;
             this.target = target;
+            _damage = damage;
+            _damageRadius = damageRadius;
             AddBehaviour(new Pursue(this, target, 0, 100));
 
         }
@@ -36,8 +44,7 @@ namespace Spacebattle.Entity.parts.Weapon
 
         public void Damage(DamageSource damage) // any damage at this point should destroy it.
         {
-            _isDestroyed = true;
-            OnGameEngineEvent(this, GameEngineEventArgs.Destroy(this));
+            BlowUp();
         }
 
         public float GetMaxAcceleration()
@@ -72,8 +79,11 @@ namespace Spacebattle.Entity.parts.Weapon
 
         public void Update(uint roundNumber)
         {
-          // dunno.
-          // I guess if it's near enough to the target it will blow up and emit damage... 
+            if (_TTL <= 0 || target.Position.DistanceTo(this.Position) < _proximityFuse) 
+            {
+                BlowUp();
+            }
+            _TTL--;
         }
 
         public void AddBehaviour(IBehaviour behaviour)
@@ -93,9 +103,16 @@ namespace Spacebattle.Entity.parts.Weapon
                 behaviour.Execute();
         }
 
-
-
-        
-
+        private void BlowUp()
+        {
+            _isDestroyed = true;
+            OnGameEngineEvent(this, GameEngineEventArgs.Destroy(this)); // destroy first so we don't get in a infinite loop of destruction.
+            OnGameEngineEvent(this, GameEngineEventArgs.SplashDamage(_damageRadius, new DamageSource()
+            {
+                Magnitude = _damage,
+                Origin = Position,
+                DamageType = DamageType.EXPLOSIVE
+            })); 
+        }
     }
 }

@@ -1,11 +1,6 @@
 ﻿using Spacebattle.entity;
 using Spacebattle.entity.parts.Weapon;
 using Spacebattle.Game;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Spacebattle.Entity.parts.Weapon
 {
@@ -20,7 +15,7 @@ namespace Spacebattle.Entity.parts.Weapon
         public void Fire()
         {
             OnFlavourText(_name, "Firing Torpedo!");
-            OnGameEngineEvent(this, GameEngineEventArgs.Spawn(new Torpedo(_target)));
+            OnGameEngineEvent(this, GameEngineEventArgs.Spawn(new Torpedo(_target, 15, 200, 150, 300)));
         }
         
         public IDamageableEntity GetLockTarget()

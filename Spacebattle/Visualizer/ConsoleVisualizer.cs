@@ -89,50 +89,49 @@ namespace Spacebattle.Visualizer
             Console.SetCursorPosition(oldX, oldY);
         }
 
-        public static void  DrawRadar(IConsole window, List<IShip> ships, IEntity centreEntity, float range)
+        public static void  DrawRadar(IConsole window, List<IGameEntity> entities, IEntity centreEntity, float range)
         {
             window.Clear();
             var scaleX = window.WindowWidth / range;
             var scaleY = window.WindowHeight / range;
             var centreX = window.WindowWidth / 2;
             var centreY = window.WindowHeight / 2;
-            foreach (var ship in ships)
+            foreach (var entity in entities)
             {
-                if (ship.Position.DistanceTo(centreEntity.Position) > range)
+                if (entity.Position.DistanceTo(centreEntity.Position) > range)
                     continue;
-                var distanceFromCenter = ship.Position - centreEntity.Position;
+                var distanceFromCenter = entity.Position - centreEntity.Position;
                 var x = (int)(distanceFromCenter.X * scaleX) + centreX;
                 var y = (int)(distanceFromCenter.Y * scaleY) + centreY;
                 if (x < 0 || y < 0)
                 {
-                    OnDebug("Radar", "Didn't draw " + ship.Name + " at " + x + " " + y);
+                    OnDebug("Radar", "Didn't draw " + entity.Name + " at " + x + " " + y);
                     continue;
                 }
 
-                if (ship.IsDestroyed())
+                if (entity.IsDestroyed())
                 {
                     window.ForegroundColor = ConsoleColor.Red;
                 }
                 else
                 {
-                    window.ForegroundColor = GetShipColor(ship);
+                    window.ForegroundColor = GetTeamColor(entity);
                 }
-                window.PrintAt(x,y, GetShipSymbol(ship));
-                OnDebug("Radar", "Drew "+ship.Name+" at "+x+" "+y);
+                window.PrintAt(x,y, GetEntitySymbol(entity));
+                OnDebug("Radar", "Drew "+entity.Name+" at "+x+" "+y);
 
             }
         }
 
-        public static void DrawShipList(IConsole window, List<IShip> ships, IEntity centreEntity)
+        public static void DrawShipList(IConsole window, List<IGameEntity> ships, IEntity centreEntity)
         {
             window.Clear();
             window.WriteLine(ConsoleColor.Yellow,"Name".PadLeft(12) + "\t" + "Range" + "\t" + "Bearing");
             foreach (var ship in ships.OrderBy(x => x.Position.DistanceTo(centreEntity.Position)))
             {
-                var shipColor = ship.IsDestroyed() ? ConsoleColor.Red : GetShipColor(ship);
-                window.Write(shipColor, GetShipSymbol(ship) + " ");
+                var shipColor = ship.IsDestroyed() ? ConsoleColor.Red : GetTeamColor(ship);
+                window.Write(shipColor, GetEntitySymbol(ship) + " "+ ship.Name.PadLeft(10) + "\t");
                 window.WriteLine(
-                    ship.Name.PadLeft(10) + "\t" + 
                     (int)ship.Position.DistanceTo(centreEntity.Position) + "\t" + 
                     (int)centreEntity.Position.DirectionInDegreesTo(ship.Position)+  '\t'+
                     (int)ship.Position.X+ "\t"+
@@ -140,18 +139,19 @@ namespace Spacebattle.Visualizer
             }
         }
 
-        public static char GetShipSymbol(IShip ship)
+        public static char GetEntitySymbol(IEntity entity)
         {
+            if (entity.Name == "Torpedo")
+                return '.';
             List<char> symbols = new List<char> { '@', '#', '$', '%', '&', '*', 'π', 'Σ', 'Φ', 'φ', 'α', 'ß', 'δ', '■', 'Ω', '¥', 'Θ', '≡', '±', };
-            var index = (Math.Abs(ship.Name.GetHashCode()) % symbols.Count);
+            var index = (Math.Abs(entity.Name.GetHashCode()) % symbols.Count);
             return symbols[index];
         }
 
-        public static ConsoleColor GetShipColor(IShip ship)
+        public static ConsoleColor GetTeamColor(IEntity ship)
         {
             List<ConsoleColor> colors = new List<ConsoleColor> { ConsoleColor.Yellow, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.DarkGray, ConsoleColor.DarkYellow, ConsoleColor.White , ConsoleColor.DarkMagenta};
-            var index = (Math.Abs(ship.Name.GetHashCode()) % colors.Count);
-            return colors[index];
+            return colors[ship.Team % colors.Count];
         }
 
         protected static void OnDebug(string from, string message)

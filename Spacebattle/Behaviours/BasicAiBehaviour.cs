@@ -17,7 +17,7 @@ namespace Spacebattle.Behaviours
         {
             if (_ship.IsDestroyed())
                 return;
-            if (_target == null || _target.IsDestroyed()) // the way we hanle this is with behaviours... they can add he state needed.
+            if (_target == null || _target.IsDestroyed()) // the way we handle this is with behaviours... they can add he state needed.
             {
                 var enemies = _ship.GetVisibleEntites().Where(x => x.Team != _ship.Team && x.Team != GameEngine.GAIA_TEAM).ToList(); 
                 var _shipToKill = enemies[GameEngine.Random(0, enemies.Count())];

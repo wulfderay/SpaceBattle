@@ -1,10 +1,11 @@
 ﻿using System;
 using Spacebattle.physics;
 using Spacebattle.Game;
+using Spacebattle.Damage;
 
 namespace Spacebattle.entity
 {
-    public class GameEntity : IEntity
+    public class GameEntity : IGameEntity
     {
 
         public event EventHandler<GameEngineEventArgs> GameEngineEventHandler;
@@ -42,5 +43,14 @@ namespace Spacebattle.entity
             GameEngineEventHandler?.Invoke(sender, e);
         }
 
+        public void Damage(DamageSource damage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsDestroyed()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

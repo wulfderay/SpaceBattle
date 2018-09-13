@@ -6,7 +6,7 @@ namespace Spacebattle.Game
     public class DestroyEvent: GameEngineEventArgs
     {
         public DestroyEvent() { Type = GameEngineEventType.DESTROYED; }
-        public IEntity Entity { get; internal set; }
+        public IGameEntity Entity { get; internal set; }
 
     }
 }

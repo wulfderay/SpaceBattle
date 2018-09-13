@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Spacebattle.entity
 {
-    public interface IShip : IControllableEntity, IFlavourTextProvider, IBehave
+    public interface IShip : IGameEntity, IControllableEntity, IFlavourTextProvider, IBehave
     {
 
         IGameState gameState { get; set; }

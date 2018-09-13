@@ -124,7 +124,7 @@ namespace Spacebattle.entity
             if (residualDamage.Magnitude == 0)
                 return;
             OnFlavourText(Name, Name + " suffered a hit to the hull!!");
-            if ( residualDamage.Type == DamageType.FIRE)
+            if ( residualDamage.DamageType == DamageType.FIRE)
             {
                 OnFlavourText(Name, Name + " is on fire!");
             }
@@ -162,7 +162,7 @@ namespace Spacebattle.entity
         {
             if (_shields.Count == 0)
                 return damage;
-            if (damage.Type == (DamageType.RADIATION | DamageType.PIERCING))
+            if (damage.DamageType == (DamageType.RADIATION | DamageType.PIERCING))
             {
                 OnFlavourText(Name, "It passed right through the shields!");
                 return damage;
@@ -176,7 +176,7 @@ namespace Spacebattle.entity
                 residualDamage = shield.Absorb(residualDamage); 
             }
             OnFlavourText(Name, damage.Magnitude - residualDamage.Magnitude + " damage was absorbed by shields.");
-            return new DamageSource { Magnitude = residualDamage.Magnitude, Origin = damage.Origin, Type = damage.Type };
+            return new DamageSource { Magnitude = residualDamage.Magnitude, Origin = damage.Origin, DamageType = damage.DamageType };
         }
 
         public void AllStop()

@@ -50,9 +50,9 @@ namespace Spacebattle.entity.parts
             OnFlavourText(_name, "Shield Hit!");
             var residualDamage = damage.Magnitude;
             var modifier = 1f;
-            if (damage.Type == DamageType.DRAINING)
+            if (damage.DamageType == DamageType.DRAINING)
                 modifier = 2f;
-            if (damage.Type == DamageType.CONCUSSIVE)
+            if (damage.DamageType == DamageType.CONCUSSIVE)
                 modifier = 0.5f;
             // apply a modifier to the damage to the sheild, but remove that modifire before it gets to the hull.
 
@@ -61,9 +61,9 @@ namespace Spacebattle.entity.parts
             {
                 var residual = Math.Abs(_currentAbsorbtion)/modifier;
                 _currentAbsorbtion = 0;
-                return new DamageSource { Magnitude = residual, Origin = damage.Origin, Type = damage.Type };
+                return new DamageSource { Magnitude = residual, Origin = damage.Origin, DamageType = damage.DamageType };
             }
-            return new DamageSource { Magnitude = 0, Origin = damage.Origin, Type = damage.Type };
+            return new DamageSource { Magnitude = 0, Origin = damage.Origin, DamageType = damage.DamageType };
         }
 
         private bool shieldInterceptsDamage(DamageSource damage)
