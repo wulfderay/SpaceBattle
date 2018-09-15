@@ -2,10 +2,12 @@
 using Spacebattle.physics;
 using Spacebattle.Game;
 using Spacebattle.Damage;
+using Spacebattle.Behaviours;
+using System.Collections.Generic;
 
 namespace Spacebattle.entity
 {
-    public class GameEntity : IGameEntity
+    public abstract class GameEntity : IGameEntity
     {
 
         public event EventHandler<GameEngineEventArgs> GameEngineEventHandler;
@@ -21,6 +23,8 @@ namespace Spacebattle.entity
         public string Name { get; set; }
 
         public int Team { get; set; }
+
+        private List<IBehaviour> _behaviours = new List<IBehaviour>();
 
         public void ApplyImpulse( Vector2d force)
         {
@@ -43,14 +47,29 @@ namespace Spacebattle.entity
             GameEngineEventHandler?.Invoke(sender, e);
         }
 
-        public void Damage(DamageSource damage)
+        public abstract void Damage(DamageSource damage);
+
+
+        public abstract bool IsDestroyed();
+
+        public abstract void Update(uint roundNumber);
+
+        public void AddBehaviour(IBehaviour behaviour)
         {
-            throw new NotImplementedException();
+            _behaviours.Add(behaviour);
         }
 
-        public bool IsDestroyed()
+        public void RemoveBehaviour(IBehaviour behaviour)
         {
-            throw new NotImplementedException();
+            if (_behaviours.Contains(behaviour))
+                _behaviours.Remove(behaviour);
+        }
+
+        public void ExecuteBehaviours()
+        {
+            foreach (var behaviour in _behaviours)
+                behaviour.Execute();
+
         }
     }
 }

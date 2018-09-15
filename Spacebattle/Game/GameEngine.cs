@@ -23,6 +23,7 @@ namespace Spacebattle.Game
         private PhysicsEngine _physicsEngine;
 
         private static Random rng = new Random();
+        private List<IGameEntity> _markedForRemoval = new List<IGameEntity>();
 
         public List<IGameEntity>  Entities {get { return _entities;}}
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
@@ -118,12 +119,14 @@ namespace Spacebattle.Game
         {
             _entities.Add(e.Entity);
             e.Entity.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
+            e.Entity.Position = e.Where;
+            e.Entity.Velocity = Vector2d.Zero;
             _physicsEngine.Register(e.Entity);
         }
 
         private void doDestroyedEvent(DestroyEvent e)
         {
-            _entities.Remove(e.Entity);
+            _markedForRemoval.Add(e.Entity);
             // hmm. Can't add flavour text here.. :/
             e.Entity.GameEngineEventHandler -= (sender, args) => OnGameEngineEvent(sender, args);
             // we probably want to remove from drawing and from updating, too....
@@ -170,11 +173,22 @@ namespace Spacebattle.Game
             {
                 x.ExecuteBehaviours();
             });
+            _entities.ForEach(x => {
+                if ( x.Team != RED_TEAM && x.Team != BLUE_TEAM)
+                {
+                    x.ExecuteBehaviours();
+                }
+            });
+
             CurrentRound += 1;
             _physicsEngine.Update(CurrentRound);
-            _redTeam.ForEach(x => x.Update(CurrentRound));
-            _blueTeam.ForEach(x => x.Update(CurrentRound));
-
+            _entities.ForEach(x => {
+                if (!x.IsDestroyed())
+                    x.Update(CurrentRound);
+            });
+            // clean up destroyed stuff.
+            _markedForRemoval.ForEach(x => _entities.Remove(x));
+            _markedForRemoval.Clear();
         }
 
         private void DoOrder(Order order, IShip ship)

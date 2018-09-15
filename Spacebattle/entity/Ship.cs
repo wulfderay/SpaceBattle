@@ -22,7 +22,6 @@ namespace Spacebattle.entity
         private List<CrewDeck> _crewDecks;
 
         private float _throttle;
-        private List<IBehaviour> _behaviours = new List<IBehaviour>();
 
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
         
@@ -115,7 +114,7 @@ namespace Spacebattle.entity
 
         
 
-        public void Damage(DamageSource damage)
+        public override void Damage(DamageSource damage)
         {
             OnFlavourText(Name, Name + " was Hit!");
             var residualDamage = DoShieldAbsorbtion(damage);
@@ -196,7 +195,7 @@ namespace Spacebattle.entity
                 */
         }
 
-        public bool IsDestroyed()
+        public override bool IsDestroyed()
         {
             if (_crewDecks.Select(x => (int)x.GetCrew()).Sum() == 0)
                 return true; // probably not exactly what we want. We will probably want a difference betweeen destroyed and derelict.
@@ -224,7 +223,7 @@ namespace Spacebattle.entity
             return true;
         }
 
-        public void Update(uint roundNumber)
+        public override void Update(uint roundNumber)
         {
             if (IsDestroyed())
                 return;
@@ -466,22 +465,5 @@ namespace Spacebattle.entity
             return gameState.GetDamageableEntities().ToList();
         }
 
-        public void AddBehaviour(IBehaviour behaviour)
-        {
-            _behaviours.Add(behaviour);
-        }
-
-        public void RemoveBehaviour(IBehaviour behaviour)
-        {
-            if (_behaviours.Contains(behaviour))
-                _behaviours.Remove(behaviour);
-        }
-
-        public void ExecuteBehaviours()
-        {
-            foreach (var behaviour in _behaviours)
-                behaviour.Execute();
-
-        }
     }
 }

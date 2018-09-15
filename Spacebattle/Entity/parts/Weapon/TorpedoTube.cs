@@ -15,7 +15,7 @@ namespace Spacebattle.Entity.parts.Weapon
         public void Fire()
         {
             OnFlavourText(_name, "Firing Torpedo!");
-            OnGameEngineEvent(this, GameEngineEventArgs.Spawn(new Torpedo(_target, 15, 200, 150, 300)));
+            OnGameEngineEvent(this, GameEngineEventArgs.Spawn( new Torpedo(_target, 15, 200, 150, 300), Parent.Position));
         }
         
         public IDamageableEntity GetLockTarget()

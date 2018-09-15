@@ -122,7 +122,7 @@ namespace Spacebattle
                 "Trymwing",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor(), Reactor.SmallReactor() },
                 sixBigShields(),
-                new List<IWeapon>() { new MassDriver("Gun", 100, 10, 0, 200, 20, 500) , new Phaser("Phaser", 100, 10, 0, 20, 500) , new Lance("Lance", 100, 10, 0, 20, 1500) },
+                new List<IWeapon>() { new TorpedoTube("Torp",100, 100, 20) , new Phaser("Phaser", 100, 10, 0, 20, 500) , new Lance("Lance", 100, 10, 0, 20, 1500) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
 
@@ -131,12 +131,12 @@ namespace Spacebattle
             game.ViewEventHandler += OnViewEvent;
             var redteam = new List<IShip> {
                 trymwing,
-                enterprise,
-                narwhal,
+               // enterprise,
+                //narwhal,
             };
             var blueteam = new List<IShip> {
                 pooey,
-                destroyer,
+               /* destroyer,
                 new Ship(
                 "Vega",
                 new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
@@ -151,6 +151,7 @@ namespace Spacebattle
                 new List<IWeapon>() { new PlasmaBolt("PlasmaBolt", 100, 10, 20, 60, 500) },
                 new List<Engine>() { new Engine("Small Engine", 100, 20, 50, 20), new Engine("Hyper Drive", 30, 120, 50, 300)  },
                 new List<CrewDeck>() { new CrewDeck("Bridge", 50, 20, 10, 15, .1f) })
+                */
             };
           /*  var bothTeams = new List<IDamageableEntity>();
             bothTeams.AddRange(redteam);

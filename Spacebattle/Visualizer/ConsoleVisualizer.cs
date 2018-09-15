@@ -151,7 +151,7 @@ namespace Spacebattle.Visualizer
         public static ConsoleColor GetTeamColor(IEntity ship)
         {
             List<ConsoleColor> colors = new List<ConsoleColor> { ConsoleColor.Yellow, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.DarkGray, ConsoleColor.DarkYellow, ConsoleColor.White , ConsoleColor.DarkMagenta};
-            return colors[ship.Team % colors.Count];
+            return colors[(ship.Team + colors.Count) % colors.Count];
         }
 
         protected static void OnDebug(string from, string message)

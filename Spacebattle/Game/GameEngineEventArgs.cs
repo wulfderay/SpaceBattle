@@ -16,9 +16,9 @@ namespace Spacebattle.Game
         }
         public GameEngineEventType Type;
 
-        public static SpawnEvent Spawn(IGameEntity entityToSpawn)
+        public static SpawnEvent Spawn(IGameEntity entityToSpawn, Vector2d where)
         {
-            return new SpawnEvent() { Entity = entityToSpawn }; 
+            return new SpawnEvent() { Entity = entityToSpawn, Where = where }; 
         }
 
         public static DestroyEvent Destroy(IGameEntity entityToDestroy)

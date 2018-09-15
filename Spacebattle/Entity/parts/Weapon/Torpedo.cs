@@ -10,7 +10,7 @@ using Spacebattle.physics;
 
 namespace Spacebattle.Entity.parts.Weapon
 {
-    class Torpedo : GameEntity, IControllableEntity, IBehave
+    class Torpedo : GameEntity, IControllableEntity
     {
         // this isn't quite right... A torpedo needs to know it's target, sure.. but the target maybe? should be able to be changed.
         // it probably doesn't belong in the constructor.
@@ -18,12 +18,12 @@ namespace Spacebattle.Entity.parts.Weapon
 
         private IDamageableEntity target;
         private bool _isDestroyed;
-        private List<IBehaviour> _behaviours;
         private float _throttle;
         private int _TTL;
         private float _proximityFuse;
         private float _damage;
         private float _damageRadius;
+        private float _enginePower = 50; // I guess.. I don't know.
         public Torpedo(IDamageableEntity target, int ttl, float proximityFuse, float damage, float damageRadius)
         {
             Team = GameEngine.GAIA_TEAM;
@@ -33,6 +33,7 @@ namespace Spacebattle.Entity.parts.Weapon
             this.target = target;
             _damage = damage;
             _damageRadius = damageRadius;
+            Mass = 1;
             AddBehaviour(new Pursue(this, target, 0, 100));
 
         }
@@ -42,8 +43,10 @@ namespace Spacebattle.Entity.parts.Weapon
             SetThrottle(0);
         }
 
-        public void Damage(DamageSource damage) // any damage at this point should destroy it.
+        public override void Damage(DamageSource damage) // any damage at this point should destroy it.
         {
+            if (_isDestroyed)
+                return;
             BlowUp();
         }
 
@@ -62,7 +65,7 @@ namespace Spacebattle.Entity.parts.Weapon
             return new List<IDamageableEntity>() { target }; // no sensors yet I guess.
         }
 
-        public bool IsDestroyed()
+        public override bool IsDestroyed()
         {
             return _isDestroyed;
         }
@@ -77,30 +80,16 @@ namespace Spacebattle.Entity.parts.Weapon
             _throttle = percent;
         }
 
-        public void Update(uint roundNumber)
+        public override void Update(uint roundNumber)
         {
-            if (_TTL <= 0 || target.Position.DistanceTo(this.Position) < _proximityFuse) 
+            if (_TTL <= 0 || target.Position.DistanceTo(this.Position) < _proximityFuse)
             {
                 BlowUp();
             }
+            //move the torp
+            var impulse = Vector2d.fromAngleDegrees(Orientation) * (_throttle/100 * _enginePower);
+            ApplyImpulse(impulse);
             _TTL--;
-        }
-
-        public void AddBehaviour(IBehaviour behaviour)
-        {
-            _behaviours.Add(behaviour);
-        }
-
-        public void RemoveBehaviour(IBehaviour behaviour)
-        {
-            if (_behaviours.Contains(behaviour))
-                _behaviours.Remove(behaviour);
-        }
-
-        public void ExecuteBehaviours()
-        {
-            foreach (var behaviour in _behaviours)
-                behaviour.Execute();
         }
 
         private void BlowUp()
