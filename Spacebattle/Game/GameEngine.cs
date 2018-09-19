@@ -119,8 +119,21 @@ namespace Spacebattle.Game
         {
             _entities.Add(e.Entity);
             e.Entity.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
-            e.Entity.Position = e.Where;
-            e.Entity.Velocity = Vector2d.Zero;
+            if ( e.Entity is IShip && e.Entity.Team == RED_TEAM)
+            {
+                (e.Entity as IShip).gameState = this;
+                (e.Entity as IShip).FlavourTextEventHandler += OnRedFlavourText;
+                _redTeam.Add(e.Entity as IShip);
+            }
+            if (e.Entity is IShip && e.Entity.Team == BLUE_TEAM)
+            {
+                (e.Entity as IShip).gameState = this;
+                (e.Entity as IShip).FlavourTextEventHandler += OnBlueFlavourText;
+                _blueTeam.Add(e.Entity as IShip);
+            }
+            e.Entity.Position = e.Position;
+            e.Entity.Velocity = e.Velocity;
+            e.Entity.Orientation = e.Orientation;
             _physicsEngine.Register(e.Entity);
         }
 

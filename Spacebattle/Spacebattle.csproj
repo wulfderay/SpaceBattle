@@ -58,6 +58,7 @@
     <Compile Include="Entity\IGameState.cs" />
     <Compile Include="Entity\IShip.cs" />
     <Compile Include="Entity\parts\Weapon\Torpedo.cs" />
+    <Compile Include="Entity\parts\Weapon\Hanger.cs" />
     <Compile Include="Entity\parts\Weapon\TorpedoTube.cs" />
     <Compile Include="Game\SplashDamageEvent.cs" />
     <Compile Include="Game\DamageEvent.cs" />

@@ -5,6 +5,7 @@
         ENERGY,
         MASS_DRIVER,
         TORPEDO,
-        PROBE
+        PROBE,
+        HANGER
     }
 }

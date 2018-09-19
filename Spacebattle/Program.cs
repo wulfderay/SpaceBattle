@@ -11,6 +11,7 @@ using Spacebattle.Visualizer;
 using Spacebattle.entity.parts.Weapon;
 using Spacebattle.Entity.parts.Weapon;
 using Spacebattle.Game;
+using Spacebattle.Behaviours;
 
 namespace Spacebattle
 {
@@ -125,12 +126,18 @@ namespace Spacebattle
                 new List<IWeapon>() { new TorpedoTube("Torp",100, 100, 20) , new Phaser("Phaser", 100, 10, 0, 20, 500) , new Lance("Lance", 100, 10, 0, 20, 1500) },
                 new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
                 new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
-
+            var carrier = new Ship(
+                "Carrier",
+                new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor(), Reactor.SmallReactor() },
+                sixBigShields(),
+                new List<IWeapon>() { new TorpedoTube("Torp", 100, 100, 20), new Hanger("Hanger", 300, 300, 100, MakeNewFighter) },
+                new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
+                new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
             var game = new GameEngine();
             game.FlavourTextEventHandler += OnFlavourText;
             game.ViewEventHandler += OnViewEvent;
             var redteam = new List<IShip> {
-                trymwing,
+                carrier,
                // enterprise,
                 //narwhal,
             };
@@ -187,6 +194,19 @@ namespace Spacebattle
             {
 
             }
+        }
+
+        private static IShip MakeNewFighter()
+        {
+            var fighter = new Ship(
+                "Fighter"+GameEngine.Random(0,20),
+                new List<Reactor>() { Reactor.SmallReactor(), Reactor.SmallReactor() },
+                sixBigShields(),
+                new List<IWeapon>() { new PlasmaBolt("Plasmabolt", 100, 10, 0, 30, 500) },
+                new List<Engine>() { new Engine("Engine", 100, 20, 50, 100) },
+                new List<CrewDeck>() { CrewDeck.EngineeringDeck(), CrewDeck.Bridge() });
+            fighter.AddBehaviour(new BasicAiBehaviour(fighter));
+            return fighter;
         }
 
         private static void OnViewEvent(object sender, ViewEventArgs e)
