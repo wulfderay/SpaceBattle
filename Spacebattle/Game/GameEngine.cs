@@ -1,31 +1,26 @@
 ﻿using Spacebattle.Behaviours;
 using Spacebattle.entity;
-using Spacebattle.entity.parts.Weapon;
+using Spacebattle.Entity;
 using Spacebattle.orders;
 using Spacebattle.physics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using static Spacebattle.Game.GameEngineEventArgs;
-using static Spacebattle.orders.Order;
 
 namespace Spacebattle.Game
 {
     public class GameEngine : IFlavourTextProvider, IGameState
     {
         public const int GAIA_TEAM = -1;
-        public const int RED_TEAM = 1;
-        public const int BLUE_TEAM = 0;
 
-        private List<IShip> _redTeam; // do we want to split these up? dunno anymore.
-        private List<IShip> _blueTeam;
-        private List<IGameEntity> _entities = new List<IGameEntity>();
         private PhysicsEngine _physicsEngine;
 
         private static Random rng = new Random();
         private List<IGameEntity> _markedForRemoval = new List<IGameEntity>();
 
-        public List<IGameEntity>  Entities {get { return _entities;}}
+        public List<IGameEntity> Entities { get; } = new List<IGameEntity>();
+        public Ship Flagship { get; private set; }
         public event EventHandler<FlavourTextEventArgs> FlavourTextEventHandler;
         public event EventHandler<ViewEventArgs> ViewEventHandler;
 
@@ -44,48 +39,57 @@ namespace Spacebattle.Game
 
         public bool IsGameFinished()
         {
+            var numSurvivingTeams = Entities.Where(x => x.Team != GAIA_TEAM && !x.IsDestroyed()).Select(x => x.Team).Distinct().Count();
             return (
-                _redTeam.TrueForAll(x => x.IsDestroyed()) || 
-                _blueTeam.TrueForAll(x => x.IsDestroyed()) ||
+                numSurvivingTeams < 2 ||
                 CurrentRound >= RoundLimit);
         }
 
-        public void StartNewGame(List<IShip> redTeam, List<IShip> blueTeam, uint roundLimit)
+        public void StartNewGame(Ship flagship, List<Ship> startingEntities,  uint roundLimit)
         {
-            if (redTeam.Count == 0)
-                throw new ArgumentException("Each team must have at least one ship! Red team does not :(");
-            if (blueTeam.Count == 0)
-                throw new ArgumentException("Each team must have at least one ship! Blue team does not :(");
+            var numStartingTeams = startingEntities.Where(x => x.Team != GAIA_TEAM).Select(x => x.Team).Distinct().Count();
+            if (numStartingTeams < 2)
+                throw new ArgumentException("There must be at least 2 teams!");
             if (roundLimit == 0)
                 throw new ArgumentOutOfRangeException("There must be at least one round in each game. Don't set roundlimit to 0 :(");
 
-            _redTeam = redTeam;
-            _blueTeam = blueTeam;
             RoundLimit = roundLimit;
             CurrentRound = 0;
-            var playerShip = _redTeam[0];
+            Flagship = flagship;
             _physicsEngine = new PhysicsEngine();
-            _redTeam.ForEach(x => {
+            startingEntities.ForEach(x => {
                 _physicsEngine.Register(x);
-                _entities.Add(x);
-                x.Team = RED_TEAM;
-                if (x != playerShip)
+                Entities.Add(x);
+                if (x != Flagship)
                     x.AddBehaviour(new BasicAiBehaviour(x));
                 x.gameState = this;
-                x.FlavourTextEventHandler += OnRedFlavourText; // should this just be a gameengine event?
+
+                x.FlavourTextEventHandler += OnFlavourText; // should this just be a gameengine event?
+                
                 x.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
-                x.Position = new Vector2d(rng.Next(0, 200), rng.Next(0, 200));
+                x.Position = GetStartingPosition(x.Team, numStartingTeams);
+                x.Update(0);
             });
-            _blueTeam.ForEach(x => {
-                x.Team = BLUE_TEAM;
-                _entities.Add(x);
-                _physicsEngine.Register(x);
-                x.AddBehaviour(new BasicAiBehaviour(x));
-                x.gameState = this;
-                x.FlavourTextEventHandler += OnBlueFlavourText;
-                x.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
-                x.Position = new Vector2d(rng.Next(500, 700), rng.Next(500, 700));
-            });
+            
+        }
+
+        private Vector2d GetStartingPosition(int team, int numStartingTeams)
+        {
+            // the idea is to create a polygon with numStartingTeams points, with edgeLength distanceBetweenTeams.
+            // we then distribute the members of each team randomly around each point.
+            var distanceBetweenTeams = 1000;
+            var angleBetweenTeams = (Math.PI*2) / numStartingTeams;
+            var polygonAngle = (Math.PI - angleBetweenTeams) / 2;
+            // we can find the distance to the center of the polygon using geometry.
+            var rightAngleDistance = Math.Tan(polygonAngle) * distanceBetweenTeams/2 ;
+            var distanceToCenter = Math.Sqrt(
+                (distanceBetweenTeams/2 * distanceBetweenTeams/2) + 
+                (rightAngleDistance * rightAngleDistance));
+
+            var centroidX = (int)(Math.Cos(angleBetweenTeams * team) * distanceToCenter);
+            var centroidY =(int)( Math.Sin(angleBetweenTeams * team) * distanceToCenter);
+            int spread = 300;
+            return new Vector2d(rng.Next(centroidX -spread, centroidX + spread), rng.Next(centroidY - spread, centroidY + spread));
         }
 
         private void OnGameEngineEvent(object sender, GameEngineEventArgs e)
@@ -109,7 +113,7 @@ namespace Spacebattle.Game
 
         private void doSplashDamageEvent(SplashDamageEvent e)
         {
-            foreach (var entity in _entities.Where(entity => entity.Position.DistanceTo(e.DamageSource.Origin) < e.Radius))
+            foreach (var entity in Entities.Where(entity => entity.Position.DistanceTo(e.DamageSource.Origin) < e.Radius))
             {
                 entity.Damage(e.DamageSource);
             }
@@ -117,19 +121,12 @@ namespace Spacebattle.Game
 
         private void doSpawnEvent(SpawnEvent e)
         {
-            _entities.Add(e.Entity);
+            Entities.Add(e.Entity);
             e.Entity.GameEngineEventHandler += (sender, args) => OnGameEngineEvent(sender, args);
-            if ( e.Entity is IShip && e.Entity.Team == RED_TEAM)
+            if ( e.Entity is Ship)
             {
-                (e.Entity as IShip).gameState = this;
-                (e.Entity as IShip).FlavourTextEventHandler += OnRedFlavourText;
-                _redTeam.Add(e.Entity as IShip);
-            }
-            if (e.Entity is IShip && e.Entity.Team == BLUE_TEAM)
-            {
-                (e.Entity as IShip).gameState = this;
-                (e.Entity as IShip).FlavourTextEventHandler += OnBlueFlavourText;
-                _blueTeam.Add(e.Entity as IShip);
+                (e.Entity as Ship).gameState = this;
+                (e.Entity as Ship).FlavourTextEventHandler += OnFlavourText;
             }
             e.Entity.Position = e.Position;
             e.Entity.Velocity = e.Velocity;
@@ -158,14 +155,9 @@ namespace Spacebattle.Game
             {
                 throw new Exception(" You can't ask who won if the game is not finished!");
             }
-            var redTeamDestroyed = _redTeam.TrueForAll(x => x.IsDestroyed());
-            var blueTeamDestroyed = _blueTeam.TrueForAll(x => x.IsDestroyed());
+            var SurvivingTeam = Entities.First(x => x.Team != GAIA_TEAM && !x.IsDestroyed()).Team;
 
-            if ((blueTeamDestroyed && redTeamDestroyed) ||(!blueTeamDestroyed && !redTeamDestroyed))
-                return -1;
-            if (blueTeamDestroyed)
-                return 1;
-            return 2;
+            return SurvivingTeam;
         }
 
         public void RunOneRound(Order order) 
@@ -177,110 +169,24 @@ namespace Spacebattle.Game
 
             //Todo: actual commnds and ai.
             // also, it might be a good idea to queue up actions and results and apply them all at one in order to be failr ...
-            DoOrder(order, _redTeam[0]);
-            for ( var i = 1; i < _redTeam.Count; i++)
-            {
-                _redTeam[i].ExecuteBehaviours();
-            }
-            _blueTeam.ForEach(x =>
-            {
-                x.ExecuteBehaviours();
-            });
-            _entities.ForEach(x => {
-                if ( x.Team != RED_TEAM && x.Team != BLUE_TEAM)
+            (Flagship as IControllableEntity).DoOrder(order);
+
+            Entities.ToList().ForEach(x => {
+                if ( x is IControllableEntity && x != Flagship)
                 {
-                    x.ExecuteBehaviours();
+                    (x as IControllableEntity).DoOrder(x.ExecuteBehaviours());
                 }
             });
 
             CurrentRound += 1;
             _physicsEngine.Update(CurrentRound);
-            _entities.ForEach(x => {
+            Entities.ForEach(x => {
                 if (!x.IsDestroyed())
                     x.Update(CurrentRound);
             });
             // clean up destroyed stuff.
-            _markedForRemoval.ForEach(x => _entities.Remove(x));
+            _markedForRemoval.ForEach(x => Entities.Remove(x));
             _markedForRemoval.Clear();
-        }
-
-        private void DoOrder(Order order, IShip ship)
-        {
-            if (ship.IsDestroyed()) // you are dead... no orders for you :)
-                return;
-            switch (order.Type)
-            {
-                case OrderType.HELM:
-                    var setCourseOrder = (HelmOrder)order;
-                    if (setCourseOrder.AngleInDegrees != null)
-                    {
-                        ship.SetCourse((float)setCourseOrder.AngleInDegrees);
-                        OnFlavourText(this, new FlavourTextEventArgs { name = ship.Name, message = "Setting course for heading " + setCourseOrder.AngleInDegrees });
-                    }
-                    if (setCourseOrder.ThrottlePercent != null)
-                    {
-                        ship.SetThrottle((float)setCourseOrder.ThrottlePercent);
-                        OnFlavourText(this, new FlavourTextEventArgs { name = ship.Name, message = "Setting throttle to  " + setCourseOrder.ThrottlePercent });
-                    }
-                    break;
-                case OrderType.LOCK:
-                    var lockOrder = (LockOrder)order;
-                    var shipToLockOn = _blueTeam.FirstOrDefault(x => x.Name.ToLower()== lockOrder.ShipToLockOn.ToLower());
-                    if (shipToLockOn == null)
-                        shipToLockOn = _redTeam.FirstOrDefault(x => x.Name.ToLower() == lockOrder.ShipToLockOn.ToLower());
-                    if (shipToLockOn == null)
-                    {
-                        OnFlavourText(this, new FlavourTextEventArgs { name = ship.Name, message = "No ship found with that name, Sir!"});
-                        break;
-                    }
-                    if ( lockOrder.WeaponName != null)
-                    {
-                        ship.LockOn(shipToLockOn, lockOrder.WeaponName);
-                        break;
-                    }
-                    if (lockOrder.WeaponType != null)
-                    {
-                        ship.LockOn(shipToLockOn, (WeaponType)lockOrder.WeaponType);
-                        break;
-                    }
-                    ship.LockOn(shipToLockOn);
-                    break;
-                case OrderType.FIRE:
-                    var fireOrder = (FireOrder)order;
-                    if (fireOrder.WeaponType != null)
-                    {
-                        ship.Shoot((WeaponType)fireOrder.WeaponType);
-                        break;
-                    }
-                    if (fireOrder.WeaponName != null)
-                    {
-                        ship.Shoot(fireOrder.WeaponName);
-                        break;
-                    }
-                    ship.Shoot();
-                    break;
-                case OrderType.SCAN: // this shouldn't take up a turn.
-                    var scanOrder = (ScanOrder)order;
-                    var shipToScan = _blueTeam.FirstOrDefault(x => x.Name.ToLower() == scanOrder.ShipToScan.ToLower());
-                    if (shipToScan == null)
-                        shipToLockOn = _redTeam.FirstOrDefault(x => x.Name.ToLower() == scanOrder.ShipToScan.ToLower());
-                    if (shipToScan == null)
-                    {
-                        OnFlavourText(this, new FlavourTextEventArgs { name = ship.Name, message = "No ship found with that name, Sir!" });
-                        break;
-                    }
-                    OnViewEvent(this, ViewEventArgs.Scan(shipToScan));
-                   
-                    OnFlavourText(this, new FlavourTextEventArgs { name = ship.Name, message = "Targetting scanners on the " + shipToScan.Name });
-                    break;
-                case OrderType.ALL_STOP:
-                    OnFlavourText(this, new FlavourTextEventArgs { name = ship.Name, message = "Stopping all motion, Capitain." });
-                    ship.AllStop();
-                    break;
-                default:
-                    OnFlavourText(this, new FlavourTextEventArgs { name=ship.Name, message="Sorry, what was that, Captain?" });
-                    break;
-            }
         }
 
 
@@ -289,27 +195,15 @@ namespace Spacebattle.Game
             ViewEventHandler?.Invoke(sender, e);
         }
 
-        private void OnBlueFlavourText(object sender, FlavourTextEventArgs e)
-        {
-            e.team = 0;
-            FlavourTextEventHandler?.Invoke(sender, e);
-
-        }
-
-        private void OnRedFlavourText(object sender, FlavourTextEventArgs e)
-        {
-            e.team = 1;
-            FlavourTextEventHandler?.Invoke(sender, e);
-        }
+       
         private void OnFlavourText(object sender, FlavourTextEventArgs e)
         {
-            e.team = -1; //gaia
             FlavourTextEventHandler?.Invoke(sender, e);
         }
 
         public IEnumerable<IDamageableEntity> GetDamageableEntities()
         {
-            return new List<IDamageableEntity>().Concat(_redTeam).Concat(_blueTeam);
+            return Entities.Where(x => x is IDamageableEntity);
         }
     }
 }

@@ -13,7 +13,8 @@ namespace Spacebattle.entity.parts
         float _arcWidthDegrees;
         float _baseAngle;
 
-        public Tuple<float, float> Strength { get { return new Tuple<float, float>(_currentAbsorbtion, _maxAbsorbtion); } }
+        public ShieldStatus Status { get; set; } = ShieldStatus.RAISED;
+        public Tuple<float, float> Strength { get { return new Tuple<float, float>(Status == ShieldStatus.LOWERED? 0 :_currentAbsorbtion, _maxAbsorbtion); } }
 
         public Shield(string name, float maxHealth, float mass,float upkeepCost,float maxAbsorbtion, float regenRate, float powerPerRegenUnit, float arcWidthDegrees, float baseAngle): base(name, maxHealth, mass, upkeepCost)
         {
@@ -23,7 +24,6 @@ namespace Spacebattle.entity.parts
             _arcWidthDegrees = arcWidthDegrees;
             _baseAngle = baseAngle;
         }
-
         public float Regen(float powerBudget)
         {
 
@@ -38,6 +38,25 @@ namespace Spacebattle.entity.parts
             return powerBudget - powerConsumed;
         }
 
+        public new void Update(uint roundNumber)
+        {
+            base.Update(roundNumber);
+            if (Status == ShieldStatus.LOWERED)
+                return;
+            if (Parent.ConsumePower(GetUpkeepCost()) < GetUpkeepCost())
+            {
+
+                OnFlavourText(_name, $"Not enough power for {_name}. Lowering Shield..");
+                Status = ShieldStatus.LOWERED;
+
+            }
+
+        }
+        public new float GetUpkeepCost()
+        {
+            return Status == ShieldStatus.LOWERED ? 0 : _upkeepCost;
+        }
+
         /// <summary>
         /// Absorb some of the damage from a shot.
         /// </summary>
@@ -45,6 +64,8 @@ namespace Spacebattle.entity.parts
         /// <returns>the residual damage that was not absorbed.</returns>
         public DamageSource Absorb(DamageSource damage)
         {
+            if (Status == ShieldStatus.LOWERED)
+                return damage;
             if (!shieldInterceptsDamage(damage))
                 return damage;
             OnFlavourText(_name, "Shield Hit!");
@@ -83,13 +104,19 @@ namespace Spacebattle.entity.parts
         // fast but expensive and fragile
         public static Shield FastRegenshield(string name, float arcWidthDegrees, float baseAngle)
         {
-            return new Shield(name, 25, 10, 10, 40, 10f, 5, arcWidthDegrees, baseAngle);
+            return new Shield(name, 25, 10, 75, 400, 10f, 5, arcWidthDegrees, baseAngle);
         }
 
         // slow but efficient
         public static Shield Bigshield(string name,float arcWidthDegrees, float baseAngle)
         {
-            return new Shield(name, 45, 15, 2, 100, 5f, 2, arcWidthDegrees, baseAngle);
+            return new Shield(name, 45, 15, 125, 1000, 5f, 2, arcWidthDegrees, baseAngle);
         }
+    }
+
+    public enum ShieldStatus
+    {
+        RAISED = 0,
+        LOWERED
     }
 }

@@ -1,11 +1,14 @@
 ﻿
+using Spacebattle.entity;
 using Spacebattle.entity.parts.Weapon;
+using Spacebattle.Game;
+using Spacebattle.Orders;
 using System;
 namespace Spacebattle.orders
 {
     public class Order
     {
-        public enum OrderType { NULL_ORDER = 0,HELM, FIRE, LOCK, ALL_STOP, SCAN };
+        public enum OrderType { NULL_ORDER = 0,HELM, FIRE, LOCK, ALL_STOP, SCAN, LOAD, STATUS, SHEILD };
 
         public OrderType Type;
 
@@ -41,17 +44,50 @@ namespace Spacebattle.orders
             return new Order { Type = OrderType.ALL_STOP};
         }
 
-        public static LockOrder Lock(string shipName, WeaponType? weaponType = null, string weaponName = null)
+        internal static Order Load(string weaponName)
         {
-            return new LockOrder { Type = OrderType.LOCK, ShipToLockOn = shipName ,  WeaponType = weaponType, WeaponName = weaponName };
+            return new LoadOrder { Type = OrderType.LOAD, WeaponName = weaponName };
         }
 
-        internal static ScanOrder Scan(string shipName)
+        
+
+        public static LockOrder Lock(IDamageableEntity target, WeaponType? weaponType = null, string weaponName = null)
+        {
+            return new LockOrder { Type = OrderType.LOCK, Target = target ,  WeaponType = weaponType, WeaponName = weaponName };
+        }
+
+        internal static StatusOrder PowerStatus(Ship ship)
+        {
+            return new StatusOrder
+            {
+                Type = OrderType.STATUS,
+                StatusType = StatusType.POWER,
+                Ship = ship
+            };
+        }
+        internal static ShieldOrder LowerShields()
+        {
+            return new ShieldOrder()
+            {
+                Type = OrderType.SHEILD,
+                Status = entity.parts.ShieldStatus.LOWERED
+            };
+        }
+        internal static Order RaiseShields()
+        {
+            return new ShieldOrder()
+            {
+                Type = OrderType.SHEILD,
+                Status = entity.parts.ShieldStatus.RAISED
+            };
+        }
+        internal static ScanOrder Scan(Ship ship)
+
         {
             return new ScanOrder
             {
                 Type = OrderType.SCAN,
-                ShipToScan = shipName,
+                ShipToScan = ship,
             };
         }
     }

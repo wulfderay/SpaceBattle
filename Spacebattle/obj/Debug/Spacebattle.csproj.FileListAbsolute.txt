@@ -26,3 +26,12 @@ C:\Users\Mark\Documents\GitHub\SpaceBattle\Spacebattle\bin\Debug\Spacebattle.pdb
 C:\Users\Mark\Documents\GitHub\SpaceBattle\Spacebattle\bin\Debug\Konsole.dll
 C:\Users\Mark\Documents\GitHub\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.csprojResolveAssemblyReference.cache
 C:\Users\Purchaser\Documents\GitHub\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.csprojResolveAssemblyReference.cache
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\bin\Debug\Spacebattle.exe.config
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\bin\Debug\Spacebattle.exe
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\bin\Debug\Spacebattle.pdb
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\bin\Debug\Konsole.dll
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.csprojAssemblyReference.cache
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.csproj.CoreCompileInputs.cache
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.csproj.CopyComplete
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.exe
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.pdb

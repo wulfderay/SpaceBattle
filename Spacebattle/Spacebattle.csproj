@@ -56,10 +56,11 @@
     <Compile Include="Entity\IBehave.cs" />
     <Compile Include="Entity\IControllableEntity.cs" />
     <Compile Include="Entity\IGameState.cs" />
-    <Compile Include="Entity\IShip.cs" />
+    <Compile Include="Entity\parts\Weapon\LoadState.cs" />
     <Compile Include="Entity\parts\Weapon\Torpedo.cs" />
     <Compile Include="Entity\parts\Weapon\Hanger.cs" />
     <Compile Include="Entity\parts\Weapon\TorpedoTube.cs" />
+    <Compile Include="Game\ShieldOrder.cs" />
     <Compile Include="Game\SplashDamageEvent.cs" />
     <Compile Include="Game\DamageEvent.cs" />
     <Compile Include="Game\DestroyEvent.cs" />
@@ -77,7 +78,9 @@
     <Compile Include="Game\SpawnEvent.cs" />
     <Compile Include="Game\ViewEventArgs.cs" />
     <Compile Include="Orders\FireOrder.cs" />
+    <Compile Include="Orders\LoadOrder.cs" />
     <Compile Include="Orders\ScanOrder.cs" />
+    <Compile Include="Orders\StatusOrder.cs" />
     <Compile Include="Visualizer\ConsoleVisualizer.cs" />
     <Compile Include="Entity\GameEntity.cs" />
     <Compile Include="FlavourText\FlavourTextEventArgs.cs" />

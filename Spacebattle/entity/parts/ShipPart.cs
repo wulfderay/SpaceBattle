@@ -83,9 +83,9 @@ namespace Spacebattle.entity
             return _upkeepCost;
         }
 
-        protected void OnFlavourText(string name, string message)
+        protected void OnFlavourText(string name, string message, int level = FlavourTextEventArgs.LEVEL_INTERNAL)
         {
-            FlavourTextEventHandler?.Invoke(this, new FlavourTextEventArgs { name = name, message = message });
+            FlavourTextEventHandler?.Invoke(this, new FlavourTextEventArgs { name = name, message = message, level = level });
         }
 
         protected void OnGameEngineEvent(object sender, GameEngineEventArgs e)
@@ -93,6 +93,12 @@ namespace Spacebattle.entity
             GameEngineEventHandler?.Invoke(sender, e);
         }
 
-        
+        public void Update(uint roundNumber)
+        {
+            if (IsDestroyed())
+                return;
+            // maybe want to consolidate repair etc here but for now it's a stub for things like reloading, 
+            // To be overridden in subbclasses.
+        }
     }
 }

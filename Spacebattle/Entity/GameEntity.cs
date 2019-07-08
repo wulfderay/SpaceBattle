@@ -4,6 +4,7 @@ using Spacebattle.Game;
 using Spacebattle.Damage;
 using Spacebattle.Behaviours;
 using System.Collections.Generic;
+using Spacebattle.orders;
 
 namespace Spacebattle.entity
 {
@@ -33,7 +34,7 @@ namespace Spacebattle.entity
             var accel = force / Mass;
             Velocity += accel;
             //Rounding to account for floating point errors
-            if (Math.Abs(Velocity.Magnitude()) < 1)
+            if (Math.Abs(Velocity.Magnitude) < 1)
                 Velocity = Vector2d.Zero;
         }
 
@@ -65,10 +66,15 @@ namespace Spacebattle.entity
                 _behaviours.Remove(behaviour);
         }
 
-        public void ExecuteBehaviours()
+        public Order ExecuteBehaviours()
         {
             foreach (var behaviour in _behaviours)
-                behaviour.Execute();
+            {
+                var order = behaviour.GetNextOrder();
+                if (order.Type != Order.OrderType.NULL_ORDER)
+                    return order;
+            }
+            return Order.NullOrder();
 
         }
     }

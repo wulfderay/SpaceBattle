@@ -5,11 +5,11 @@ using System;
 
 namespace Spacebattle.Entity.parts.Weapon
 {
-    class Hanger : ShipPart, IWeapon
+    class Hanger : ShipPart
     {
-        private Func<IShip> _shipCreationFunc;
+        private Func<Ship> _shipCreationFunc;
 
-        public Hanger(string name, float maxHealth, float mass, float upkeepCost, Func<IShip> shipCreationFunc) : base(name, maxHealth, mass, upkeepCost)
+        public Hanger(string name, float maxHealth, float mass, float upkeepCost, Func<Ship> shipCreationFunc) : base(name, maxHealth, mass, upkeepCost)
         {
             _shipCreationFunc = shipCreationFunc;
         }

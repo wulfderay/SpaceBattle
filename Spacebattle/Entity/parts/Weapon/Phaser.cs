@@ -5,6 +5,8 @@ using System;
 
 namespace Spacebattle.entity.parts.Weapon
 {
+    // what I want from this weapon is to directly convert ship energy to damage.
+    // in an ideal setup, this would happen by way of a power distribution system under user control.
     class Phaser:ShipPart,IWeapon
     {
         float _power;
@@ -28,7 +30,10 @@ namespace Spacebattle.entity.parts.Weapon
             }
             var distance = Parent.Position.DistanceTo(_target.Position);
             if (distance < _range)
+            {
+                // use power for charge...
                 OnGameEngineEvent(this, GameEngineEventArgs.Damage(_target, (new DamageSource() { Magnitude = _power - (_power * distance / _range), DamageType = DamageType.DRAINING, Origin = Parent.Position })));
+            }
             else
                 OnFlavourText(_name, "Target was too far away to hit!");
         }
@@ -44,9 +49,19 @@ namespace Spacebattle.entity.parts.Weapon
             return WeaponType.ENERGY;
         }
 
+        public bool IsReadyToFire()
+        {
+            return true;
+        }
+
         public void Lock(IDamageableEntity target)
         {
             _target = target;
+        }
+
+        public bool TargetIsInRange()
+        {
+            return _target != null && Parent.Position.DistanceTo(_target.Position) < _range;
         }
 
         public override string ToString()

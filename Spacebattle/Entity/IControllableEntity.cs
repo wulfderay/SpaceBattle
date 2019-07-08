@@ -1,5 +1,5 @@
 ﻿using Spacebattle.entity;
-
+using Spacebattle.orders;
 
 namespace Spacebattle.Entity
 {
@@ -11,7 +11,8 @@ namespace Spacebattle.Entity
         void SetCourse(float angle);
         void SetThrottle(float percent);
         float GetThrottle();
-       
+
+        void DoOrder(Order order);
         
     }
 }

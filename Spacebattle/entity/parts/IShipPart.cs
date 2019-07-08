@@ -3,7 +3,7 @@ using System;
 
 namespace Spacebattle.entity
 {
-    public interface IShipPart: IDamageable, IFlavourTextProvider, IGameEngineEventProvider
+    public interface IShipPart: IDamageable, IFlavourTextProvider, IGameEngineEventProvider, IUpdateable
     {
         Tuple<float, float> Health { get; } // current, max
         void Repair(float repairAmount);

@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Linq;
 using Konsole;
 using Spacebattle.entity;
+using Spacebattle.entity.parts.Weapon;
+using Spacebattle.Entity.parts.Weapon;
 
 namespace Spacebattle.Visualizer
 {
@@ -117,41 +119,63 @@ namespace Spacebattle.Visualizer
                 {
                     window.ForegroundColor = GetTeamColor(entity);
                 }
-                window.PrintAt(x,y, GetEntitySymbol(entity));
+                window.PrintAt(x,y, GetEntitySymbol(entity.Name));
                 OnDebug("Radar", "Drew "+entity.Name+" at "+x+" "+y);
 
             }
         }
 
-        public static void DrawShipList(IConsole window, List<IGameEntity> ships, IEntity centreEntity)
+        public static void DrawShipList(IConsole window, List<IGameEntity> entities, IEntity centreEntity)
         {
             window.Clear();
-            window.WriteLine(ConsoleColor.Yellow,"Name".PadLeft(12) + "\t" + "Range" + "\t" + "Bearing");
-            foreach (var ship in ships.OrderBy(x => x.Position.DistanceTo(centreEntity.Position)))
+            window.WriteLine(ConsoleColor.Yellow,"Name".PadLeft(12) + "\t" + "Range" + "\t" + "Bearing" + "\tVelocity");
+            var groupedEntities = entities.GroupBy(x => x.Position.DistanceTo(centreEntity.Position));
+            foreach (var group in groupedEntities)
             {
-                var shipColor = ship.IsDestroyed() ? ConsoleColor.Red : GetTeamColor(ship);
-                window.Write(shipColor, GetEntitySymbol(ship) + " "+ ship.Name.PadLeft(10) + "\t");
-                window.WriteLine(
-                    (int)ship.Position.DistanceTo(centreEntity.Position) + "\t" + 
-                    (int)centreEntity.Position.DirectionInDegreesTo(ship.Position)+  '\t'+
-                    (int)ship.Position.X+ "\t"+
-                    (int)ship.Position.Y);
+                foreach (var namedgroup in group.GroupBy(x => x.Name).ToList())
+                {
+                    var count = namedgroup.Count();
+                    if (count == 0) continue;
+                    var entity = namedgroup.First();
+                    var name = entity.Name;
+                    if (count > 1)
+                        name += $"({count})";
+                    var shipColor = entity.IsDestroyed() ? ConsoleColor.Red : GetTeamColor(entity);
+                    window.Write(shipColor, GetEntitySymbol(entity.Name) + " " + name.PadLeft(10) + "\t");
+                    var distanceString = $"\t{(int)entity.Position.DistanceTo(centreEntity.Position)}\t";
+                    var directionString = $"{(int)centreEntity.Position.DirectionInDegreesTo(entity.Position)}\t";
+                    if (entity == centreEntity)
+                    {
+                        distanceString = "\t-\t";
+                        directionString = "-\t";
+                    }
+                    window.WriteLine(
+                        distanceString +
+                        directionString +
+                        $"{(int)(entity.Velocity).Magnitude}"
+                       );
+                }
             }
+            
         }
 
-        public static char GetEntitySymbol(IEntity entity)
+        public static char GetEntitySymbol(string entityName)
         {
-            if (entity.Name == "Torpedo")
+            if (entityName.Contains("Torp"))
                 return '.';
             List<char> symbols = new List<char> { '@', '#', '$', '%', '&', '*', 'π', 'Σ', 'Φ', 'φ', 'α', 'ß', 'δ', '■', 'Ω', '¥', 'Θ', '≡', '±', };
-            var index = (Math.Abs(entity.Name.GetHashCode()) % symbols.Count);
+            var index = (int)Math.Abs(entityName.GetHashCode() * .3) % (symbols.Count -1);
             return symbols[index];
         }
 
         public static ConsoleColor GetTeamColor(IEntity ship)
         {
-            List<ConsoleColor> colors = new List<ConsoleColor> { ConsoleColor.Yellow, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.DarkGray, ConsoleColor.DarkYellow, ConsoleColor.White , ConsoleColor.DarkMagenta};
-            return colors[(ship.Team + colors.Count) % colors.Count];
+            return GetTeamColor(ship.Team);
+        }
+        public static ConsoleColor GetTeamColor(int team)
+        {
+            List<ConsoleColor> colors = new List<ConsoleColor> { ConsoleColor.Yellow, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.DarkGray, ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.DarkMagenta };
+            return colors[(team + colors.Count) % colors.Count];
         }
 
         protected static void OnDebug(string from, string message)
@@ -164,7 +188,7 @@ namespace Spacebattle.Visualizer
             window.WriteLine(color, "Name:" + ship.Name +
                 " Crew:" + ship.CrewDecks.Select(x => (int)x.GetCrew()).Sum() +
                 " Mass: " + ship.Mass +
-                " Power:" + ship.Power);
+                " Power:" + ship.Power + "/"+ ship.Reactors.Select(x => x.Produce()).Sum());
             PrintReactors(ship, window, color);
             PrintShields(ship, window, color);
             PrintWeapons(ship, window, color);
@@ -179,10 +203,42 @@ namespace Spacebattle.Visualizer
             window.Write(color, "Weapons: |");
             foreach (var weapon in ship.Weapons)
             {
-                window.Write(color, weapon.GetName()+" H:");
+                window.Write(color, weapon.GetName()+"");
                 window.Write(ColorFromTuple(weapon.Health), HealthBarFromTuple(weapon.Health));
-                window.Write(color, " S:-");
-               // window.Write(ColorFromTuple(weapon.Strength), HealthBarFromTuple(weapon.Strength));
+                if ( weapon is TorpedoTube)
+                {
+                    var tube = weapon as TorpedoTube;
+                    if (tube.LoadingState == LoadState.UNLOADED)
+                    {
+                        window.Write("_");
+                    }
+                    else
+                    {
+                        window.Write(loadingStatusSymbol(tube.TurnsUntilLoaded));
+                    }
+                }
+                if (weapon is PlasmaBolt)
+                {
+                    var bolt = weapon as PlasmaBolt;
+                    window.Write(loadingStatusSymbol(bolt.TurnsUntilLoaded));
+                }
+                if (weapon is FireBreath)
+                {
+                    var breath = weapon as FireBreath;
+                    window.Write(loadingStatusSymbol(breath.TurnsUntilLoaded));
+                }
+                if (weapon is Lance)
+                {
+                    var lance = weapon as Lance;
+                    window.Write(loadingStatusSymbol(lance.TurnsUntilLoaded));
+                }
+                if (weapon is MassDriver)
+                {
+                    var massDriver = weapon as MassDriver;
+                    window.Write(massDriver.Ammo.ToString());
+                }
+                if ( weapon.GetLockTarget() != null)
+                    window.Write(GetEntitySymbol(weapon.GetLockTarget().Name).ToString());
                 window.Write(color, "|");
             }
             window.WriteLine(color, string.Empty);
@@ -190,24 +246,21 @@ namespace Spacebattle.Visualizer
 
         private static void PrintEngines(Ship ship, IConsole window, ConsoleColor color)
         {
-            window.Write(color, "Engines: |");
+            window.Write(color, "Engines: ");
             foreach (var engine in ship.Engines)
             {
-                window.Write(color, " H:");
                 window.Write(ColorFromTuple(engine.Health), HealthBarFromTuple(engine.Health));
-                window.Write(color, "|");
             }
             window.WriteLine(color, string.Empty);
         }
 
         private static void PrintCrewDecks(Ship ship, IConsole window, ConsoleColor color)
         {
-            window.Write(color, "Crew Decks: |");
             foreach (var crewDeck in ship.CrewDecks)
             {
-                window.Write(color, crewDeck.GetName() + " H:");
+                window.Write(color, crewDeck.GetName() + "");
                 window.Write(ColorFromTuple(crewDeck.Health), HealthBarFromTuple(crewDeck.Health));
-                window.Write(color, " C:" + crewDeck.GetCrew() + "|");
+                window.Write(color, ":" + crewDeck.GetCrew() + "|");
             }
             window.WriteLine(color, string.Empty);
         }
@@ -217,10 +270,15 @@ namespace Spacebattle.Visualizer
             window.Write(color, "Shields: |");
             foreach (var shield in ship.Shields)
             {
-                window.Write(color, " H:");
                 window.Write(ColorFromTuple(shield.Health), HealthBarFromTuple(shield.Health));
-                window.Write(color, " S:");
-                window.Write(ColorFromTuple(shield.Strength), HealthBarFromTuple(shield.Strength) );
+                if (shield.Status == entity.parts.ShieldStatus.LOWERED)
+                {
+                    window.Write("-");
+                }
+                else
+                {
+                    window.Write(ColorFromTuple(shield.Strength), HealthBarFromTuple(shield.Strength));
+                }
                 window.Write(color, "|");
             }
             window.WriteLine(color, string.Empty);
@@ -231,9 +289,8 @@ namespace Spacebattle.Visualizer
             window.Write(color, "Reactors: |");
             foreach (var reactor in ship.Reactors)
             {
-                window.Write(color, " H:");
                 window.Write(ColorFromTuple(reactor.Health), HealthBarFromTuple(reactor.Health));
-                window.Write(color, " P:" + reactor.Produce() + "|");
+                window.Write(color, ":" + reactor.Produce() + "|");
             }
             window.WriteLine(color, string.Empty);
         }
@@ -276,6 +333,15 @@ namespace Spacebattle.Visualizer
                 return ConsoleColor.Red;
 
             return ConsoleColor.DarkRed;
+        }
+
+        private static string loadingStatusSymbol(uint turnsTilLoaded)
+        {
+            
+            string [] symbols = { "O", "=", "-", "."};
+            if (turnsTilLoaded >= symbols.Length)
+                return symbols[symbols.Length - 1];
+            return symbols[turnsTilLoaded];
         }
     }
 }

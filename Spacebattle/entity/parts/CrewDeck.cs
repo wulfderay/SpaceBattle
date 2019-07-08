@@ -8,11 +8,30 @@ namespace Spacebattle.entity.parts
     {
         uint _crew;
         float _repairRate;
+        float _upkeepCostPerCrew;
 
-        public CrewDeck(string name, float maxHealth, float mass, float upkeepCost, uint crewCompliment, float repairRate): base(name, maxHealth, mass, upkeepCost)
+        public CrewDeck(string name, float maxHealth, float mass, float upkeepCostPerCrew, uint crewCompliment, float repairRate) : base(name, maxHealth, mass, upkeepCostPerCrew)
         {
             _crew = crewCompliment;
             _repairRate = repairRate;
+            _upkeepCostPerCrew = upkeepCostPerCrew;
+        }
+
+        public new float GetUpkeepCost()
+        {
+            return _upkeepCostPerCrew * _crew;
+        }
+        public new void Update(uint roundNumber)
+        {
+            base.Update(roundNumber);
+            if (Parent.ConsumePower(GetUpkeepCost()) < GetUpkeepCost())
+            {
+                // ohh shit we are out of power. Life support will fail!
+                if (_crew > 0)
+                    OnFlavourText(_name, "Loss of power caused life support failure on the " + _name + ". " + _crew + " souls lost.");
+                _crew = 0;
+            }
+            
         }
 
         public override void Damage(DamageSource damage)
@@ -49,24 +68,24 @@ namespace Spacebattle.entity.parts
             return "["+_name+" H:"+_currentHealth+" C:" + _crew+ " R:" + _crew * _repairRate +" ]";
         }
 
-        public static CrewDeck MilitaryDeck()
+        public static CrewDeck MilitaryDeck(uint crew = 60)
         {
-            return new CrewDeck("Military Deck",100, 200, 20, 200, 0.1f);
+            return new CrewDeck("Mil. Deck",300, 200, 1, crew, 0.1f);
         }
 
-        public static CrewDeck PleasureDeck()
+        public static CrewDeck PleasureDeck(uint crew = 500)
         {
-            return new CrewDeck("Pleasure Deck", 100, 400, 100, 500, 0.01f);
+            return new CrewDeck("Pleas. Deck", 200, 400, 5, crew, 0.01f);
         }
 
-        public static CrewDeck EngineeringDeck()
+        public static CrewDeck EngineeringDeck(uint crew = 30)
         {
-            return new CrewDeck("Engineering Deck",75, 200, 30, 100, 0.5f);
+            return new CrewDeck("Eng. Deck",275, 200, 2, crew, 0.5f);
         }
 
-        public static CrewDeck Bridge()
+        public static CrewDeck Bridge(uint crew = 10)
         {
-            return new CrewDeck("Bridge", 50, 50, 10, 10, 0.0f);
+            return new CrewDeck("Bridge", 150, 50, 3, crew, 0.1f);
         }
     }
 }

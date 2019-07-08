@@ -6,7 +6,9 @@ using Spacebattle.Behaviours;
 using Spacebattle.Damage;
 using Spacebattle.entity;
 using Spacebattle.Game;
+using Spacebattle.orders;
 using Spacebattle.physics;
+using static Spacebattle.orders.Order;
 
 namespace Spacebattle.Entity.parts.Weapon
 {
@@ -24,10 +26,10 @@ namespace Spacebattle.Entity.parts.Weapon
         private float _damage;
         private float _damageRadius;
         private float _enginePower = 50; // I guess.. I don't know.
-        public Torpedo(IDamageableEntity target, int ttl, float proximityFuse, float damage, float damageRadius)
+        public Torpedo(string name, IDamageableEntity target, int ttl, float proximityFuse, float damage, float damageRadius)
         {
             Team = GameEngine.GAIA_TEAM;
-            Name = "Torpedo";
+            Name = name;
             _TTL = ttl;
             _proximityFuse = proximityFuse;
             this.target = target;
@@ -49,6 +51,8 @@ namespace Spacebattle.Entity.parts.Weapon
                 return;
             BlowUp();
         }
+
+        
 
         public float GetMaxAcceleration()
         {
@@ -102,6 +106,38 @@ namespace Spacebattle.Entity.parts.Weapon
                 Origin = Position,
                 DamageType = DamageType.EXPLOSIVE
             })); 
+        }
+
+        public void DoOrder(Order order)
+        {
+            if (IsDestroyed()) // you are dead... no orders for you :)
+                return;
+            switch (order.Type)
+            {
+                case OrderType.HELM:
+                    var setCourseOrder = (HelmOrder)order;
+                    if (setCourseOrder.AngleInDegrees != null)
+                    {
+                        SetCourse((float)setCourseOrder.AngleInDegrees);
+                        
+                    }
+                    if (setCourseOrder.ThrottlePercent != null)
+                    {
+                        SetThrottle((float)setCourseOrder.ThrottlePercent);
+                    }
+                    break;
+                case OrderType.LOCK:
+                    var lockOrder = (LockOrder)order;
+                    target = lockOrder.Target;
+                    break;
+                
+                case OrderType.ALL_STOP:
+                    AllStop();
+                    break;
+                
+                default:
+                    break;
+            }
         }
     }
 }

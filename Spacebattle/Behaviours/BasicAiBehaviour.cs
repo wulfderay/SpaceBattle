@@ -1,54 +1,57 @@
 ﻿using Spacebattle.entity;
+using Spacebattle.Entity.parts.Weapon;
 using Spacebattle.Game;
+using Spacebattle.orders;
+using Spacebattle.physics;
 using System.Linq;
 
 namespace Spacebattle.Behaviours
 {
     class BasicAiBehaviour : IBehaviour
     {
-        private IShip _ship;
+        private Ship _ship;
         private IDamageableEntity _target;
+        
 
-        public BasicAiBehaviour(IShip ship)
+        public BasicAiBehaviour(Ship ship)
         {
             _ship = ship;
         }
-        public void Execute()
+
+        public Order GetNextOrder()
         {
             if (_ship.IsDestroyed())
-                return;
+                return Order.NullOrder();
+            var unloadedTorpedoTubes = _ship.Weapons.Where(weapon => weapon is TorpedoTube && (weapon as TorpedoTube).LoadingState == LoadState.UNLOADED);
+            if (unloadedTorpedoTubes.Any())
+            {
+                return Order.Load(""); // TODO: flesh out load more.
+            }
             if (_target == null || _target.IsDestroyed()) // the way we handle this is with behaviours... they can add he state needed.
             {
-                var enemies = _ship.GetVisibleEntites().Where(x => x.Team != _ship.Team && x.Team != GameEngine.GAIA_TEAM).ToList(); 
-                var _shipToKill = enemies[GameEngine.Random(0, enemies.Count())];
-                _ship.LockOn(_shipToKill);
-                _target = _shipToKill;
-                return; // don't give unfair turn advantage
+                var enemies = _ship.GetVisibleEntites().Where(x => x.Team != _ship.Team && x.Team != GameEngine.GAIA_TEAM).ToList();
+                _target = enemies[GameEngine.Random(0, enemies.Count())];
+                return Order.Lock(_target);
             }
-            else
+            
+            if (_ship.Weapons.Where(weapon => weapon.TargetIsInRange() && weapon.IsReadyToFire()).Any())
             {
-                _ship.Shoot();
+                return Order.Fire();
             }
 
-            if (_ship.Position.DistanceTo(_target.Position) > 190)
+            // no weapons in range.
+            if (!_ship.Weapons.Where(weapon => weapon.TargetIsInRange()).Any())
             {
-                if (_ship.Position.DistanceTo(_target.Position) > 200)
-                {
-                    _ship.SetCourse(_ship.Position.DirectionInDegreesTo(_target.Position));
-                    _ship.SetThrottle(GameEngine.Random(0,10));
-                }
-                else
-                {
-                    _ship.AllStop();
-                }
+                return Order.SetCourse(_ship.Position.DirectionInDegreesTo(_target.Position), GameEngine.Random(1, 20));
             }
-            else
+
+            if ( _ship.Velocity.Magnitude > 100)
             {
-                _ship.SetCourse(GameEngine.Random(0, 360));
-                _ship.SetThrottle(GameEngine.Random(0, 10));
+
+                return Order.AllStop();
             }
+            return Order.SetCourse(GameEngine.Random(0, 360), GameEngine.Random(1, 20));
+
         }
-
-
     }
 }

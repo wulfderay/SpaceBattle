@@ -1,4 +1,5 @@
-﻿using Spacebattle.entity.parts.Weapon;
+﻿using Spacebattle.entity;
+using Spacebattle.entity.parts.Weapon;
 
 namespace Spacebattle.orders
 {
@@ -6,6 +7,6 @@ namespace Spacebattle.orders
     {
         public WeaponType? WeaponType { get; set; }
         public string WeaponName { get; set; }
-        public string ShipToLockOn { get; set; }
+        public IDamageableEntity Target { get; set; }
     }
 }

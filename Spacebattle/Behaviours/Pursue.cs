@@ -1,10 +1,6 @@
 ﻿using Spacebattle.entity;
 using Spacebattle.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Spacebattle.orders;
 
 namespace Spacebattle.Behaviours
 {
@@ -23,22 +19,18 @@ namespace Spacebattle.Behaviours
             _maxThrottle = maxThrottle;
         }
 
-        public void Execute()
+        public Order GetNextOrder()
         {
             if ( _parent.Position.DistanceTo(_target.Position) > _preferredDistance)
             {
                 // head toward the target and/or speed up
-                _parent.SetCourse(_parent.Position.DirectionInDegreesTo(_target.Position));
-                _parent.SetThrottle(_maxThrottle); // just punch it, I guess.
-                return;
+                return Order.SetCourse(_parent.Position.DirectionInDegreesTo(_target.Position), _maxThrottle);
             }
             if (_parent.Position.DistanceTo(_target.Position) < _preferredDistance)
             {
-                _parent.SetCourse(_target.Position.DirectionInDegreesTo(_parent.Position)); // opposite direction.
-                _parent.SetThrottle(_maxThrottle); // just punch it, I guess.
-                return;
+                return Order.SetCourse(_target.Position.DirectionInDegreesTo(_parent.Position), _maxThrottle);
             }
-
+            return Order.NullOrder();
         }
     }
 }

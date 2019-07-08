@@ -1,7 +1,9 @@
-﻿namespace Spacebattle.orders
+﻿using Spacebattle.entity;
+
+namespace Spacebattle.orders
 {
     internal class ScanOrder:Order
     {
-        public string ShipToScan { get; set; }
+        public Ship ShipToScan { get; set; }
     }
 }

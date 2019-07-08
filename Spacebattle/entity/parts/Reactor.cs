@@ -22,12 +22,12 @@ namespace Spacebattle.entity.parts
 
         public static Reactor BigReactor()
         {
-            return new Reactor("Big Reactor",200, 200, 0, 300);
+            return new Reactor("Big Reactor",200, 200, 0, 500);
         }
 
         public static Reactor SmallReactor()
         {
-            return new Reactor("Small Reactor",100, 100, 0, 100);
+            return new Reactor("Small Reactor",100, 100, 0, 250);
         }
     }
 }

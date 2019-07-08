@@ -8,14 +8,14 @@ namespace Spacebattle.Entity.parts.Weapon
 {
     class MassDriver : ShipPart, IWeapon
     {
-        uint _ammo;
         float _power;
         float _range;
         private IDamageableEntity _target;
+        public uint Ammo { get; private set; }
 
         public MassDriver(string name, float maxHealth, float mass, float upkeepCost, float power, uint ammo, float range) : base(name, maxHealth, mass, upkeepCost)
         {
-            _ammo = ammo;
+            Ammo = ammo;
             _power = power;
             _range = range;
         }
@@ -29,7 +29,7 @@ namespace Spacebattle.Entity.parts.Weapon
                 OnFlavourText(_name, "No target to fire at!");
                 return;
             }
-            if (_ammo <= 0)
+            if (Ammo <= 0)
             {
                 OnFlavourText(_name, "No more ammo!");
                 return;
@@ -37,7 +37,7 @@ namespace Spacebattle.Entity.parts.Weapon
             var distance = Parent.Position.DistanceTo(_target.Position);
             if (distance < _range)
             {
-                _ammo--;
+                Ammo--;
                 OnGameEngineEvent(this, GameEngineEventArgs.Damage(_target, new DamageSource() { Magnitude = _power, DamageType = DamageType.CONCUSSIVE, Origin = Parent.Position })); // power is not attenuated because there is no drag.
             }
             else
@@ -56,9 +56,19 @@ namespace Spacebattle.Entity.parts.Weapon
             return WeaponType.MASS_DRIVER;
         }
 
+        public bool IsReadyToFire()
+        {
+            return Ammo > 0;
+        }
+
         public void Lock(IDamageableEntity target)
         {
             _target = target;
+        }
+
+        public bool TargetIsInRange()
+        {
+            return _target != null && Parent.Position.DistanceTo(_target.Position) < _range;
         }
     }
 }

@@ -8,8 +8,12 @@ namespace Spacebattle.physics
     {
         public float X { get; set; }
         public float Y { get; set; }
+        public float Magnitude { get => (float) Math.Sqrt((X* X) + (Y* Y)); }
 
         public static Vector2d Zero => new Vector2d {X = 0, Y = 0};
+
+        public float AngleDegrees { get => (float)(360 + 90 + (float)(Math.Atan2(Y, X)).ToDegrees()) % 360; } // the + 90 accounts for the rotation of the coordinate system to put north at 0.
+            // the extra 360 takes care of the problem of comparing angles that crosss the rollover at 360 ( 270 and 30) for example... the distance is 60, not 210 or whatever.
 
         public Vector2d(){}
 
@@ -30,13 +34,7 @@ namespace Spacebattle.physics
         public float DirectionInDegreesTo(Vector2d other)
         {
             var difference = other - this;
-            return (360 + 90+ (float)(Math.Atan2(difference.Y, difference.X)).ToDegrees()) % 360; // the + 90 accounts for the rotation of the coordinate system to put north at 0.
-            // the extra 360 takes care of the problem of comparing angles that crosss the rollover at 360 ( 270 and 30) for example... the distance is 60, not 210 or whatever.
-        }
-
-        public float Magnitude()
-        {
-            return (float)Math.Sqrt((X *X) + (Y * Y));
+            return difference.AngleDegrees; 
         }
 
         public static Vector2d fromAngleDegrees(float angleInDegrees)

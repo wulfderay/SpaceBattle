@@ -1,4 +1,5 @@
 ﻿using Spacebattle.Behaviours;
+using Spacebattle.orders;
 using System;
 
 namespace Spacebattle.entity
@@ -7,6 +8,6 @@ namespace Spacebattle.entity
     {
         void AddBehaviour(IBehaviour behaviour);
         void RemoveBehaviour(IBehaviour behaviour); // don't really like this.
-        void ExecuteBehaviours();
+        Order ExecuteBehaviours();
     }
 }
