@@ -101,17 +101,6 @@ namespace Spacebattle.entity.parts
             return "["+_name+" H:" + _currentHealth + "/" + _maxHealth + " A:" + _currentAbsorbtion + "/" + _maxAbsorbtion + "]";
         }
 
-        // fast but expensive and fragile
-        public static Shield FastRegenshield(string name, float arcWidthDegrees, float baseAngle)
-        {
-            return new Shield(name, 25, 10, 75, 400, 10f, 5, arcWidthDegrees, baseAngle);
-        }
-
-        // slow but efficient
-        public static Shield Bigshield(string name,float arcWidthDegrees, float baseAngle)
-        {
-            return new Shield(name, 45, 15, 125, 1000, 5f, 2, arcWidthDegrees, baseAngle);
-        }
     }
 
     public enum ShieldStatus

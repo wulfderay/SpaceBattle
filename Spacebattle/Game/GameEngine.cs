@@ -155,9 +155,13 @@ namespace Spacebattle.Game
             {
                 throw new Exception(" You can't ask who won if the game is not finished!");
             }
-            var SurvivingTeam = Entities.First(x => x.Team != GAIA_TEAM && !x.IsDestroyed()).Team;
+            if (Entities.Any(x => x.Team != GAIA_TEAM && !x.IsDestroyed()))
+            {
+                var SurvivingTeam = Entities.First(x => x.Team != GAIA_TEAM && !x.IsDestroyed()).Team;
 
-            return SurvivingTeam;
+                return SurvivingTeam;
+            }
+            return GAIA_TEAM;
         }
 
         public void RunOneRound(Order order) 

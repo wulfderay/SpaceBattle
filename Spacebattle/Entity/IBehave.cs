@@ -1,6 +1,5 @@
 ﻿using Spacebattle.Behaviours;
 using Spacebattle.orders;
-using System;
 
 namespace Spacebattle.entity
 {

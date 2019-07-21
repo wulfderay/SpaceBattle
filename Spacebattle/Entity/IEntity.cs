@@ -1,10 +1,9 @@
 ﻿using Spacebattle.Game;
 using Spacebattle.physics;
-using System;
 
 namespace Spacebattle.entity
 {
-    
+
     public interface IEntity: IGameEngineEventProvider
     {
         

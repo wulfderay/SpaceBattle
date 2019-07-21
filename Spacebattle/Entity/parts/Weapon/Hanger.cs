@@ -27,7 +27,7 @@ namespace Spacebattle.Entity.parts.Weapon
             return null;
         }
 
-        public WeaponType GetWeaponType()
+        public string GetWeaponType()
         {
             return WeaponType.HANGER;
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using Spacebattle.Damage;
+﻿using Spacebattle.Damage;
 using Spacebattle.entity;
 using Spacebattle.physics;
 

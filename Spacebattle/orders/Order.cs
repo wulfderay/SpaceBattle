@@ -34,7 +34,7 @@ namespace Spacebattle.orders
             return new HelmOrder { Type = OrderType.HELM, ThrottlePercent = percent };
         }
 
-        public static FireOrder Fire(WeaponType? weaponType=null, string weaponName=null) //TODO: fire a specific weapon
+        public static FireOrder Fire(string weaponType=null, string weaponName=null) //TODO: fire a specific weapon
         {
             return new FireOrder { Type = OrderType.FIRE, WeaponType = weaponType, WeaponName = weaponName};
         }
@@ -51,7 +51,7 @@ namespace Spacebattle.orders
 
         
 
-        public static LockOrder Lock(IDamageableEntity target, WeaponType? weaponType = null, string weaponName = null)
+        public static LockOrder Lock(IDamageableEntity target, string weaponType = null, string weaponName = null)
         {
             return new LockOrder { Type = OrderType.LOCK, Target = target ,  WeaponType = weaponType, WeaponName = weaponName };
         }

@@ -20,14 +20,5 @@ namespace Spacebattle.entity.parts
             return "[" + _name + " H:" + _currentHealth + "/" + _maxHealth + " P:" + Produce()+"/"+_maxPower+ "]";
         }
 
-        public static Reactor BigReactor()
-        {
-            return new Reactor("Big Reactor",200, 200, 0, 500);
-        }
-
-        public static Reactor SmallReactor()
-        {
-            return new Reactor("Small Reactor",100, 100, 0, 250);
-        }
     }
 }

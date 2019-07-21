@@ -2,7 +2,6 @@
 using Spacebattle.Entity.parts.Weapon;
 using Spacebattle.Game;
 using Spacebattle.orders;
-using Spacebattle.physics;
 using System.Linq;
 
 namespace Spacebattle.Behaviours

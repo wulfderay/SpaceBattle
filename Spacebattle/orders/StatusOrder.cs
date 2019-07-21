@@ -1,5 +1,4 @@
-﻿using System;
-using Spacebattle.entity;
+﻿using Spacebattle.entity;
 using Spacebattle.orders;
 
 namespace Spacebattle.Orders

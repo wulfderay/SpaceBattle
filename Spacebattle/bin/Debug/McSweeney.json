@@ -1,0 +1,104 @@
+{
+  "Name": "McSweeney",
+  "CrewDecks": [
+    {
+      "Name": "Bridge",
+      "MaxHealth": 150.0,
+      "Mass": 0.0,
+      "UpkeepCostPerCrew": 3.0,
+      "CrewCompliment": 15,
+      "RepairRate": 0.1
+    }
+  ],
+  "Engines": [
+    {
+      "Name": "Thruster",
+      "MaxHealth": 100.0,
+      "Mass": 15.0,
+      "UpkeepCost": 10.0,
+      "ThrustPower": 100.0
+    },
+    {
+      "Name": "Thruster",
+      "MaxHealth": 100.0,
+      "Mass": 15.0,
+      "UpkeepCost": 10.0,
+      "ThrustPower": 100.0
+    }
+  ],
+  "Reactors": [
+    {
+      "Name": "Small Reactor",
+      "MaxHealth": 100.0,
+      "Mass": 100.0,
+      "UpkeepCost": 0.0,
+      "MaxPower": 250.0
+    },
+    {
+      "Name": "Small Reactor",
+      "MaxHealth": 100.0,
+      "Mass": 100.0,
+      "UpkeepCost": 0.0,
+      "MaxPower": 250.0
+    }
+  ],
+  "Shields": [
+    {
+      "Name": "Shield 1",
+      "MaxHealth": 100.0,
+      "Mass": 10.0,
+      "UpkeepCost": 75.0,
+      "MaxAbsorbtion": 400.0,
+      "RegenRate": 10.0,
+      "PowerPerRegenUnit": 5.0,
+      "ArcWidthDegrees": 180.0,
+      "BaseAngle": 0.0
+    },
+    {
+      "Name": "Shield 2",
+      "MaxHealth": 100.0,
+      "Mass": 10.0,
+      "UpkeepCost": 75.0,
+      "MaxAbsorbtion": 400.0,
+      "RegenRate": 10.0,
+      "PowerPerRegenUnit": 5.0,
+      "ArcWidthDegrees": 180.0,
+      "BaseAngle": 180.0
+    },
+    {
+      "Name": "Shield 1",
+      "MaxHealth": 100.0,
+      "Mass": 10.0,
+      "UpkeepCost": 75.0,
+      "MaxAbsorbtion": 400.0,
+      "RegenRate": 10.0,
+      "PowerPerRegenUnit": 5.0,
+      "ArcWidthDegrees": 360.0,
+      "BaseAngle": 0.0
+    }
+  ],
+  "Weapons": [
+    {
+      "WeaponType": "PLASMABOLT",
+      "Name": "Plasmabolt",
+      "MaxHealth": 100.0,
+      "Mass": 10.0,
+      "UpkeepCost": 75.0,
+      "Power": 100.0,
+      "Range": 750.0,
+      "Ammo": 0,
+      "TorpedoType": null
+    },
+    {
+      "WeaponType": "PLASMABOLT",
+      "Name": "Plasmabolt",
+      "MaxHealth": 100.0,
+      "Mass": 10.0,
+      "UpkeepCost": 75.0,
+      "Power": 100.0,
+      "Range": 750.0,
+      "Ammo": 0,
+      "TorpedoType": null
+    }
+  ]
+}

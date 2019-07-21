@@ -1,7 +1,6 @@
 ﻿using Spacebattle.entity.parts.Weapon;
 using Spacebattle.entity;
 using Spacebattle.Damage;
-using System;
 using Spacebattle.Game;
 
 namespace Spacebattle.Entity.parts.Weapon
@@ -51,9 +50,9 @@ namespace Spacebattle.Entity.parts.Weapon
             return _target;
         }
 
-        public WeaponType GetWeaponType()
+        public string GetWeaponType()
         {
-            return WeaponType.MASS_DRIVER;
+            return WeaponType.MASSDRIVER;
         }
 
         public bool IsReadyToFire()

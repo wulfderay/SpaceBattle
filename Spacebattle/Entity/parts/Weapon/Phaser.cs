@@ -1,7 +1,6 @@
 ﻿
 using Spacebattle.Damage;
 using Spacebattle.Game;
-using System;
 
 namespace Spacebattle.entity.parts.Weapon
 {
@@ -44,9 +43,9 @@ namespace Spacebattle.entity.parts.Weapon
             return _target;
         }
 
-        public WeaponType GetWeaponType()
+        public string GetWeaponType()
         {
-            return WeaponType.ENERGY;
+            return WeaponType.PHASER;
         }
 
         public bool IsReadyToFire()

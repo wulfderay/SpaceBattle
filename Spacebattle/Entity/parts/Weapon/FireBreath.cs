@@ -1,6 +1,4 @@
-﻿
-using System;
-using Spacebattle.Damage;
+﻿using Spacebattle.Damage;
 using Spacebattle.Game;
 
 namespace Spacebattle.entity.parts.Weapon
@@ -59,9 +57,9 @@ namespace Spacebattle.entity.parts.Weapon
             return _target;
         }
 
-        public WeaponType GetWeaponType()
+        public string GetWeaponType()
         {
-            return WeaponType.ENERGY;
+            return WeaponType.FIREBREATH;
         }
 
         public bool IsReadyToFire()

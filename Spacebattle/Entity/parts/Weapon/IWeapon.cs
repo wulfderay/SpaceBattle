@@ -6,7 +6,7 @@ namespace Spacebattle.entity.parts.Weapon
     {
 
         void Fire();
-        WeaponType GetWeaponType();
+        string GetWeaponType();
         void Lock(IDamageableEntity target);
         IDamageableEntity GetLockTarget();
         bool TargetIsInRange();

@@ -1,6 +1,5 @@
 ﻿using Spacebattle.Extensions;
 using System;
-using System.Data.SqlTypes;
 
 namespace Spacebattle.physics
 {

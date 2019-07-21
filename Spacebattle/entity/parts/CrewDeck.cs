@@ -68,24 +68,5 @@ namespace Spacebattle.entity.parts
             return "["+_name+" H:"+_currentHealth+" C:" + _crew+ " R:" + _crew * _repairRate +" ]";
         }
 
-        public static CrewDeck MilitaryDeck(uint crew = 60)
-        {
-            return new CrewDeck("Mil. Deck",300, 200, 1, crew, 0.1f);
-        }
-
-        public static CrewDeck PleasureDeck(uint crew = 500)
-        {
-            return new CrewDeck("Pleas. Deck", 200, 400, 5, crew, 0.01f);
-        }
-
-        public static CrewDeck EngineeringDeck(uint crew = 30)
-        {
-            return new CrewDeck("Eng. Deck",275, 200, 2, crew, 0.5f);
-        }
-
-        public static CrewDeck Bridge(uint crew = 10)
-        {
-            return new CrewDeck("Bridge", 150, 50, 3, crew, 0.1f);
-        }
     }
 }

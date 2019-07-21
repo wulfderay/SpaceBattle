@@ -40,9 +40,9 @@ namespace Spacebattle.Entity.parts.Weapon
             return _target;
         }
 
-        public WeaponType GetWeaponType()
+        public string GetWeaponType()
         {
-            return WeaponType.TORPEDO;
+            return WeaponType.TORPEDOTUBE;
         }
 
         public bool IsReadyToFire()

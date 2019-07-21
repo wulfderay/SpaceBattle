@@ -56,22 +56,5 @@ namespace Spacebattle.entity.parts
         {
             return (_thrustPower * _currentHealth / _maxHealth);
         }
-
-        public static Engine Thruster()
-        {
-            return new Engine("Thruster", 100, 15, 10, 100);
-        }
-        public static Engine CoreDrive()
-        {
-            return new Engine("Core Drive", 100, 70, 25, 250);
-        }
-        public static Engine MainSail()
-        {
-            return new Engine("MainSail", 100, 150, 40, 400);
-        }
-        public static Engine MegaThruster()
-        {
-            return new Engine("MegaThruster", 150, 450, 100, 1000);
-        }
     }
 }

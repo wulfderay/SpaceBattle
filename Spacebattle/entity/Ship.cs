@@ -242,7 +242,7 @@ namespace Spacebattle.entity
                 Power = shield.Regen(Power);
         }
 
-        public void LockOn(IDamageableEntity ship, WeaponType weaponType)
+        public void LockWeaponsByTypeOn(IDamageableEntity ship, string weaponType)
         {
             if ( ship != this) // stop hitting yourself! Stop hitting yourself!
             {
@@ -256,7 +256,7 @@ namespace Spacebattle.entity
                 OnFlavourText(this, new FlavourTextEventArgs { name = Name, message = "Locking weapons on to the " + ship.Name , level = FlavourTextEventArgs.LEVEL_INTERNAL, team = Team});
             }
         }
-        public void LockOn(IDamageableEntity ship, string weaponName)
+        public void LockWeaponsByNameOn(IDamageableEntity ship, string weaponName)
         {
             if (ship != this) // stop hitting yourself! Stop hitting yourself!
             {
@@ -271,7 +271,7 @@ namespace Spacebattle.entity
             }
         }
 
-        public void LockOn(IDamageableEntity ship)
+        public void LockAllWeaponsOn(IDamageableEntity ship)
         {
             if (ship != this) // stop hitting yourself! Stop hitting yourself!
             {
@@ -284,7 +284,7 @@ namespace Spacebattle.entity
         }
 
 
-        public void Shoot(WeaponType weaponType)
+        public void ShootByType(string weaponType)
         {
             var weaponsToFire = getWeaponsByType(weaponType).ToList();
             if (!weaponsToFire.Any())
@@ -295,7 +295,7 @@ namespace Spacebattle.entity
             weaponsToFire.ForEach(x => x.Fire());           
         }
 
-        public void Shoot(string weaponName) 
+        public void ShootByName(string weaponName) 
         {
             var weaponsToFire = getWeaponsByName(weaponName).ToList();
             if (!weaponsToFire.Any())
@@ -416,7 +416,7 @@ namespace Spacebattle.entity
             return result;
         }
 
-        private IEnumerable<IWeapon> getWeaponsByType(WeaponType weaponType)
+        private IEnumerable<IWeapon> getWeaponsByType(string weaponType)
         {
             return Weapons.Where(x => x.GetWeaponType() == weaponType);
         }
@@ -426,7 +426,7 @@ namespace Spacebattle.entity
             return Weapons.Where(x => x.GetName().ToLower() == weaponName.ToLower());
         }
 
-        private IEnumerable<IWeapon> getWeaponsByTypeOrName(WeaponType weaponType, string weaponName)
+        private IEnumerable<IWeapon> getWeaponsByTypeOrName(string weaponType, string weaponName)
         {
             return Weapons.Where(x => x.GetName() == weaponName || x.GetWeaponType() == weaponType);
         }
@@ -476,26 +476,26 @@ namespace Spacebattle.entity
                    
                     if (lockOrder.WeaponName != null)
                     {
-                        LockOn(lockOrder.Target, lockOrder.WeaponName);
+                        LockWeaponsByNameOn(lockOrder.Target, lockOrder.WeaponName);
                         break;
                     }
                     if (lockOrder.WeaponType != null)
                     {
-                        LockOn(lockOrder.Target, (WeaponType)lockOrder.WeaponType);
+                        LockWeaponsByTypeOn(lockOrder.Target, lockOrder.WeaponType);
                         break;
                     }
-                    LockOn(lockOrder.Target);
+                    LockAllWeaponsOn(lockOrder.Target);
                     break;
                 case OrderType.FIRE:
                     var fireOrder = (FireOrder)order;
                     if (fireOrder.WeaponType != null)
                     {
-                        Shoot((WeaponType)fireOrder.WeaponType);
+                        ShootByType(fireOrder.WeaponType);
                         break;
                     }
                     if (fireOrder.WeaponName != null)
                     {
-                        Shoot(fireOrder.WeaponName);
+                        ShootByName(fireOrder.WeaponName);
                         break;
                     }
                     Shoot();

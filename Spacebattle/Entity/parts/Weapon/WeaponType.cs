@@ -1,11 +1,14 @@
 ﻿namespace Spacebattle.entity.parts.Weapon
 {
-    public enum WeaponType
+    public static class WeaponType
     {
-        ENERGY,
-        MASS_DRIVER,
-        TORPEDO,
-        PROBE,
-        HANGER
+        public const string PLASMABOLT = "PLASMABOLT";
+        public const string LANCE = "LANCE";
+        public const string PHASER = "PHASER";
+        public const string FIREBREATH = "FIREBREATH";
+        public const string MASSDRIVER = "MASSDRIVER";
+        public const string TORPEDOTUBE = "TORPEDOTUBE";
+        public const string PROBE = "PROBE";
+        public const string HANGER = "HANGER";
     }
 }

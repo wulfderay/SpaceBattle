@@ -1,5 +1,4 @@
-﻿using System;
-using Spacebattle.entity;
+﻿using Spacebattle.entity;
 
 namespace Spacebattle.Game
 {

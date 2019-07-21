@@ -1,5 +1,4 @@
 ﻿using Spacebattle.entity;
-using Spacebattle.entity.parts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,13 +102,13 @@ namespace Spacebattle.orders
                 case "guns":
                 case "mass":
                 case "massdrivers":
-                    return Order.Lock(entityToLock, entity.parts.Weapon.WeaponType.MASS_DRIVER);
+                    return Order.Lock(entityToLock, entity.parts.Weapon.WeaponType.MASSDRIVER);
                 case "energy":
                 case "phasers":
-                    return Order.Lock(entityToLock, entity.parts.Weapon.WeaponType.ENERGY);
+                    return Order.Lock(entityToLock, entity.parts.Weapon.WeaponType.PLASMABOLT);
                 case "torpedoes":
                 case "torps":
-                    return Order.Lock(entityToLock, entity.parts.Weapon.WeaponType.TORPEDO);
+                    return Order.Lock(entityToLock, entity.parts.Weapon.WeaponType.TORPEDOTUBE);
                 case "probes":
                     return Order.Lock(entityToLock, entity.parts.Weapon.WeaponType.PROBE);
                 default:
@@ -128,13 +127,13 @@ namespace Spacebattle.orders
                 case "guns":
                 case "mass":
                 case "massdrivers":
-                    return Order.Fire(entity.parts.Weapon.WeaponType.MASS_DRIVER);
+                    return Order.Fire(entity.parts.Weapon.WeaponType.MASSDRIVER);
                 case "energy":
                 case "phasers":
-                    return Order.Fire(entity.parts.Weapon.WeaponType.ENERGY);
+                    return Order.Fire(entity.parts.Weapon.WeaponType.PLASMABOLT);
                 case "torpedoes":
                 case "torps":
-                    return Order.Fire(entity.parts.Weapon.WeaponType.TORPEDO);
+                    return Order.Fire(entity.parts.Weapon.WeaponType.TORPEDOTUBE);
                 case "probes":
                     return Order.Fire(entity.parts.Weapon.WeaponType.PROBE);
                 default:

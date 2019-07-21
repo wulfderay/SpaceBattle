@@ -1,5 +1,4 @@
-﻿using System;
-using Spacebattle.entity;
+﻿using Spacebattle.entity;
 using Spacebattle.entity.parts.Weapon;
 using Spacebattle.Damage;
 using Spacebattle.Game;
@@ -62,9 +61,9 @@ namespace Spacebattle.Entity.parts.Weapon
             return _target;
         }
 
-        public WeaponType GetWeaponType()
+        public string GetWeaponType()
         {
-            return WeaponType.ENERGY;
+            return WeaponType.PLASMABOLT;
         }
 
         public bool IsReadyToFire()
@@ -97,11 +96,6 @@ namespace Spacebattle.Entity.parts.Weapon
             if ( TurnsUntilLoaded> 0)
                 TurnsUntilLoaded--;
             
-        }
-
-        public static PlasmaBolt StandardPlasmaBolt()
-        {
-            return new PlasmaBolt("Plasmabolt", 100, 10, 75, 100, 750);
         }
     }
 }
