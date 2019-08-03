@@ -44,9 +44,9 @@ namespace Spacebattle.orders
                     break;
                 case "lower":
                 case "drop":
-                    return Order.LowerShields();
+                    return parseAsShieldsOrder(true, tokens);
                 case "raise":
-                    return Order.RaiseShields();
+                    return parseAsShieldsOrder(false, tokens);
                 case "fire":
                     if (tokens.Length > 1)
                     {
@@ -71,6 +71,23 @@ namespace Spacebattle.orders
 
             }
             return Order.NullOrder();
+        }
+
+        private static Order parseAsShieldsOrder(bool lowering, string[] tokens)
+        {
+            var WhichShields = new List<int>();
+            if ( tokens.Length > 1)
+            {
+                foreach (var token in tokens)
+                {
+                    if (int.TryParse(token, out int shieldNum) && shieldNum > 0)
+                    {
+                        WhichShields.Add(shieldNum -1);
+                    }
+
+                };  
+            }
+            return lowering ? Order.LowerShields(WhichShields) : Order.RaiseShields(WhichShields);
         }
 
         private static Order parseAsStatus(string[] tokens, List <IDamageableEntity> entities)

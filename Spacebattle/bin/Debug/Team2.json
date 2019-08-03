@@ -42,7 +42,7 @@
         "MaxHealth": 200.0,
         "Mass": 200.0,
         "UpkeepCost": 0.0,
-        "MaxPower": 100000.0
+        "MaxPower": 500.0
       },
       {
         "Name": "Big Reactor",

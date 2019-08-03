@@ -1,0 +1,28 @@
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\SpaceBattle Scenario Creator.exe.config
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\SpaceBattle Scenario Creator.exe
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\SpaceBattle Scenario Creator.pdb
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\SpaceBattle Scenario Creator.csprojAssemblyReference.cache
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\MainWindow.g.cs
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\App.g.cs
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\SpaceBattle Scenario Creator_MarkupCompile.cache
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\SpaceBattle Scenario Creator_MarkupCompile.lref
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\MainWindow.baml
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\SpaceBattle Scenario Creator.g.resources
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\SpaceBattle_Scenario_Creator.Properties.Resources.resources
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\SpaceBattle Scenario Creator.csproj.GenerateResource.cache
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\SpaceBattle Scenario Creator.csproj.CoreCompileInputs.cache
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\SpaceBattle Scenario Creator.exe
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\SpaceBattle Scenario Creator.pdb
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\Spacebattle.exe
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\Konsole.dll
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\Spacebattle.pdb
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\Spacebattle.exe.config
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\obj\Debug\SpaceBattle Scenario Creator.csproj.CopyComplete
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\OxyPlot.dll
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\OxyPlot.Wpf.dll
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\OxyPlot.pdb
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\OxyPlot.xml
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\OxyPlot.Wpf.pdb
+C:\Users\Mark\Documents\SpaceBattle\SpaceBattle Scenario Creator\bin\Debug\OxyPlot.Wpf.xml

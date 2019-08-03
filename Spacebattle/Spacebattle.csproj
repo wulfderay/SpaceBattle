@@ -36,6 +36,9 @@
     <Reference Include="Konsole, Version=3.3.0.29034, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Goblinfactory.Konsole.3.3.0\lib\net45\Konsole.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -50,6 +53,24 @@
     <Compile Include="Behaviours\BasicAiBehaviour.cs" />
     <Compile Include="Behaviours\IBehaviour.cs" />
     <Compile Include="Behaviours\Pursue.cs" />
+    <Compile Include="Configuration\EntityFactories\CrewDeckFactory.cs" />
+    <Compile Include="Configuration\EntityFactories\EngineFactory.cs" />
+    <Compile Include="Configuration\EntityFactories\ReactorFactory.cs" />
+    <Compile Include="Configuration\EntityFactories\ShieldFactory.cs" />
+    <Compile Include="Configuration\EntityFactories\ShipFactory.cs" />
+    <Compile Include="Configuration\EntityFactories\WeaponFactory.cs" />
+    <Compile Include="Configuration\Schema\CrewDeckSchema.cs" />
+    <Compile Include="Configuration\Schema\EngineSchema.cs" />
+    <Compile Include="Configuration\Schema\ReactorSchema.cs" />
+    <Compile Include="Configuration\Schema\ShieldSchema.cs" />
+    <Compile Include="Configuration\Schema\ShipSchema.cs" />
+    <Compile Include="Configuration\Schema\WeaponSchema.cs" />
+    <Compile Include="Configuration\StandardConfigs\CrewDecks.cs" />
+    <Compile Include="Configuration\StandardConfigs\Engines.cs" />
+    <Compile Include="Configuration\StandardConfigs\Reactors.cs" />
+    <Compile Include="Configuration\StandardConfigs\Shields.cs" />
+    <Compile Include="Configuration\StandardConfigs\Ships.cs" />
+    <Compile Include="Configuration\StandardConfigs\Weapons.cs" />
     <Compile Include="Damage\DamageSource.cs" />
     <Compile Include="Debug\IDebugProvider.cs" />
     <Compile Include="Entity\IGameEntity.cs" />
@@ -110,6 +131,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

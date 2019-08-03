@@ -426,12 +426,6 @@ namespace Spacebattle.entity
             return Weapons.Where(x => x.GetName().ToLower() == weaponName.ToLower());
         }
 
-        private IEnumerable<IWeapon> getWeaponsByTypeOrName(string weaponType, string weaponName)
-        {
-            return Weapons.Where(x => x.GetName() == weaponName || x.GetWeaponType() == weaponType);
-        }
-
-
         private void OnFlavourText(string name, string message, int level = FlavourTextEventArgs.LEVEL_INTERNAL)
         {
             FlavourTextEventHandler?.Invoke(this, new FlavourTextEventArgs { name = name, message = message, level = level , team = Team});
@@ -522,18 +516,28 @@ namespace Spacebattle.entity
                     OnFlavourText(this, new FlavourTextEventArgs { name = Name, message = "But we don't have any torpedos, Captain!", team = Team, level = FlavourTextEventArgs.LEVEL_INTERNAL });
                     break;
                 case OrderType.SHEILD:
-                    var status = (order as ShieldOrder).Status;
+                    var shieldOrder = (order as ShieldOrder);
                     var undestroyedShields =Shields.Where(x => !x.IsDestroyed());
                     if (!undestroyedShields.Any())
                     {
                         OnFlavourText(this, new FlavourTextEventArgs { name = Name, message = "We don't have any working shields!", team = Team, level = FlavourTextEventArgs.LEVEL_INTERNAL });
                         return;
                     }
-                    foreach (var shield in undestroyedShields)
+                    if (shieldOrder.WhichShields == null || shieldOrder.WhichShields.Count == 0)
                     {
-                        shield.Status = status;
+                        foreach (var shield in undestroyedShields)
+                        {
+                            shield.Status = shieldOrder.Status;
+                        }
                     }
-                    if (status == ShieldStatus.LOWERED)
+                    else
+                    {
+                        foreach(var ShieldIndex  in shieldOrder.WhichShields.Where(x => x < Shields.Count && !Shields[x].IsDestroyed()))
+                        {
+                            Shields[ShieldIndex].Status = shieldOrder.Status;
+                        }
+                    }
+                    if (shieldOrder.Status == ShieldStatus.LOWERED)
                     {
                         OnFlavourText(this, new FlavourTextEventArgs { name = Name, message = "Lowering Shields.", team = Team, level = FlavourTextEventArgs.LEVEL_INTERNAL });
 

@@ -35,3 +35,5 @@ C:\Users\Mark\Documents\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.csproj.Cor
 C:\Users\Mark\Documents\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.csproj.CopyComplete
 C:\Users\Mark\Documents\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.exe
 C:\Users\Mark\Documents\SpaceBattle\Spacebattle\obj\Debug\Spacebattle.pdb
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Mark\Documents\SpaceBattle\Spacebattle\bin\Debug\Newtonsoft.Json.xml

@@ -65,20 +65,22 @@ namespace Spacebattle.orders
                 Ship = ship
             };
         }
-        internal static ShieldOrder LowerShields()
+        internal static ShieldOrder LowerShields(System.Collections.Generic.List<int> whichShields)
         {
             return new ShieldOrder()
             {
                 Type = OrderType.SHEILD,
-                Status = entity.parts.ShieldStatus.LOWERED
+                Status = entity.parts.ShieldStatus.LOWERED,
+                WhichShields = whichShields
             };
         }
-        internal static Order RaiseShields()
+        internal static Order RaiseShields(System.Collections.Generic.List<int> whichShields)
         {
             return new ShieldOrder()
             {
                 Type = OrderType.SHEILD,
-                Status = entity.parts.ShieldStatus.RAISED
+                Status = entity.parts.ShieldStatus.RAISED,
+                WhichShields = whichShields
             };
         }
         internal static ScanOrder Scan(Ship ship)
