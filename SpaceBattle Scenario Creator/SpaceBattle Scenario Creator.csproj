@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\ActionCommand.cs" />
     <Compile Include="TeamEditor\ShipDetails\ShipDetailsView.cs" />
     <Compile Include="TeamEditor\ShipDetails\ShipDetailsViewContext.cs" />
     <Compile Include="TeamEditor\TeamModel.cs" />

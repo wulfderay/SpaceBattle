@@ -1,1 +1,244 @@
-[]
+[
+  {
+    "Name": "dudey",
+    "CrewDecks": [
+      {
+        "Name": "Eng. Deck",
+        "MaxHealth": 275.0,
+        "Mass": 10.0,
+        "UpkeepCostPerCrew": 2.0,
+        "CrewCompliment": 35,
+        "RepairRate": 0.5
+      },
+      {
+        "Name": "Bridge",
+        "MaxHealth": 150.0,
+        "Mass": 10.0,
+        "UpkeepCostPerCrew": 3.0,
+        "CrewCompliment": 10,
+        "RepairRate": 0.1
+      }
+    ],
+    "Engines": [],
+    "Reactors": [
+      {
+        "Name": "Small Reactor",
+        "MaxHealth": 100.0,
+        "Mass": 100.0,
+        "UpkeepCost": 0.0,
+        "MaxPower": 250.0
+      },
+      {
+        "Name": "Small Reactor",
+        "MaxHealth": 100.0,
+        "Mass": 100.0,
+        "UpkeepCost": 0.0,
+        "MaxPower": 250.0
+      },
+      {
+        "Name": "Small Reactor",
+        "MaxHealth": 100.0,
+        "Mass": 100.0,
+        "UpkeepCost": 0.0,
+        "MaxPower": 250.0
+      }
+    ],
+    "Shields": [
+      {
+        "Name": "Shield 1",
+        "MaxHealth": 100.0,
+        "Mass": 10.0,
+        "UpkeepCost": 75.0,
+        "MaxAbsorbtion": 400.0,
+        "RegenRate": 10.0,
+        "PowerPerRegenUnit": 5.0,
+        "ArcWidthDegrees": 180.0,
+        "BaseAngle": 0.0
+      },
+      {
+        "Name": "Shield 2",
+        "MaxHealth": 100.0,
+        "Mass": 10.0,
+        "UpkeepCost": 75.0,
+        "MaxAbsorbtion": 400.0,
+        "RegenRate": 10.0,
+        "PowerPerRegenUnit": 5.0,
+        "ArcWidthDegrees": 180.0,
+        "BaseAngle": 180.0
+      },
+      {
+        "Name": "Shield 1",
+        "MaxHealth": 200.0,
+        "Mass": 15.0,
+        "UpkeepCost": 125.0,
+        "MaxAbsorbtion": 1000.0,
+        "RegenRate": 5.0,
+        "PowerPerRegenUnit": 2.0,
+        "ArcWidthDegrees": 360.0,
+        "BaseAngle": 0.0
+      }
+    ],
+    "Weapons": [
+      {
+        "WeaponType": "TORPEDOTUBE",
+        "Name": "Torp",
+        "MaxHealth": 100.0,
+        "Mass": 100.0,
+        "UpkeepCost": 20.0,
+        "Power": 0.0,
+        "Range": 0.0,
+        "Ammo": 0,
+        "TorpedoType": "Doesn't Matter Yet"
+      },
+      {
+        "WeaponType": "TORPEDOTUBE",
+        "Name": "Torp",
+        "MaxHealth": 100.0,
+        "Mass": 100.0,
+        "UpkeepCost": 20.0,
+        "Power": 0.0,
+        "Range": 0.0,
+        "Ammo": 0,
+        "TorpedoType": "Doesn't Matter Yet"
+      },
+      {
+        "WeaponType": "PLASMABOLT",
+        "Name": "Plasmabolt",
+        "MaxHealth": 100.0,
+        "Mass": 10.0,
+        "UpkeepCost": 75.0,
+        "Power": 100.0,
+        "Range": 750.0,
+        "Ammo": 0,
+        "TorpedoType": null
+      }
+    ]
+  },
+  {
+    "Name": "Syncertroon",
+    "CrewDecks": [
+      {
+        "Name": "Eng. Deck",
+        "MaxHealth": 275.0,
+        "Mass": 10.0,
+        "UpkeepCostPerCrew": 2.0,
+        "CrewCompliment": 30,
+        "RepairRate": 0.5
+      },
+      {
+        "Name": "Mil. Deck",
+        "MaxHealth": 300.0,
+        "Mass": 10.0,
+        "UpkeepCostPerCrew": 1.0,
+        "CrewCompliment": 10,
+        "RepairRate": 0.1
+      }
+    ],
+    "Engines": [
+      {
+        "Name": "MainSail",
+        "MaxHealth": 100.0,
+        "Mass": 150.0,
+        "UpkeepCost": 40.0,
+        "ThrustPower": 400.0
+      }
+    ],
+    "Reactors": [
+      {
+        "Name": "Big Reactor",
+        "MaxHealth": 200.0,
+        "Mass": 200.0,
+        "UpkeepCost": 0.0,
+        "MaxPower": 500.0
+      },
+      {
+        "Name": "Big Reactor",
+        "MaxHealth": 200.0,
+        "Mass": 200.0,
+        "UpkeepCost": 0.0,
+        "MaxPower": 500.0
+      }
+    ],
+    "Shields": [
+      {
+        "Name": "Shield 1",
+        "MaxHealth": 200.0,
+        "Mass": 15.0,
+        "UpkeepCost": 125.0,
+        "MaxAbsorbtion": 1000.0,
+        "RegenRate": 5.0,
+        "PowerPerRegenUnit": 2.0,
+        "ArcWidthDegrees": 90.0,
+        "BaseAngle": 0.0
+      },
+      {
+        "Name": "Shield 2",
+        "MaxHealth": 200.0,
+        "Mass": 15.0,
+        "UpkeepCost": 125.0,
+        "MaxAbsorbtion": 1000.0,
+        "RegenRate": 5.0,
+        "PowerPerRegenUnit": 2.0,
+        "ArcWidthDegrees": 90.0,
+        "BaseAngle": 90.0
+      },
+      {
+        "Name": "Shield 3",
+        "MaxHealth": 200.0,
+        "Mass": 15.0,
+        "UpkeepCost": 125.0,
+        "MaxAbsorbtion": 1000.0,
+        "RegenRate": 5.0,
+        "PowerPerRegenUnit": 2.0,
+        "ArcWidthDegrees": 90.0,
+        "BaseAngle": 180.0
+      },
+      {
+        "Name": "Shield 4",
+        "MaxHealth": 200.0,
+        "Mass": 15.0,
+        "UpkeepCost": 125.0,
+        "MaxAbsorbtion": 1000.0,
+        "RegenRate": 5.0,
+        "PowerPerRegenUnit": 2.0,
+        "ArcWidthDegrees": 90.0,
+        "BaseAngle": 270.0
+      }
+    ],
+    "Weapons": [
+      {
+        "WeaponType": "PHASER",
+        "Name": "Ph1",
+        "MaxHealth": 150.0,
+        "Mass": 1.0,
+        "UpkeepCost": 10.0,
+        "Power": 200.0,
+        "Range": 500.0,
+        "Ammo": 0,
+        "TorpedoType": null
+      },
+      {
+        "WeaponType": "PHASER",
+        "Name": "Ph2",
+        "MaxHealth": 150.0,
+        "Mass": 1.0,
+        "UpkeepCost": 10.0,
+        "Power": 200.0,
+        "Range": 500.0,
+        "Ammo": 0,
+        "TorpedoType": null
+      },
+      {
+        "WeaponType": "PHASER",
+        "Name": "Ph3",
+        "MaxHealth": 150.0,
+        "Mass": 1.0,
+        "UpkeepCost": 10.0,
+        "Power": 200.0,
+        "Range": 500.0,
+        "Ammo": 0,
+        "TorpedoType": null
+      }
+    ]
+  }
+]

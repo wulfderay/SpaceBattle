@@ -1,10 +1,12 @@
 ﻿using Spacebattle.Configuration.Schema;
+using SpaceBattle_Scenario_Creator.Commands;
 using SpaceBattle_Scenario_Creator.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace SpaceBattle_Scenario_Creator.TreeView
 {
@@ -13,6 +15,13 @@ namespace SpaceBattle_Scenario_Creator.TreeView
         private System.Windows.Controls.TreeView _target;
 
         public event EventHandler<ShipSchema> OnShipSelected;
+
+        public event Action<ReactorSchema> OnDeleteReactor;
+        public event Action<EngineSchema> OnDeleteEngine;
+        public event Action<CrewDeckSchema> OnDeleteCrewDeck;
+        public event Action<ShieldSchema> OnDeleteShield;
+        public event Action<WeaponSchema> OnDeleteWeapon;
+
 
         public TvView(System.Windows.Controls.TreeView target)
         {
@@ -24,11 +33,11 @@ namespace SpaceBattle_Scenario_Creator.TreeView
             shipParent.Header = shipSchema.Name;
             shipParent.GotFocus += (sender, arg) => OnShipSelected?.Invoke(sender, shipSchema);
             shipParent.IsExpanded = true;
-            var reactorsParent = GetTreeForSchemas(shipSchema.Reactors.Select(item=> item as object), "Reactors");
-            var enginesParent = GetTreeForSchemas(shipSchema.Engines.Select(item => item as object), "Engines");
-            var shieldsParent = GetTreeForSchemas(shipSchema.Shields.Select(item => item as object), "Shields");
-            var weaponsParent = GetTreeForSchemas(shipSchema.Weapons.Select(item => item as object), "Weapons");
-            var crewdecksParent = GetTreeForSchemas(shipSchema.CrewDecks.Select(item => item as object), "CrewDecks");
+            var reactorsParent = GetTreeForSchemas(shipSchema.Reactors.Select(item=> item), "Reactors", OnDeleteReactor);
+            var enginesParent = GetTreeForSchemas(shipSchema.Engines.Select(item => item), "Engines", OnDeleteEngine);
+            var shieldsParent = GetTreeForSchemas(shipSchema.Shields.Select(item => item), "Shields", OnDeleteShield);
+            var weaponsParent = GetTreeForSchemas(shipSchema.Weapons.Select(item => item), "Weapons", OnDeleteWeapon);
+            var crewdecksParent = GetTreeForSchemas(shipSchema.CrewDecks.Select(item => item), "CrewDecks", OnDeleteCrewDeck);
 
             shipParent.Items.Add(reactorsParent);
             shipParent.Items.Add(shieldsParent);
@@ -38,13 +47,17 @@ namespace SpaceBattle_Scenario_Creator.TreeView
             return shipParent;
         }
 
-        private TreeViewItem GetTreeForSchemas(IEnumerable<object> schemas, string rootName)
+        private TreeViewItem GetTreeForSchemas<T>(IEnumerable<T> schemas, string rootName, Action<T> OnDeleteAction)
         {
-            var reactorsParent = new TreeViewItem();
-            reactorsParent.Header = rootName;
+            
+            var parent = new TreeViewItem();
+            parent.Header = rootName;
+            parent.IsExpanded = true;
             foreach (var schema in schemas)
             {
                 var rootItem = new TreeViewItem();
+                
+                rootItem.InputBindings.Add(new KeyBinding(new ActionCommand(() => { OnDeleteAction?.Invoke(schema); }), Key.Delete, ModifierKeys.None));
                 PropertyInfo[] properties = schema.GetType().GetProperties();
 
                 foreach (var property in properties)
@@ -66,9 +79,9 @@ namespace SpaceBattle_Scenario_Creator.TreeView
 
 
                 }
-                reactorsParent.Items.Add(rootItem);
+                parent.Items.Add(rootItem);
             }
-            return reactorsParent;
+            return parent;
         }
 
 
